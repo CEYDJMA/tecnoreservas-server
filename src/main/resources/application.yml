@@ -6,7 +6,7 @@ spring:
   datasource:
     url: jdbc:postgresql://${POSTGRES_DB_SERVER_ADDRESS:localhost}:${POSTGRES_DB_SERVER_PORT:5432}/
     username: ${POSTGRES_USER:postgres}
-    password: ${POSTGRES_PASSWORD:488777}
+    password: ${POSTGRES_PASSWORD:example}
     hikari:
       pool-name: SpringBootBoilerplateHikariPool
   jpa:
@@ -15,6 +15,12 @@ spring:
     open-in-view: false
   jta:
     enabled: false
+  messages:
+    basename: messages
+    encoding: UTF-8
+  mvc:
+    locale: es_CO
+    local-resolver: fixed
 
 springdoc:
   show-actuator: true
