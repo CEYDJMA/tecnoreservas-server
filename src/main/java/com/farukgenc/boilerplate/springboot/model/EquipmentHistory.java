@@ -1,13 +1,11 @@
 package com.farukgenc.boilerplate.springboot.model;
 
-import com.farukgenc.boilerplate.springboot.model.enums.HistoryEventType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -22,15 +20,14 @@ public class EquipmentHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Date eventDate;
+    @Column(nullable = true)
+    private Date maintenanceDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private HistoryEventType eventType;
+    @Column(length = 100)
+    private String eventDescription;
 
-    @Column(length = 1000)
-    private String details;
+    @Column(length = 500)
+    private String incidentReported;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "resource_id", nullable = false)
