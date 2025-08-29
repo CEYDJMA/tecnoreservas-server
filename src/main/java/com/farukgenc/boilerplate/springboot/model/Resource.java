@@ -2,6 +2,7 @@ package com.farukgenc.boilerplate.springboot.model;
 
 import com.farukgenc.boilerplate.springboot.model.enums.ResourceStatus;
 import jakarta.persistence.*;
+import jakarta.persistence.DiscriminatorType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "resources")
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "resource_type")
+@DiscriminatorColumn(name = "resource_type", discriminatorType = DiscriminatorType.STRING)
 @Getter
 @Setter
 @AllArgsConstructor
@@ -30,10 +31,7 @@ public abstract class Resource {
     private String description;
 
     @Column(nullable = false, unique = true)
-    private String serialNumber;
-
-    @Column(nullable = false, unique = true)
-    private String internalId;
+    private String plate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -43,7 +41,7 @@ public abstract class Resource {
     private String model;
 
     @Column(nullable = false)
-    private String location;
+    private String brand;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_line_id", nullable = false)
