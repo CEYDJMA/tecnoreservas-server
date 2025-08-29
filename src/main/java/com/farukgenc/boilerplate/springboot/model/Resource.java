@@ -1,8 +1,6 @@
 package com.farukgenc.boilerplate.springboot.model;
 
-import com.farukgenc.boilerplate.springboot.model.enums.ResourceStatus;
 import jakarta.persistence.*;
-import jakarta.persistence.DiscriminatorType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,36 +10,39 @@ import java.util.List;
 
 @Entity
 @Table(name = "resources")
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "resource_type", discriminatorType = DiscriminatorType.STRING)
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class Resource {
+public class Resource {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 255, nullable = false)
+    @Column(length = 255)
     private String name;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
-
-    @Column(nullable = false, unique = true)
-    private String plate;
-
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ResourceStatus status;
-
-    @Column(nullable = false)
-    private String model;
+    private String type;
 
     @Column(nullable = false)
     private String brand;
+
+    @Column(nullable = false)
+    private String serialNumber;
+
+    @Column(nullable = false)
+    private String internalId;
+
+    @Column(nullable = false)
+    private String status;
+
+    @Column(nullable = false)
+    private Boolean availableForBooking;
+
+    @Column(nullable = false)
+    private Long servicelineId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_line_id", nullable = false)
