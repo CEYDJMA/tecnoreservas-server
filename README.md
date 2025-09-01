@@ -1,46 +1,107 @@
-# Spring Boot Boilerplate
- *Spring Boot Boilerplate* is a **starter kit**. This project is a very simple and useful.
- 
-## Technologies 
-- Spring Boot (v3.5.0)
-- Spring Data JPA
-- Spring Validation
-- Spring Security + JWT Token
-- PostgreSQL
-- Mapstruct
-- Lombok
-- Swagger (Open API)
+# Sistema de Gestión de Citas e Inventario
 
-## Customization
+Este repositorio contiene el código fuente de un sistema de **Gestión de Citas e Inventario**. Es una aplicación backend desarrollada en **Java** con el framework **Spring Boot**, diseñada para administrar recursos, personal y la programación de citas.
 
-- You can customize ```token information (secret key, issuer, expiry date) ``` in [*application.yml*](https://github.com/Genc/spring-boot-boilerplate/blob/master/src/main/resources/application.yml#L40) file.
-- You can customize ```database connection information``` in [*application.yml*](https://github.com/Genc/spring-boot-boilerplate/blob/master/src/main/resources/application.yml#L3) file.
-- You can customize ```swagger information``` in [*application.yml*](https://github.com/Genc/spring-boot-boilerplate/blob/master/src/main/resources/application.yml#L45) file.
-- You can customize ```which endpoints are accessible without token information``` in [*SecurityConfiguration.java*](https://github.com/Genc/spring-boot-boilerplate/blob/master/src/main/java/com/farukgenc/boilerplate/springboot/configuration/SecurityConfiguration.java#L45) file.
+## Tabla de Contenido
 
-## Run the Application
+- [Tecnologías](#tecnologías)
+- [Dependencias Clave](#dependencias-clave)
+- [Cómo Empezar](#cómo-empezar)
+  - [Prerrequisitos](#prerrequisitos)
+  - [Instalación](#instalación)
+- [Ejecutar la Aplicación](#ejecutar-la-aplicación)
+  - [Configuración](#configuración)
+  - [Arranque](#arranque)
+- [Documentación de la API](#documentación-de-la-api)
+- [Licencia](#licencia)
 
-First you need to make sure that the database is up. 
-If you're using Docker, you can use ```docker compose up -d``` command. (If you have made changes in local, you should use the *local-docker-compose* file.)
+## Tecnologías
 
-Navigate to the root of the project. For building the project using command line, run below command :
+La aplicación está construida sobre un stack de tecnologías moderno y robusto:
 
-``` mvn clean install```
+- **Java 21**: Versión del lenguaje de programación.
+- **Spring Boot 3.5.0**: Framework principal para el desarrollo de la aplicación.
+- **Spring Data JPA**: Para la persistencia de datos y comunicación con la base de datos.
+- **Spring Security**: Para la gestión de autenticación y autorización.
+- **PostgreSQL**: Sistema de gestión de bases de datos relacional.
+- **Maven**: Herramienta para la gestión de dependencias y construcción del proyecto.
 
-Run service in command line. Navigate to *target* directory. 
+## Dependencias Clave
 
-``` java -jar spring-boot-boilerplate.jar ```
+El proyecto utiliza las siguientes librerías para funcionalidades críticas:
 
-## Postman Collection
+| Dependencia                               | Propósito                                            |
+| ----------------------------------------- | ---------------------------------------------------- |
+| `flyway-core` & `flyway-database-postgresql` | Gestión de migraciones de la base de datos.          |
+| `java-jwt`                                | Creación y validación de JSON Web Tokens (JWT).      |
+| `springdoc-openapi-starter-webmvc-ui`     | Generación de documentación de la API con Swagger.   |
+| `mapstruct`                               | Mapeo de objetos (ej. entre Entidades y DTOs).       |
+| `lombok`                                  | Reducción de código repetitivo en clases Java.       |
+| `spring-dotenv`                           | Carga de variables de entorno desde un archivo `.env`. |
 
-- [You can access the Postman collection here and you can try it after you get the project up and running.](https://www.postman.com/postmanfaruk/workspace/faruk-genc-projects/collection/11439300-3d0317df-f217-40ff-a2a6-4eaaf66e1c55?action=share&creator=11439300)
+## Cómo Empezar
 
-### Others
+Sigue estos pasos para configurar el entorno de desarrollo local.
 
- - [For Angular]
- 
-### License
+### Prerrequisitos
 
-Apache License 2.0
+- **JDK 21**: Java Development Kit.
+- **Maven 3.x**: Gestor de dependencias.
+- **PostgreSQL**: Base de datos.
 
-   [For Angular]: <https://github.com/Genc/angular-boilerplate>
+### Instalación
+
+1.  **Clona el repositorio:**
+    ```bash
+    git clone <URL_DEL_REPOSITORIO>
+    cd proyecto-tecno
+    ```
+2.  **Instala las dependencias:**
+    ```bash
+    mvn clean install
+    ```
+
+## Ejecutar la Aplicación
+
+### Configuración
+
+La aplicación utiliza la dependencia `spring-dotenv` para gestionar la configuración sensible, como las credenciales de la base de datos.
+
+1.  Crea un archivo llamado `.env` en la raíz del proyecto.
+2.  Añade las siguientes variables con tus valores locales:
+
+    ```dotenv
+    # URL de conexión a tu base de datos PostgreSQL
+    DB_URL=jdbc:postgresql://localhost:5432/tu_base_de_datos
+
+    # Usuario y contraseña de la base de datos
+    DB_USER=tu_usuario
+    DB_PASSWORD=tu_contraseña
+
+    # Configuración de JWT (puedes cambiar estos valores)
+    JWT_SECRET_KEY=tu_clave_secreta_muy_larga_y_segura
+    JWT_ISSUER=gestion-citas-api
+    JWT_EXPIRATION_MS=86400000 # 24 horas
+    ```
+
+### Arranque
+
+Una vez configurado el archivo `.env`, puedes iniciar la aplicación con el siguiente comando de Maven:
+
+```bash
+mvn spring-boot:run
+```
+
+Flyway aplicará automáticamente las migraciones de la base de datos al arrancar.
+
+## Documentación de la API
+
+Una vez que la aplicación esté en ejecución, puedes acceder a la documentación interactiva de la API (generada por Swagger) en tu navegador:
+
+[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+
+Desde esta interfaz podrás explorar todos los endpoints, ver los modelos de datos y probar la API directamente.
+
+## Licencia
+
+Este proyecto está bajo la Licencia Apache 2.0.
