@@ -32,7 +32,7 @@ public class EquipmentHistory {
     @Column(length = 1000)
     private String details;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "resource_id", nullable = false)
     private Resource resource;
 }

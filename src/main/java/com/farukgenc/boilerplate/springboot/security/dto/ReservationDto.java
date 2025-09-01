@@ -11,4 +11,8 @@ public class ReservationDto {
 
     private Date endDateTime;
 
+    private Long expert;
+
+    private Long talent;
+
 }
