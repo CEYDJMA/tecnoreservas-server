@@ -3,6 +3,8 @@ package com.farukgenc.boilerplate.springboot.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -17,15 +19,15 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date dateTimeStart;
+    private LocalDateTime dateTimeStart;
 
-    private Date endDateTime;
+    private LocalDateTime endDateTime;
 
     private String reservationStatus;
 
-    private Date creationDate;
+    private LocalDateTime creationDate;
 
-    private Date lastModifiedDate;
+    private LocalDateTime lastModifiedDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "expert_id", nullable = false)

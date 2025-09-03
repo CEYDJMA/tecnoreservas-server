@@ -13,7 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,13 +55,25 @@ public class ReservationService {
         Optional<Expert> expert = expertRepository.findById(expertId);
         Long talentId = reservationDto.getTalent();
         Optional<Talent> talent = talentRepository.findById(talentId);
+        //asignacion de tiempo
+        LocalDateTime start = reservationDto.getDateTimeStart();
+        LocalTime time = start
+                .atZone(ZoneId.systemDefault())
+                .toLocalTime();
+        // horario no disponible
+        LocalTime almuerzoInicio = LocalTime.of(12,0);
+        LocalTime almuerzoFin = LocalTime.of(14,0);
+
+        if (time.isAfter(almuerzoInicio) || time.isBefore(almuerzoFin)){
+            throw new IllegalArgumentException("No se puede reservar en este horario.");
+        }
         //obtencion de datos
         Reservation newReservation = new Reservation();
         newReservation.setDateTimeStart(reservationDto.getDateTimeStart());
         newReservation.setEndDateTime(reservationDto.getEndDateTime());
         newReservation.setReservationStatus("solicitado");
-        newReservation.setCreationDate(Date.from(Instant.now()));
-        newReservation.setLastModifiedDate(Date.from(Instant.now()));
+        newReservation.setCreationDate(LocalDateTime.now());
+        newReservation.setLastModifiedDate(LocalDateTime.now());
         newReservation.setExpert(expert.get());
         newReservation.setTalent(talent.get());
         reservationRepository.save(newReservation);
@@ -75,16 +87,46 @@ public class ReservationService {
         Long talentId = reservationDto.getTalent();
         Optional<Talent> talent = talentRepository.findById(talentId);
         Reservation reservation = reservationRepository.findById(id).orElseThrow();
-
+        //validar y asignar el experto y talento
         expert.ifPresent(reservation::setExpert);
         talent.ifPresent(reservation::setTalent);
+        //valida que la fecha no venga vacía
+        LocalDateTime start = reservationDto.getDateTimeStart();
+        LocalDateTime end = reservationDto.getEndDateTime();
+        LocalTime time = start
+                .atZone(ZoneId.systemDefault())
+                .toLocalTime();
+        //limitacion de horas
+        LocalTime inicio = LocalTime.of(8,0);
+        LocalTime almuerzoInicio = LocalTime.of(12,01);
+        LocalTime almuerzoFin = LocalTime.of(13,59);
+        LocalTime fin = LocalTime.of(16,0);
+        LocalDate fecha1 = start.toLocalDate();
+        LocalDate fecha2 = end.toLocalDate();
+        LocalTime startTime = start.toLocalTime();
+        LocalTime endTime = end.toLocalTime();
+        boolean intersectaConAlmuerzo = !endTime.isBefore(almuerzoInicio) && !startTime.isAfter(almuerzoFin);
 
-        if (reservationDto.getDateTimeStart() != null){
-            reservation.setDateTimeStart(reservationDto.getDateTimeStart());
+        if (time.isBefore(inicio) || time.isAfter(fin)) {
+            throw new IllegalArgumentException("solo se permiten reservas entre las 8:00 y 16:00 horas.");
         }
-        if (reservationDto.getEndDateTime() != null){
-            reservation.setEndDateTime(reservationDto.getEndDateTime());
+        if (end.isBefore(start)) {
+            throw new IllegalArgumentException("El tiempo de fin de la reserva no puede ser menor al tiempo de inicio de la reserva.");
         }
+        if (end.getHour() - start.getHour() < 1) {
+            throw new IllegalArgumentException("El tiempo de reserva no puede ser inferior a una hora.");
+        }
+        if (!fecha1.equals(fecha2)) {
+            throw new IllegalArgumentException("Las reservas deben estar en el mismo día.");
+        }
+        if (intersectaConAlmuerzo) {
+            throw new IllegalArgumentException("No se puede reservar entre las 12:01 y las 13:59.");
+        }
+
+        reservation.setDateTimeStart(reservationDto.getDateTimeStart());
+        reservation.setEndDateTime(reservationDto.getEndDateTime());
+        reservation.setLastModifiedDate(LocalDateTime.now());
+
         reservationRepository.save(reservation);
         return "la reserva de " + reservation.getTalent().getName() + " ha sido modificada.";
     }
