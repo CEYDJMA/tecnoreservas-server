@@ -1,5 +1,6 @@
 package com.farukgenc.boilerplate.springboot.security.dto.resource;
 
+import com.farukgenc.boilerplate.springboot.model.ServiceLine;
 import com.farukgenc.boilerplate.springboot.model.enums.ResourceType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -3,7 +3,9 @@ package com.farukgenc.boilerplate.springboot.service;
 import com.farukgenc.boilerplate.springboot.model.BiotechnologyResource;
 import com.farukgenc.boilerplate.springboot.model.GenericResource;
 import com.farukgenc.boilerplate.springboot.model.Resource;
+import com.farukgenc.boilerplate.springboot.model.ServiceLine;
 import com.farukgenc.boilerplate.springboot.repository.ResourceRepository;
+import com.farukgenc.boilerplate.springboot.repository.ServiceLineRepository;
 import com.farukgenc.boilerplate.springboot.security.dto.resource.CreateResourceRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.resource.CreateResourceResponse;
 import com.farukgenc.boilerplate.springboot.service.interfaces.IResourceService;
@@ -17,9 +19,11 @@ import java.util.Optional;
 public class ResourceService implements IResourceService {
 
     private final ResourceRepository resourceRepository;
+    private final ServiceLineRepository serviceLineRepository;
 
-    public ResourceService(ResourceRepository resourceRepository) {
+    public ResourceService(ResourceRepository resourceRepository, ServiceLineRepository serviceLineRepository) {
         this.resourceRepository = resourceRepository;
+        this.serviceLineRepository = serviceLineRepository;
     }
 
     /**
@@ -101,10 +105,15 @@ public class ResourceService implements IResourceService {
         resource.setModel(request.getModel());
         resource.setBrand(request.getBrand());
         
+        // Buscar ServiceLine por ID y asignarlo
+        ServiceLine serviceLine = serviceLineRepository.findById(request.getServiceLineId())
+                .orElseThrow(() -> new RuntimeException("ServiceLine no encontrada con ID: " + request.getServiceLineId()));
+        resource.setServiceLine(serviceLine);
+        
         // Set default status for new resources
         resource.setStatus(com.farukgenc.boilerplate.springboot.model.enums.ResourceStatus.DISPONIBLE);
         
-        // TODO: Set ServiceLine based on serviceLineId
+        // Save the resource
         // ServiceLine serviceLine = serviceLineRepository.findById(request.getServiceLineId())...
         // resource.setServiceLine(serviceLine);
         
