@@ -70,15 +70,19 @@ public class ReservationService {
         Optional<Talent> talent = talentRepository.findById(talentId);
         //asignacion de tiempo
         LocalDateTime start = reservationDto.getDateTimeStart();
+        LocalDateTime end = reservationDto.getEndDateTime();
         LocalTime time = start
                 .atZone(ZoneId.systemDefault())
                 .toLocalTime();
         // horario no disponible
         LocalTime almuerzoInicio = LocalTime.of(12,0);
         LocalTime almuerzoFin = LocalTime.of(14,0);
+        LocalTime startTime = start.toLocalTime();
+        LocalTime endTime = end.toLocalTime();
+        boolean intersectaConAlmuerzo = !endTime.isBefore(almuerzoInicio) && !startTime.isAfter(almuerzoFin);
 
-        if (time.isAfter(almuerzoInicio) || time.isBefore(almuerzoFin)){
-            throw new IllegalArgumentException("No se puede reservar en este horario.");
+        if (intersectaConAlmuerzo) {
+            throw new IllegalArgumentException("No se puede reservar entre las 12:01 y las 13:59.");
         }
         //obtencion de datos
         Reservation newReservation = new Reservation();
@@ -135,5 +139,20 @@ public class ReservationService {
 
         reservationRepository.save(reservation);
         return "la reserva de " + reservation.getTalent().getName() + " ha sido modificada.";
+    }
+
+    @Transactional
+    public String delete(Long id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada con ID: " + id));
+
+        System.out.println("ANTES DE BORRAR: " + reservation);
+
+        reservationRepository.delete(reservation);
+
+        boolean stillExists = reservationRepository.existsById(id);
+        System.out.println("¿Todavía existe después del borrado?: " + stillExists);
+
+        return "La reserva de " + reservation.getTalent().getName() + " ha sido eliminada.";
     }
 }

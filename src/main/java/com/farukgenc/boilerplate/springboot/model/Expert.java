@@ -20,9 +20,9 @@ public class Expert extends User {
     @JsonBackReference
     private ServiceLine serviceLine;
 
-    @OneToMany(mappedBy = "expert", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "expert", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<DigitalRecord> digitalRecords;
 
-    @OneToMany(mappedBy = "expert", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "expert", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Reservation> reservations;
 }

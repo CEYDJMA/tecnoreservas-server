@@ -37,4 +37,9 @@ public class ReservationController {
     public ResponseEntity<String> modifyReservation(@Valid @PathVariable Long id, @RequestBody ReservationDto reservationDto){
         return ResponseEntity.ok(reservationService.modification(id, reservationDto));
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteReservation(@PathVariable Long id){
+        return ResponseEntity.ok(reservationService.delete(id));
+    }
 }

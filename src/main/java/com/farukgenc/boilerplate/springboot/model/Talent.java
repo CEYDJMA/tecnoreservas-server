@@ -17,9 +17,9 @@ public class Talent extends User {
     @Column(unique = true)
     private String associatedProject;
 
-    @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<DigitalRecord> digitalRecords;
 
-    @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Reservation> reservations;
 }
