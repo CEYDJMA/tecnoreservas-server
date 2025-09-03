@@ -4,9 +4,11 @@ server:
 
 spring:
   datasource:
+
     url: jdbc:postgresql://${POSTGRES_DB_SERVER_ADDRESS}:${POSTGRES_DB_SERVER_PORT}/postgres
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
+    
     hikari:
       pool-name: SpringBootBoilerplateHikariPool
   jpa:
@@ -22,6 +24,12 @@ spring:
     baseline-on-migrate: true
   jta:
     enabled: false
+  messages:
+    basename: messages
+    encoding: UTF-8
+  mvc:
+    locale: es_CO
+    local-resolver: fixed
 
 springdoc:
   show-actuator: true
