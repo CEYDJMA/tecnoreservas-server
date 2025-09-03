@@ -23,6 +23,11 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.getReservations());
     }
 
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<ReservationDto>> getReservationsStatus(@PathVariable String status) {
+        return ResponseEntity.ok(reservationService.getReservationByStatus(status));
+    }
+
     @PostMapping("/create")
     public ResponseEntity<String> createReservations(@RequestBody ReservationDto reservationDto){
         return ResponseEntity.ok(reservationService.createReservation(reservationDto));
@@ -30,8 +35,6 @@ public class ReservationController {
 
     @PatchMapping("/modify/{id}")
     public ResponseEntity<String> modifyReservation(@Valid @PathVariable Long id, @RequestBody ReservationDto reservationDto){
-        System.out.println("la fecha y hora de inicio: " + reservationDto.getDateTimeStart());
-        System.out.println("la fecha y hora de fin: " + reservationDto.getEndDateTime());
         return ResponseEntity.ok(reservationService.modification(id, reservationDto));
     }
 }

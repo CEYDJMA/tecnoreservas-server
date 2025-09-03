@@ -48,6 +48,19 @@ public class ReservationService {
         return response;
     }
 
+    public List<ReservationDto> getReservationByStatus(String status){
+        List<Reservation> listStatus = reservationRepository.findAllByReservationStatus(status);
+        List<ReservationDto> response = new ArrayList<>();
+        for (Reservation reservation: listStatus) {
+            ReservationDto reservationDto = new ReservationDto();
+            reservationDto.setDateTimeStart(reservation.getDateTimeStart());
+            reservationDto.setEndDateTime(reservation.getEndDateTime());
+            reservationDto.setExpert(reservation.getExpert().getId());
+            reservationDto.setTalent(reservation.getTalent().getId());
+            response.add(reservationDto);
+        }
+        return response;
+    }
     @Transactional
     public String createReservation(ReservationDto reservationDto) {
         //Validacion del experto y talento
@@ -82,14 +95,7 @@ public class ReservationService {
     }
 
     public String modification(Long id, ReservationDto reservationDto) {
-        Long expertId = reservationDto.getExpert();
-        Optional<Expert> expert = expertRepository.findById(expertId);
-        Long talentId = reservationDto.getTalent();
-        Optional<Talent> talent = talentRepository.findById(talentId);
         Reservation reservation = reservationRepository.findById(id).orElseThrow();
-        //validar y asignar el experto y talento
-        expert.ifPresent(reservation::setExpert);
-        talent.ifPresent(reservation::setTalent);
         //valida que la fecha no venga vacía
         LocalDateTime start = reservationDto.getDateTimeStart();
         LocalDateTime end = reservationDto.getEndDateTime();
