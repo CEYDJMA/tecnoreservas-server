@@ -16,7 +16,7 @@ public class Expert extends User {
     
     private Long lineId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "service_line_id", nullable = false)
     private ServiceLine serviceLine;
 
