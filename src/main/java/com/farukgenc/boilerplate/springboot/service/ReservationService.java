@@ -4,6 +4,7 @@ import com.farukgenc.boilerplate.springboot.model.Expert;
 import com.farukgenc.boilerplate.springboot.model.Reservation;
 import com.farukgenc.boilerplate.springboot.model.Talent;
 import com.farukgenc.boilerplate.springboot.model.User;
+import com.farukgenc.boilerplate.springboot.model.enums.ReservationStatus;
 import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
 import com.farukgenc.boilerplate.springboot.repository.ReservationRepository;
 import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
@@ -61,6 +62,7 @@ public class ReservationService {
         }
         return response;
     }
+
     @Transactional
     public String createReservation(ReservationDto reservationDto) {
         //Validacion del experto y talento
@@ -88,7 +90,7 @@ public class ReservationService {
         Reservation newReservation = new Reservation();
         newReservation.setDateTimeStart(reservationDto.getDateTimeStart());
         newReservation.setEndDateTime(reservationDto.getEndDateTime());
-        newReservation.setReservationStatus("solicitado");
+        newReservation.setReservationStatus(ReservationStatus.SOLICITADA);
         newReservation.setCreationDate(LocalDateTime.now());
         newReservation.setLastModifiedDate(LocalDateTime.now());
         newReservation.setExpert(expert.get());
@@ -108,7 +110,7 @@ public class ReservationService {
                 .toLocalTime();
         //limitacion de horas
         LocalTime inicio = LocalTime.of(8,0);
-        LocalTime almuerzoInicio = LocalTime.of(12,01);
+        LocalTime almuerzoInicio = LocalTime.of(12, 1);
         LocalTime almuerzoFin = LocalTime.of(13,59);
         LocalTime fin = LocalTime.of(16,0);
         LocalDate fecha1 = start.toLocalDate();
@@ -142,17 +144,46 @@ public class ReservationService {
     }
 
     @Transactional
-    public String delete(Long id) {
+    public String canceled(Long id) {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada con ID: " + id));
 
-        System.out.println("ANTES DE BORRAR: " + reservation);
+        reservation.setReservationStatus(ReservationStatus.CANCELADA);
+        reservationRepository.save(reservation);
 
-        reservationRepository.delete(reservation);
+        return "La reserva de " + reservation.getTalent().getName() + " ha sido cancelada.";
+    }
 
-        boolean stillExists = reservationRepository.existsById(id);
-        System.out.println("¿Todavía existe después del borrado?: " + stillExists);
+    @Transactional
+    public String confirmed(Long id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada con ID: " + id));
 
-        return "La reserva de " + reservation.getTalent().getName() + " ha sido eliminada.";
+        reservation.setReservationStatus(ReservationStatus.CONFIRMADA);
+        reservationRepository.save(reservation);
+
+        return "La reserva de " + reservation.getTalent().getName() + " ha sido confirmada.";
+    }
+
+    @Transactional
+    public String fulfilled(Long id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada con ID: " + id));
+
+        reservation.setReservationStatus(ReservationStatus.CUMPLIDA);
+        reservationRepository.save(reservation);
+
+        return "La reserva de " + reservation.getTalent().getName() + " ha sido cumplida.";
+    }
+
+    @Transactional
+    public String missed(Long id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada con ID: " + id));
+
+        reservation.setReservationStatus(ReservationStatus.INCUMPLIDA);
+        reservationRepository.save(reservation);
+
+        return "La reserva de " + reservation.getTalent().getName() + " ha sido incumplida.";
     }
 }

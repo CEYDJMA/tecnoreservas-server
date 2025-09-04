@@ -38,8 +38,23 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.modification(id, reservationDto));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteReservation(@PathVariable Long id){
-        return ResponseEntity.ok(reservationService.delete(id));
+    @PatchMapping("/canceled/{id}")
+    public ResponseEntity<String> canceledReservation(@PathVariable Long id){
+        return ResponseEntity.ok(reservationService.canceled(id));
+    }
+
+    @PatchMapping("/confirmed/{id}")
+    public ResponseEntity<String> confirmedReservation(@PathVariable Long id){
+        return ResponseEntity.ok(reservationService.confirmed(id));
+    }
+
+    @PatchMapping("/fulfilled/{id}")
+    public ResponseEntity<String> fulfilledReservation(@PathVariable Long id){
+        return ResponseEntity.ok(reservationService.fulfilled(id));
+    }
+
+    @PatchMapping("/missed/{id}")
+    public ResponseEntity<String> missedReservation(@PathVariable Long id){
+        return ResponseEntity.ok(reservationService.missed(id));
     }
 }

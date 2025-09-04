@@ -1,5 +1,6 @@
 package com.farukgenc.boilerplate.springboot.model;
 
+import com.farukgenc.boilerplate.springboot.model.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,7 +24,8 @@ public class Reservation {
 
     private LocalDateTime endDateTime;
 
-    private String reservationStatus;
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus reservationStatus;
 
     private LocalDateTime creationDate;
 

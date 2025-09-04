@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Expert extends User {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "service_line_id", nullable = false)
     @JsonBackReference
     private ServiceLine serviceLine;
