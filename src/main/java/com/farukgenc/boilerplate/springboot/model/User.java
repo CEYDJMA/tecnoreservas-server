@@ -21,7 +21,7 @@ public class User {
 
 	private String name;
 
-	private String lastName;
+	private String lastname;
 
 	@Column(unique = true)
 	private String username;

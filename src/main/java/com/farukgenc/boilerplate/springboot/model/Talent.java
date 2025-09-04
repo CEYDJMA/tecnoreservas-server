@@ -1,5 +1,6 @@
 package com.farukgenc.boilerplate.springboot.model;
 
+import com.farukgenc.boilerplate.springboot.model.enums.ProjectLine;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,4 +23,6 @@ public class Talent extends User {
 
     @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Reservation> reservations;
+
+    private List<ProjectLine> projectLines;
 }

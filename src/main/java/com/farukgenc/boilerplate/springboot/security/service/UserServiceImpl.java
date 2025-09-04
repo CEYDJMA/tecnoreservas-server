@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Locale;
+
 /**
  * Created on Ağustos, 2020
  *
@@ -42,12 +44,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public RegistrationResponse registration(RegistrationRequest registrationRequest) {
-
+        System.out.println(registrationRequest);
 		userValidationService.validateUser(registrationRequest);
 
 		final User user = UserMapper.INSTANCE.convertToUser(registrationRequest);
+        user.setLastname(registrationRequest.getLastname());
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		user.setUserRole(UserRole.USER);
+		UserRole role = UserRole.valueOf(registrationRequest.getUserRole().toUpperCase());
+        System.out.println("el rol es ..." + registrationRequest.getUserRole().toUpperCase());
+        user.setUserRole(role);
 
 		userRepository.save(user);
 
@@ -55,6 +60,7 @@ public class UserServiceImpl implements UserService {
 		final String registrationSuccessMessage = generalMessageAccessor.getMessage(null, REGISTRATION_SUCCESSFUL, username);
 
 		log.info("{} registered successfully!", username);
+        System.out.println(user);
 
 		return new RegistrationResponse(registrationSuccessMessage);
 	}
