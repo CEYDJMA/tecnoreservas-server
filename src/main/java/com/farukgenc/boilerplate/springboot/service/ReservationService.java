@@ -1,9 +1,6 @@
 package com.farukgenc.boilerplate.springboot.service;
 
-import com.farukgenc.boilerplate.springboot.model.Expert;
-import com.farukgenc.boilerplate.springboot.model.Reservation;
-import com.farukgenc.boilerplate.springboot.model.Talent;
-import com.farukgenc.boilerplate.springboot.model.User;
+import com.farukgenc.boilerplate.springboot.model.*;
 import com.farukgenc.boilerplate.springboot.model.enums.ReservationStatus;
 import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
 import com.farukgenc.boilerplate.springboot.repository.ReservationRepository;
@@ -60,6 +57,32 @@ public class ReservationService {
             reservationDto.setTalent(reservation.getTalent().getId());
             response.add(reservationDto);
         }
+        return response;
+    }
+
+    public List<ReservationDto> getReservationByUserRole(UserRole userRole){
+        List<Reservation> listUserRole = UserRepository.findAllByReservationUserRole(userRole);
+        List<ReservationDto> response = new ArrayList<>();
+        if (userRole == UserRole.EXPERT){
+            for (Reservation reservation: listUserRole) {
+                ReservationDto reservationDto = new ReservationDto();
+                reservationDto.setDateTimeStart(reservation.getDateTimeStart());
+                reservationDto.setEndDateTime(reservation.getEndDateTime());
+                reservationDto.setExpert(reservation.getExpert().getId());
+                response.add(reservationDto);
+            }
+        }
+
+        if (userRole == UserRole.TALENT){
+            for (Reservation reservation: listUserRole) {
+                ReservationDto reservationDto = new ReservationDto();
+                reservationDto.setDateTimeStart(reservation.getDateTimeStart());
+                reservationDto.setEndDateTime(reservation.getEndDateTime());
+                reservationDto.setTalent(reservation.getTalent().getId());
+                response.add(reservationDto);
+            }
+        }
+
         return response;
     }
 

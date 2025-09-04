@@ -1,6 +1,7 @@
 package com.farukgenc.boilerplate.springboot.controller;
 
 import com.farukgenc.boilerplate.springboot.model.Reservation;
+import com.farukgenc.boilerplate.springboot.model.UserRole;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
 import com.farukgenc.boilerplate.springboot.service.ReservationService;
 import jakarta.validation.Valid;
@@ -26,6 +27,11 @@ public class ReservationController {
     @GetMapping("/status/{status}")
     public ResponseEntity<List<ReservationDto>> getReservationsStatus(@PathVariable String status) {
         return ResponseEntity.ok(reservationService.getReservationByStatus(status));
+    }
+
+    @GetMapping("/userrole/{userRole}")
+    public ResponseEntity<List<ReservationDto>> getReservationsUserRole(@PathVariable String userRole) {
+        return ResponseEntity.ok(reservationService.getReservationByUserRole(UserRole.valueOf(userRole)));
     }
 
     @PostMapping("/create")
