@@ -57,8 +57,13 @@ public class ResourceService implements IResourceService {
     }
 
     @Override
-    public PagedResponse<ResourceListItemResponse> findAll(Pageable pageable) {
-    Page<Resource> resourcePage = resourceRepository.findAllWithServiceLine(pageable);
+    public PagedResponse<ResourceListItemResponse> findAll(Pageable pageable, Long serviceLineId) {
+        Page<Resource> resourcePage;
+        if (serviceLineId != null) {
+            resourcePage = resourceRepository.findAllByServiceLineIdWithFetch(serviceLineId, pageable);
+        } else {
+            resourcePage = resourceRepository.findAllWithServiceLine(pageable);
+        }
     return ResourceMapper.mapPageToPagedResponse(resourcePage);
     }
 
