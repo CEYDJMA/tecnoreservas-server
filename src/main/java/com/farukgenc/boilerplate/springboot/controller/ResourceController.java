@@ -69,8 +69,9 @@ public class ResourceController {
     @GetMapping
     public ResponseEntity<PagedResponse<ResourceListItemResponse>> getResources(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        PagedResponse<ResourceListItemResponse> response = resourceService.findAll(PageRequest.of(page, size));
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) Long serviceLineId) {
+        PagedResponse<ResourceListItemResponse> response = resourceService.findAll(PageRequest.of(page, size),serviceLineId);
         return ResponseEntity.ok(response);
     }
 }
