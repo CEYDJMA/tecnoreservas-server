@@ -10,4 +10,7 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     List<Reservation> findAllByReservationStatus(String status);
+    List<Reservation> findAllByTalent_Id(Long id);
+    List<Reservation> findAllByExpert_Id(Long id);
+    //List<Reservation> findAllByUser_UserRole(UserRole userRole);
 }

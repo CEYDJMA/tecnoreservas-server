@@ -11,6 +11,9 @@ import com.farukgenc.boilerplate.springboot.utils.GeneralMessageAccessor;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +38,7 @@ public class UserServiceImpl implements UserService {
 	private final UserValidationService userValidationService;
 
 	private final GeneralMessageAccessor generalMessageAccessor;
+
 
 	@Override
 	public User findByUsername(String username) {
@@ -71,5 +75,18 @@ public class UserServiceImpl implements UserService {
 		final User user = findByUsername(username);
 
 		return UserMapper.INSTANCE.convertToAuthenticatedUserDto(user);
+	}
+
+	public String getLoggedUser(){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+				if (authentication != null && authentication.isAuthenticated()) {
+				Object principal = authentication.getPrincipal();
+					if (principal instanceof UserDetails){
+						return ((UserDetails) principal).getUsername();
+					} else {
+						return principal.toString();
+					}
+				}
+				return null;
 	}
 }

@@ -29,9 +29,9 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.getReservationByStatus(status));
     }
 
-    @GetMapping("/userrole/{userRole}")
-    public ResponseEntity<List<ReservationDto>> getReservationsUserRole(@PathVariable String userRole) {
-        return ResponseEntity.ok(reservationService.getReservationByUserRole(UserRole.valueOf(userRole)));
+    @GetMapping("/user")
+    public ResponseEntity<List<ReservationDto>> getReservationsByTalent() {
+        return ResponseEntity.ok(reservationService.getReservationByUser());
     }
 
     @PostMapping("/create")
@@ -63,4 +63,6 @@ public class ReservationController {
     public ResponseEntity<String> missedReservation(@PathVariable Long id){
         return ResponseEntity.ok(reservationService.missed(id));
     }
+
+
 }

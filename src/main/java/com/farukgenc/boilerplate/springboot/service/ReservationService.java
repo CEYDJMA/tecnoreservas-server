@@ -7,14 +7,15 @@ import com.farukgenc.boilerplate.springboot.repository.ReservationRepository;
 import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
+import com.farukgenc.boilerplate.springboot.security.service.UserServiceImpl;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -31,6 +32,9 @@ public class ReservationService {
 
     @Autowired
     private TalentRepository talentRepository;
+
+    @Autowired
+    private UserServiceImpl userServiceImpl;
 
     public List<ReservationDto> getReservations() {
         List<Reservation> listaReservas = reservationRepository.findAll();
@@ -60,30 +64,37 @@ public class ReservationService {
         return response;
     }
 
-    public List<ReservationDto> getReservationByUserRole(UserRole userRole){
-        List<Reservation> listUserRole = UserRepository.findAllByReservationUserRole(userRole);
+    public List<ReservationDto> getReservationByUser(){
+        //Obtener el usuario logueado
+        String username = userServiceImpl.getLoggedUser();
+        //BUscar el usuario y guardarlo en variable
+        User user = userRepository.findByUsername(username);
         List<ReservationDto> response = new ArrayList<>();
-        if (userRole == UserRole.EXPERT){
-            for (Reservation reservation: listUserRole) {
+        if (user.getUserRole() == UserRole.EXPERT) {
+            Expert expert = expertRepository.findById(user.getId()).orElseThrow();
+            List<Reservation> listado = reservationRepository.findAllByExpert_Id(user.getId());
+            for (Reservation reservation : listado) {
+                    ReservationDto reservationDto = new ReservationDto();
+                    reservationDto.setDateTimeStart(reservation.getDateTimeStart());
+                    reservationDto.setEndDateTime(reservation.getEndDateTime());
+                    reservationDto.setExpert(reservation.getExpert().getId());
+                    reservationDto.setTalent(reservation.getTalent().getId());
+                    response.add(reservationDto);
+                }
+                return response;
+        } else if (user.getUserRole() == UserRole.TALENT) {
+            Talent talent = talentRepository.findById(user.getId()).orElseThrow();
+            List<Reservation> listado = reservationRepository.findAllByTalent_Id(user.getId());
+            for (Reservation reservation : listado) {
                 ReservationDto reservationDto = new ReservationDto();
                 reservationDto.setDateTimeStart(reservation.getDateTimeStart());
                 reservationDto.setEndDateTime(reservation.getEndDateTime());
                 reservationDto.setExpert(reservation.getExpert().getId());
-                response.add(reservationDto);
-            }
-        }
-
-        if (userRole == UserRole.TALENT){
-            for (Reservation reservation: listUserRole) {
-                ReservationDto reservationDto = new ReservationDto();
-                reservationDto.setDateTimeStart(reservation.getDateTimeStart());
-                reservationDto.setEndDateTime(reservation.getEndDateTime());
                 reservationDto.setTalent(reservation.getTalent().getId());
                 response.add(reservationDto);
             }
         }
-
-        return response;
+            return response;
     }
 
     @Transactional
