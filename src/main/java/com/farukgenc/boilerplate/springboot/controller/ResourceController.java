@@ -4,8 +4,11 @@ import com.farukgenc.boilerplate.springboot.security.dto.resource.CreateResource
 import com.farukgenc.boilerplate.springboot.security.dto.resource.CreateResourceResponse;
 import com.farukgenc.boilerplate.springboot.security.dto.resource.UpdateResourceRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.resource.UpdateResourceResponse;
+import com.farukgenc.boilerplate.springboot.security.dto.resource.ResourceListItemResponse;
+import com.farukgenc.boilerplate.springboot.security.dto.resource.PagedResponse;
 import com.farukgenc.boilerplate.springboot.service.ResourceService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,5 +56,21 @@ public class ResourceController {
             @Valid @RequestBody UpdateResourceRequest updateRequest) {
         UpdateResourceResponse updatedResource = resourceService.update(id, updateRequest);
         return ResponseEntity.ok(updatedResource);
+    }
+
+    /**
+     * Retrieves a paginated list of resources with stable JSON structure.
+     * Returns DTOs with fields according to resource type.
+     *
+     * @param page Page number (default 0)
+     * @param size Page size (default 10)
+     * @return Paginated list of ResourceListItemResponse wrapped in PagedResponse
+     */
+    @GetMapping
+    public ResponseEntity<PagedResponse<ResourceListItemResponse>> getResources(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        PagedResponse<ResourceListItemResponse> response = resourceService.findAll(PageRequest.of(page, size));
+        return ResponseEntity.ok(response);
     }
 }

@@ -1,16 +1,10 @@
 package com.farukgenc.boilerplate.springboot.service;
 
-import com.farukgenc.boilerplate.springboot.model.BiotechnologyResource;
-import com.farukgenc.boilerplate.springboot.model.GenericResource;
 import com.farukgenc.boilerplate.springboot.model.Resource;
 import com.farukgenc.boilerplate.springboot.model.ServiceLine;
-import com.farukgenc.boilerplate.springboot.model.enums.ResourceType;
 import com.farukgenc.boilerplate.springboot.repository.ResourceRepository;
 import com.farukgenc.boilerplate.springboot.repository.ServiceLineRepository;
-import com.farukgenc.boilerplate.springboot.security.dto.resource.CreateResourceRequest;
-import com.farukgenc.boilerplate.springboot.security.dto.resource.CreateResourceResponse;
-import com.farukgenc.boilerplate.springboot.security.dto.resource.UpdateResourceRequest;
-import com.farukgenc.boilerplate.springboot.security.dto.resource.UpdateResourceResponse;
+import com.farukgenc.boilerplate.springboot.security.dto.resource.*;
 import com.farukgenc.boilerplate.springboot.security.mapper.resource.ResourceMapper;
 import com.farukgenc.boilerplate.springboot.service.interfaces.IResourceService;
 import org.springframework.data.domain.Page;
@@ -63,8 +57,9 @@ public class ResourceService implements IResourceService {
     }
 
     @Override
-    public Page<Resource> findAll(Pageable pageable) {
-        return null;
+    public PagedResponse<ResourceListItemResponse> findAll(Pageable pageable) {
+    Page<Resource> resourcePage = resourceRepository.findAllWithServiceLine(pageable);
+    return ResourceMapper.mapPageToPagedResponse(resourcePage);
     }
 
     /**

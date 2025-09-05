@@ -5,17 +5,57 @@ import com.farukgenc.boilerplate.springboot.model.GenericResource;
 import com.farukgenc.boilerplate.springboot.model.Resource;
 import com.farukgenc.boilerplate.springboot.model.ServiceLine;
 import com.farukgenc.boilerplate.springboot.model.enums.ResourceType;
-import com.farukgenc.boilerplate.springboot.security.dto.resource.CreateResourceRequest;
-import com.farukgenc.boilerplate.springboot.security.dto.resource.CreateResourceResponse;
-import com.farukgenc.boilerplate.springboot.security.dto.resource.UpdateResourceRequest;
-import com.farukgenc.boilerplate.springboot.security.dto.resource.UpdateResourceResponse;
+import com.farukgenc.boilerplate.springboot.security.dto.resource.*;
+
 import java.util.Optional;
 
 public class ResourceMapper {
 
+    /**
+     * Mapea una página de entidades Resource a un DTO paginado estable.
+     */
+    public static PagedResponse<ResourceListItemResponse> mapPageToPagedResponse(org.springframework.data.domain.Page<Resource> resourcePage) {
+        PagedResponse<ResourceListItemResponse> response = new PagedResponse<>();
+        response.setContent(resourcePage.map(ResourceMapper::mapEntityToListItemResponse).getContent());
+        response.setPage(resourcePage.getNumber());
+        response.setSize(resourcePage.getSize());
+        response.setTotalElements(resourcePage.getTotalElements());
+        response.setTotalPages(resourcePage.getTotalPages());
+        response.setLast(resourcePage.isLast());
+        return response;
+    }
+
     // =====================================================
     // MÉTODOS PRIVADOS DE MAPEO
     // =====================================================
+
+
+    /**
+     * Mapea una entidad Resource a su DTO para listado paginado.
+     */
+    public static ResourceListItemResponse mapEntityToListItemResponse(Resource resource) {
+        ResourceListItemResponse dto = new ResourceListItemResponse();
+        dto.setId(resource.getId());
+        dto.setName(resource.getName());
+        dto.setDescription(resource.getDescription());
+        dto.setPlate(resource.getPlate());
+        dto.setModel(resource.getModel());
+        dto.setBrand(resource.getBrand());
+        dto.setStatus(resource.getStatus());
+        dto.setResourceType(resource instanceof BiotechnologyResource ? ResourceType.BIOTECHNOLOGY : ResourceType.GENERIC);
+        dto.setCreatedDate(resource.getCreatedDate());
+        dto.setUpdatedDate(resource.getUpdatedDate());
+        if (resource.getServiceLine() != null) {
+            dto.setServiceLineId(resource.getServiceLine().getId());
+            dto.setServiceLineName(resource.getServiceLine().getServiceLineName());
+        }
+        if (resource instanceof BiotechnologyResource biotechResource) {
+            dto.setMaxUsuariosSimultaneos(biotechResource.getMaxUsuariosSimultaneos());
+            dto.setCondicionesDeUso(biotechResource.getCondicionesDeUso());
+        }
+        return dto;
+    }
+
 
     /**
      * Maps CreateResourceRequest DTO to Resource entity.
