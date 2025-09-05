@@ -61,4 +61,14 @@ public class CreateResourceRequest {
      */
     @NotNull(message = "El ID de línea de servicio es obligatorio")
     private Long serviceLineId;
+
+    /**
+     * Número máximo de usuarios simultáneos (solo para BIOTECHNOLOGY).
+     */
+    private Integer maxUsuariosSimultaneos;
+
+    /**
+     * Condiciones de uso interactivas (solo para BIOTECHNOLOGY).
+     */
+    private java.util.Map<String, String> condicionesDeUso;
 }
