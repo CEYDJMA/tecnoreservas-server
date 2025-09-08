@@ -56,6 +56,14 @@ public class ResourceService implements IResourceService {
         return Optional.empty();
     }
 
+    /**
+     * Retrieves a paginated list of all resources.
+     * Can be filtered by service line ID.
+     *
+     * @param pageable      Pagination information (page number, size, sort order)
+     * @param serviceLineId Optional ID of the service line to filter resources by
+     * @return A PagedResponse containing a list of ResourceListItemResponse
+     */
     @Override
     public PagedResponse<ResourceListItemResponse> findAll(Pageable pageable, Long serviceLineId) {
         Page<Resource> resourcePage;
@@ -131,5 +139,25 @@ public class ResourceService implements IResourceService {
     @Override
     public void delete(Long id) {
 
+    }
+
+    /**
+     * Logically deletes a resource by setting its 'active' flag to false.
+     * The resource is not physically removed from the database.
+     *
+     * @param id The ID of the resource to logically delete.
+     * @throws RuntimeException if no resource is found with the given ID.
+     */
+    @Override
+    public void logicalDelete(Long id) {
+        // Step 1: Find the resource by ID
+        Resource resource = resourceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Resource not found with ID: " + id));
+
+        // Step 2: Set the 'active' flag to false
+        resource.setActive(false);
+
+        // Step 3: Save the updated resource
+        resourceRepository.save(resource);
     }
 }

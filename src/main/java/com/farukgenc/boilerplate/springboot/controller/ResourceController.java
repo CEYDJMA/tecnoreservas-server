@@ -135,4 +135,29 @@ public class ResourceController {
         PagedResponse<ResourceListItemResponse> response = resourceService.findAll(PageRequest.of(page, size),serviceLineId);
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * Logically deletes a resource by setting its status to inactive.
+     * The resource is not physically removed from the database.
+     *
+     * @param id The ID of the resource to logically delete
+     * @return ResponseEntity with HTTP 204 No Content status
+     */
+    @Operation(
+            summary = "Borrar lógicamente un recurso",
+            description = "Marca un recurso como inactivo en el sistema sin eliminarlo físicamente de la base de datos."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Recurso marcado como inactivo exitosamente"
+            ),
+            @ApiResponse(responseCode = "401", description = "No autorizado"),
+            @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
+    })
+    @DeleteMapping("/{id}/logical")
+    public ResponseEntity<Void> logicalDeleteResource(@PathVariable Long id) {
+        resourceService.logicalDelete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

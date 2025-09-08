@@ -13,4 +13,5 @@ public interface IResourceService {
     PagedResponse<ResourceListItemResponse> findAll(Pageable pageable, Long serviceLineId);
     UpdateResourceResponse update(Long id, UpdateResourceRequest resourceDetails);
     void delete(Long id);
+    void logicalDelete(Long id);
 }
