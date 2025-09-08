@@ -26,6 +26,27 @@ public class ResourceService implements IResourceService {
     }
 
     /**
+     * Retrieves a resource by its ID, optionally filtered by serviceLineId.
+     * Returns DTO with fields according to resource type.
+     *
+     * @param id The ID of the resource to retrieve
+     * @param serviceLineId Optional service line ID to filter the resource
+     * @return ResourceListItemResponse or null if not found or not matching service line
+     */
+    @Override
+    public ResourceListItemResponse findByIdAndServiceLine(Long id, Long serviceLineId) {
+        Optional<Resource> resourceOpt = resourceRepository.findById(id);
+        if (resourceOpt.isEmpty()) {
+            return null;
+        }
+        Resource resource = resourceOpt.get();
+        if (serviceLineId != null && (resource.getServiceLine() == null || !serviceLineId.equals(resource.getServiceLine().getId()))) {
+            return null;
+        }
+        return ResourceMapper.mapEntityToListItemResponse(resource);
+    }
+
+    /**
      * Creates a new resource based on the provided request data.
      * Handles both BIOTECHNOLOGY and GENERIC resource types using JPA inheritance.
      * 
@@ -49,11 +70,6 @@ public class ResourceService implements IResourceService {
 
         // Step 4: Transform the saved entity back to response DTO
         return ResourceMapper.mapEntityToResponse(savedResource);
-    }
-
-    @Override
-    public Optional<Resource> findById(Long id) {
-        return Optional.empty();
     }
 
     /**

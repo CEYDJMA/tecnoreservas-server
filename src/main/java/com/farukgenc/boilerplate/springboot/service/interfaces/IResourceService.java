@@ -9,10 +9,10 @@ import java.util.Optional;
 
 public interface IResourceService {
     CreateResourceResponse create(CreateResourceRequest request);
-    Optional<Resource> findById(Long id);
     PagedResponse<ResourceListItemResponse> findAll(Pageable pageable, Long serviceLineId);
     UpdateResourceResponse update(Long id, UpdateResourceRequest resourceDetails);
     void delete(Long id);
     void logicalDelete(Long id);
     void logicalEnable(Long id);
+    ResourceListItemResponse findByIdAndServiceLine(Long id, Long serviceLineId);
 }

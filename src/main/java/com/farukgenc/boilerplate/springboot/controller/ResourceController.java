@@ -35,6 +35,41 @@ public class ResourceController {
     }
 
     /**
+     * Retrieves a resource by its ID, optionally filtered by serviceLineId.
+     * Returns DTO with fields according to resource type.
+     *
+     * @param id The ID of the resource to retrieve
+     * @param serviceLineId Optional service line ID to filter the resource
+     * @return ResponseEntity containing the resource or 404 if not found or not matching service line
+     */
+    @Operation(
+            summary = "Obtener recurso por ID",
+            description = "Devuelve un recurso por su identificador. Permite filtrar por línea de servicio (serviceLineId)."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Recurso encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResourceListItemResponse.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "404", description = "Recurso no encontrado o no coincide con la línea de servicio")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<ResourceListItemResponse> getResourceById(
+            @PathVariable Long id,
+            @RequestParam(required = false) Long serviceLineId
+    ) {
+        ResourceListItemResponse response = resourceService.findByIdAndServiceLine(id, serviceLineId);
+        if (response == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * Creates a new resource.
      * 
      * @param createRequest The resource creation request with validation
