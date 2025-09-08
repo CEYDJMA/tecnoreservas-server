@@ -57,6 +57,26 @@ public class ResourceService implements IResourceService {
     }
 
     /**
+     * Logically enables a resource by setting its 'active' flag to true.
+     * The resource is not physically modified except for its status.
+     *
+     * @param id The ID of the resource to logically enable.
+     * @throws RuntimeException if no resource is found with the given ID.
+     */
+    @Override
+    public void logicalEnable(Long id) {
+        // Step 1: Find the resource by ID
+        Resource resource = resourceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Resource not found with ID: " + id));
+
+        // Step 2: Set the 'active' flag to true
+        resource.setActive(true);
+
+        // Step 3: Save the updated resource
+        resourceRepository.save(resource);
+    }
+
+    /**
      * Retrieves a paginated list of all resources.
      * Can be filtered by service line ID.
      *

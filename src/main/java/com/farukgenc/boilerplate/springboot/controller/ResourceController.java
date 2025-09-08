@@ -160,4 +160,29 @@ public class ResourceController {
         resourceService.logicalDelete(id);
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     * Logically enables a resource by setting its status to active.
+     * The resource is not physically modified except for its status.
+     *
+     * @param id The ID of the resource to logically enable
+     * @return ResponseEntity with HTTP 204 No Content status
+     */
+    @Operation(
+            summary = "Habilitar lógicamente un recurso",
+            description = "Marca un recurso como activo en el sistema sin modificar otros datos."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Recurso habilitado exitosamente"
+            ),
+            @ApiResponse(responseCode = "401", description = "No autorizado"),
+            @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
+    })
+    @PatchMapping("/{id}/enable")
+    public ResponseEntity<Void> logicalEnableResource(@PathVariable Long id) {
+        resourceService.logicalEnable(id);
+        return ResponseEntity.noContent().build();
+    }
 }

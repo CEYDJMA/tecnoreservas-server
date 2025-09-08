@@ -14,4 +14,5 @@ public interface IResourceService {
     UpdateResourceResponse update(Long id, UpdateResourceRequest resourceDetails);
     void delete(Long id);
     void logicalDelete(Long id);
+    void logicalEnable(Long id);
 }
