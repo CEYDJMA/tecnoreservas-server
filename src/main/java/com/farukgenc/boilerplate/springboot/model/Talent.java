@@ -1,5 +1,6 @@
 package com.farukgenc.boilerplate.springboot.model;
 
+import com.farukgenc.boilerplate.springboot.model.enums.ProjectLine;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,13 +14,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Talent extends User {
-    
+
     @Column(unique = true)
     private String associatedProject;
 
-    @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<DigitalRecord> digitalRecords;
 
-    @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Reservation> reservations;
+
+    private List<ProjectLine> projectLines;
 }

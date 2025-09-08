@@ -1,8 +1,11 @@
 package com.farukgenc.boilerplate.springboot.model;
 
+import com.farukgenc.boilerplate.springboot.model.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -17,28 +20,29 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date dateTimeStart;
+    private LocalDateTime dateTimeStart;
 
-    private Date endDateTime;
+    private LocalDateTime endDateTime;
 
-    private String reservationStatus;
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus reservationStatus;
 
-    private Date creationDate;
+    private LocalDateTime creationDate;
 
-    private Date lastModifiedDate;
+    private LocalDateTime lastModifiedDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "expert_id", nullable = false)
     private Expert expert;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "talent_id", nullable = false)
     private Talent talent;
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<DigitalRecord> digitalRecords;
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<ReservationResource> reservationResources;
 
 }
