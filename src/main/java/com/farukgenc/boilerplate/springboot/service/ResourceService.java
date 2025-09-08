@@ -157,8 +157,20 @@ public class ResourceService implements IResourceService {
     }
 
     @Override
+    /**
+     * Permanently deletes a resource from the database.
+     * The resource is physically removed and cannot be recovered.
+     *
+     * @param id The ID of the resource to delete.
+     * @throws RuntimeException if no resource is found with the given ID.
+     */
     public void delete(Long id) {
+    // Step 1: Find the resource by ID
+    Resource resource = resourceRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Resource not found with ID: " + id));
 
+    // Step 2: Delete the resource physically
+    resourceRepository.delete(resource);
     }
 
     /**

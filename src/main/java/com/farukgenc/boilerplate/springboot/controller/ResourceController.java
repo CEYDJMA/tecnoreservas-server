@@ -155,9 +155,34 @@ public class ResourceController {
             @ApiResponse(responseCode = "401", description = "No autorizado"),
             @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
     })
-    @DeleteMapping("/{id}/logical")
+    @DeleteMapping("/{id}/disable")
     public ResponseEntity<Void> logicalDeleteResource(@PathVariable Long id) {
         resourceService.logicalDelete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Permanently deletes a resource from the database.
+     * The resource is physically removed.
+     *
+     * @param id The ID of the resource to delete
+     * @return ResponseEntity with HTTP 204 No Content status
+     */
+    @Operation(
+            summary = "Eliminar definitivamente un recurso",
+            description = "Elimina físicamente un recurso de la base de datos. Esta operación no se puede deshacer."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Recurso eliminado exitosamente"
+            ),
+            @ApiResponse(responseCode = "401", description = "No autorizado"),
+            @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteResource(@PathVariable Long id) {
+        resourceService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
