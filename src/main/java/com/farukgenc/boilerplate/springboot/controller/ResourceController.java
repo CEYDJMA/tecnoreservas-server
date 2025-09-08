@@ -7,6 +7,11 @@ import com.farukgenc.boilerplate.springboot.security.dto.resource.UpdateResource
 import com.farukgenc.boilerplate.springboot.security.dto.resource.ResourceListItemResponse;
 import com.farukgenc.boilerplate.springboot.security.dto.resource.PagedResponse;
 import com.farukgenc.boilerplate.springboot.service.ResourceService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -35,6 +40,23 @@ public class ResourceController {
      * @param createRequest The resource creation request with validation
      * @return ResponseEntity containing the created resource response with HTTP 201 status
      */
+
+    @Operation(
+            summary = "Crear un nuevo recurso",
+            description = "Crea un recurso en el sistema. El tipo de recurso se determina por los campos enviados en el cuerpo de la solicitud."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Recurso creado exitosamente",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = CreateResourceResponse.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+            @ApiResponse(responseCode = "401", description = "No autorizado")
+    })
     @PostMapping
     public ResponseEntity<CreateResourceResponse> createResource(@Valid @RequestBody CreateResourceRequest createRequest) {
         CreateResourceResponse createdResource = resourceService.create(createRequest);
@@ -50,6 +72,26 @@ public class ResourceController {
      * @param updateRequest The resource update request with optional fields and validation
      * @return ResponseEntity containing the complete updated resource response with HTTP 200 status
      */
+
+    @Operation(
+            summary = "Actualizar parcialmente un recurso existente",
+            description = "Permite modificar los campos de un recurso existente (genérico o biotecnológico)"+
+                            "mediante una operación PATCH. Solo los campos enviados en la solicitud serán actualizados."+
+                                "Requiere autenticación y validación."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Recurso actualizado exitosamente",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UpdateResourceResponse.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+            @ApiResponse(responseCode = "401", description = "No autorizado"),
+            @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
+    })
     @PatchMapping("/{id}")
     public ResponseEntity<UpdateResourceResponse> updateResource(
             @PathVariable Long id, 
@@ -66,6 +108,25 @@ public class ResourceController {
      * @param size Page size (default 10)
      * @return Paginated list of ResourceListItemResponse wrapped in PagedResponse
      */
+
+    @Operation(
+            summary = "Obtener lista paginada de recursos",
+            description = "Devuelve una lista paginada de recursos registrados en el sistema."+
+                            "Permite filtrar por línea de servicio (serviceLineId). "+
+                                "La respuesta incluye información relevante según el tipo de recurso."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Lista paginada de recursos obtenida exitosamente",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PagedResponse.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "400", description = "Parámetros inválidos"),
+            @ApiResponse(responseCode = "401", description = "No autorizado")
+    })
     @GetMapping
     public ResponseEntity<PagedResponse<ResourceListItemResponse>> getResources(
             @RequestParam(defaultValue = "0") int page,
