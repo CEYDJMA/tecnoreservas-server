@@ -19,6 +19,7 @@ target/
 *.iml
 *.ipr
 
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -34,3 +35,5 @@ build/
 
 .env
 /docs
+
+src/main/resources/application.yml

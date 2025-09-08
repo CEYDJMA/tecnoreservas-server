@@ -8,7 +8,7 @@ spring:
     url: jdbc:postgresql://${POSTGRES_DB_SERVER_ADDRESS}:${POSTGRES_DB_SERVER_PORT}/postgres
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
-    
+
     hikari:
       pool-name: SpringBootBoilerplateHikariPool
   jpa:

@@ -1,5 +1,6 @@
 package com.farukgenc.boilerplate.springboot.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,9 +23,10 @@ public class ServiceLine {
     @Column(unique = true)
     private String serviceLineName;
 
-    @OneToMany(mappedBy = "serviceLine", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "serviceLine", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonBackReference
     private List<Expert> experts;
 
-    @OneToMany(mappedBy = "serviceLine", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "serviceLine", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Resource> resources;
 }
