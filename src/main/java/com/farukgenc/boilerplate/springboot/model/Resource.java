@@ -36,6 +36,9 @@ public abstract class Resource {
     @Column(nullable = false, unique = true)
     private String plate;
 
+    @Column(nullable = false)
+    private boolean active = true;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ResourceStatus status;

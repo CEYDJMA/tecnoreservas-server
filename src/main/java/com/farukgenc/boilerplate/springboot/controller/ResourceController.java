@@ -35,6 +35,41 @@ public class ResourceController {
     }
 
     /**
+     * Retrieves a resource by its ID, optionally filtered by serviceLineId.
+     * Returns DTO with fields according to resource type.
+     *
+     * @param id The ID of the resource to retrieve
+     * @param serviceLineId Optional service line ID to filter the resource
+     * @return ResponseEntity containing the resource or 404 if not found or not matching service line
+     */
+    @Operation(
+            summary = "Obtener recurso por ID",
+            description = "Devuelve un recurso por su identificador. Permite filtrar por línea de servicio (serviceLineId)."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Recurso encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResourceListItemResponse.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "404", description = "Recurso no encontrado o no coincide con la línea de servicio")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<ResourceListItemResponse> getResourceById(
+            @PathVariable Long id,
+            @RequestParam(required = false) Long serviceLineId
+    ) {
+        ResourceListItemResponse response = resourceService.findByIdAndServiceLine(id, serviceLineId);
+        if (response == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * Creates a new resource.
      * 
      * @param createRequest The resource creation request with validation
@@ -134,5 +169,80 @@ public class ResourceController {
             @RequestParam(required = false) Long serviceLineId) {
         PagedResponse<ResourceListItemResponse> response = resourceService.findAll(PageRequest.of(page, size),serviceLineId);
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Logically deletes a resource by setting its status to inactive.
+     * The resource is not physically removed from the database.
+     *
+     * @param id The ID of the resource to logically delete
+     * @return ResponseEntity with HTTP 204 No Content status
+     */
+    @Operation(
+            summary = "Borrar lógicamente un recurso",
+            description = "Marca un recurso como inactivo en el sistema sin eliminarlo físicamente de la base de datos."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Recurso marcado como inactivo exitosamente"
+            ),
+            @ApiResponse(responseCode = "401", description = "No autorizado"),
+            @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
+    })
+    @DeleteMapping("/{id}/disable")
+    public ResponseEntity<Void> logicalDeleteResource(@PathVariable Long id) {
+        resourceService.logicalDelete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Permanently deletes a resource from the database.
+     * The resource is physically removed.
+     *
+     * @param id The ID of the resource to delete
+     * @return ResponseEntity with HTTP 204 No Content status
+     */
+    @Operation(
+            summary = "Eliminar definitivamente un recurso",
+            description = "Elimina físicamente un recurso de la base de datos. Esta operación no se puede deshacer."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Recurso eliminado exitosamente"
+            ),
+            @ApiResponse(responseCode = "401", description = "No autorizado"),
+            @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteResource(@PathVariable Long id) {
+        resourceService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Logically enables a resource by setting its status to active.
+     * The resource is not physically modified except for its status.
+     *
+     * @param id The ID of the resource to logically enable
+     * @return ResponseEntity with HTTP 204 No Content status
+     */
+    @Operation(
+            summary = "Habilitar lógicamente un recurso",
+            description = "Marca un recurso como activo en el sistema sin modificar otros datos."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Recurso habilitado exitosamente"
+            ),
+            @ApiResponse(responseCode = "401", description = "No autorizado"),
+            @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
+    })
+    @PatchMapping("/{id}/enable")
+    public ResponseEntity<Void> logicalEnableResource(@PathVariable Long id) {
+        resourceService.logicalEnable(id);
+        return ResponseEntity.noContent().build();
     }
 }

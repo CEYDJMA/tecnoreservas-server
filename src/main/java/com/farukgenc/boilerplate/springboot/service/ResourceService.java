@@ -26,6 +26,27 @@ public class ResourceService implements IResourceService {
     }
 
     /**
+     * Retrieves a resource by its ID, optionally filtered by serviceLineId.
+     * Returns DTO with fields according to resource type.
+     *
+     * @param id The ID of the resource to retrieve
+     * @param serviceLineId Optional service line ID to filter the resource
+     * @return ResourceListItemResponse or null if not found or not matching service line
+     */
+    @Override
+    public ResourceListItemResponse findByIdAndServiceLine(Long id, Long serviceLineId) {
+        Optional<Resource> resourceOpt = resourceRepository.findById(id);
+        if (resourceOpt.isEmpty()) {
+            return null;
+        }
+        Resource resource = resourceOpt.get();
+        if (serviceLineId != null && (resource.getServiceLine() == null || !serviceLineId.equals(resource.getServiceLine().getId()))) {
+            return null;
+        }
+        return ResourceMapper.mapEntityToListItemResponse(resource);
+    }
+
+    /**
      * Creates a new resource based on the provided request data.
      * Handles both BIOTECHNOLOGY and GENERIC resource types using JPA inheritance.
      * 
@@ -51,11 +72,34 @@ public class ResourceService implements IResourceService {
         return ResourceMapper.mapEntityToResponse(savedResource);
     }
 
+    /**
+     * Logically enables a resource by setting its 'active' flag to true.
+     * The resource is not physically modified except for its status.
+     *
+     * @param id The ID of the resource to logically enable.
+     * @throws RuntimeException if no resource is found with the given ID.
+     */
     @Override
-    public Optional<Resource> findById(Long id) {
-        return Optional.empty();
+    public void logicalEnable(Long id) {
+        // Step 1: Find the resource by ID
+        Resource resource = resourceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Resource not found with ID: " + id));
+
+        // Step 2: Set the 'active' flag to true
+        resource.setActive(true);
+
+        // Step 3: Save the updated resource
+        resourceRepository.save(resource);
     }
 
+    /**
+     * Retrieves a paginated list of all resources.
+     * Can be filtered by service line ID.
+     *
+     * @param pageable      Pagination information (page number, size, sort order)
+     * @param serviceLineId Optional ID of the service line to filter resources by
+     * @return A PagedResponse containing a list of ResourceListItemResponse
+     */
     @Override
     public PagedResponse<ResourceListItemResponse> findAll(Pageable pageable, Long serviceLineId) {
         Page<Resource> resourcePage;
@@ -129,7 +173,39 @@ public class ResourceService implements IResourceService {
     }
 
     @Override
+    /**
+     * Permanently deletes a resource from the database.
+     * The resource is physically removed and cannot be recovered.
+     *
+     * @param id The ID of the resource to delete.
+     * @throws RuntimeException if no resource is found with the given ID.
+     */
     public void delete(Long id) {
+    // Step 1: Find the resource by ID
+    Resource resource = resourceRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Resource not found with ID: " + id));
 
+    // Step 2: Delete the resource physically
+    resourceRepository.delete(resource);
+    }
+
+    /**
+     * Logically deletes a resource by setting its 'active' flag to false.
+     * The resource is not physically removed from the database.
+     *
+     * @param id The ID of the resource to logically delete.
+     * @throws RuntimeException if no resource is found with the given ID.
+     */
+    @Override
+    public void logicalDelete(Long id) {
+        // Step 1: Find the resource by ID
+        Resource resource = resourceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Resource not found with ID: " + id));
+
+        // Step 2: Set the 'active' flag to false
+        resource.setActive(false);
+
+        // Step 3: Save the updated resource
+        resourceRepository.save(resource);
     }
 }

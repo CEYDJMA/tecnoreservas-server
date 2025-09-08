@@ -15,10 +15,10 @@ import java.util.Optional;
 @Repository
 public interface ResourceRepository extends JpaRepository<Resource, Long> {
 
-    @Query("SELECT r FROM Resource r JOIN FETCH r.serviceLine")
+    @Query("SELECT r FROM Resource r JOIN FETCH r.serviceLine WHERE r.active = true")
     Page<Resource> findAllWithServiceLine(Pageable pageable);
 
-    @Query("SELECT r FROM Resource r JOIN FETCH r.serviceLine sl WHERE sl.id = :serviceLineId")
+    @Query("SELECT r FROM Resource r JOIN FETCH r.serviceLine sl WHERE sl.id = :serviceLineId AND r.active = true")
     Page<Resource> findAllByServiceLineIdWithFetch(@Param("serviceLineId") Long serviceLineId, Pageable pageable);
 
     Page<Resource> findAllByServiceLineId(Long serviceLineId, Pageable pageable);
