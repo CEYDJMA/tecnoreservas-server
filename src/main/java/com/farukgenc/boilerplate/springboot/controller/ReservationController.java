@@ -1,6 +1,7 @@
 package com.farukgenc.boilerplate.springboot.controller;
 
 import com.farukgenc.boilerplate.springboot.model.Reservation;
+import com.farukgenc.boilerplate.springboot.model.ServiceLine;
 import com.farukgenc.boilerplate.springboot.model.UserRole;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
 import com.farukgenc.boilerplate.springboot.service.ReservationService;
@@ -9,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -32,6 +36,20 @@ public class ReservationController {
     @GetMapping("/user")
     public ResponseEntity<List<ReservationDto>> getReservationsByTalent() {
         return ResponseEntity.ok(reservationService.getReservationByUser());
+    }
+
+    @GetMapping("/serviceline/{serviceLine}")
+    public ResponseEntity<List<ReservationDto>> getReservationsByServiceLine(@PathVariable ServiceLine serviceLine){
+        return ResponseEntity.ok(reservationService.getReservationByServiceLine(serviceLine));
+    }
+
+    @GetMapping("/dates")
+    public ResponseEntity<List<ReservationDto>> getReservationsByDates(@RequestParam String dateStart, @RequestParam String dateEnd){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime start = LocalDateTime.parse(dateStart, formatter);
+        LocalDateTime end = LocalDateTime.parse(dateEnd, formatter);
+
+        return ResponseEntity.ok(reservationService.getReservationByDates(start, end));
     }
 
     @PostMapping("/create")
