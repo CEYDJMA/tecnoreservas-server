@@ -29,7 +29,7 @@ public class EquipmentHistoryService implements IEquipmentHistoryService {
 			.orElseThrow(() -> new RuntimeException("Resource not found with ID: " + request.getResourceId()));
 
 		// Crear el historial y asociarlo al recurso
-		EquipmentHistory history = EquipmentHistoryMapper.toEntity(request);
+		EquipmentHistory history = EquipmentHistoryMapper.toEntity(resource,request);
 
 		// Guardar el historial
 		EquipmentHistory saved = equipmentHistoryRepository.save(history);

@@ -1,6 +1,7 @@
 package com.farukgenc.boilerplate.springboot.security.mapper.equipmenthistory;
 
 import com.farukgenc.boilerplate.springboot.model.EquipmentHistory;
+import com.farukgenc.boilerplate.springboot.model.Resource;
 import com.farukgenc.boilerplate.springboot.security.dto.equipmenthistory.EquipmentHistoryResponse;
 import com.farukgenc.boilerplate.springboot.security.dto.equipmenthistory.CreateEquipmentHistoryRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.equipmenthistory.UpdateEquipmentHistoryRequest;
@@ -16,12 +17,12 @@ public class EquipmentHistoryMapper {
         return dto;
     }
 
-    public static EquipmentHistory toEntity(CreateEquipmentHistoryRequest request) {
+    public static EquipmentHistory toEntity(Resource resourceId,CreateEquipmentHistoryRequest request) {
         EquipmentHistory entity = new EquipmentHistory();
         entity.setEventDate(request.getEventDate());
         entity.setEventType(request.getEventType());
         entity.setDetails(request.getDetails());
-        // resource debe ser seteado aparte
+        entity.setResource(resourceId);
         return entity;
     }
 
