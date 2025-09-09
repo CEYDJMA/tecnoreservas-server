@@ -50,4 +50,30 @@ public class EquipmentHistoryController {
 		EquipmentHistoryResponse response = equipmentHistoryService.create(request);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
+
+	/**
+	 * Retrieves an equipment history record by its ID.
+	 * @param id ID of the equipment history record
+	 * @return Equipment history record details
+	 */
+	@Operation(
+			summary = "Obtener historial de mantenimiento por ID",
+			description = "Obtiene un registro específico de historial de mantenimiento mediante su identificador único."
+	)
+	@ApiResponses(value = {
+			@ApiResponse(
+					responseCode = "200",
+					description = "Historial de mantenimiento encontrado exitosamente",
+					content = @Content(
+							mediaType = "application/json",
+							schema = @Schema(implementation = EquipmentHistoryResponse.class)
+					)
+			),
+			@ApiResponse(responseCode = "404", description = "Historial de mantenimiento no encontrado")
+	})
+	@GetMapping("/{id}")
+	public ResponseEntity<EquipmentHistoryResponse> getEquipmentHistoryById(@PathVariable Long id) {
+		EquipmentHistoryResponse response = equipmentHistoryService.findById(id);
+		return ResponseEntity.ok(response);
+	}
 }

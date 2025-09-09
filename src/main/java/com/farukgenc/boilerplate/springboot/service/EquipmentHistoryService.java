@@ -22,6 +22,20 @@ public class EquipmentHistoryService implements IEquipmentHistoryService {
 		this.resourceRepository = resourceRepository;
 	}
 
+	/**
+	 * Creates a new maintenance history record for a specific resource.
+	 * 
+	 * This method validates that the resource exists in the database, creates a new
+	 * equipment history record associated with that resource, and persists the information
+	 * to the database.
+	 * 
+	 * @param request object containing the necessary data to create the history:
+	 *                resourceId (resource ID), eventDate (event date),
+	 *                eventType (maintenance event type), details (event details)
+	 * @return EquipmentHistoryResponse DTO object with the created history information,
+	 *         including the auto-generated ID
+	 * @throws RuntimeException if no resource is found with the provided ID
+	 */
 	@Override
 	public EquipmentHistoryResponse create(CreateEquipmentHistoryRequest request) {
 		// Buscar el recurso asociado
@@ -39,9 +53,22 @@ public class EquipmentHistoryService implements IEquipmentHistoryService {
 		return response;
 	}
 
+	/**
+	 * Retrieves an equipment history record by its unique identifier.
+	 * 
+	 * This method searches for an equipment history record in the database using
+	 * the provided ID and returns the corresponding DTO if found.
+	 * 
+	 * @param id the unique identifier of the equipment history record to retrieve
+	 * @return EquipmentHistoryResponse DTO object containing the history information
+	 * @throws RuntimeException if no equipment history is found with the provided ID
+	 */
 	@Override
 	public EquipmentHistoryResponse findById(Long id) {
-		return null;
+		EquipmentHistory history = equipmentHistoryRepository.findById(id)
+			.orElseThrow(() -> new RuntimeException("Equipment history not found with ID: " + id));
+		
+		return EquipmentHistoryMapper.toResponse(history);
 	}
 
 	@Override
