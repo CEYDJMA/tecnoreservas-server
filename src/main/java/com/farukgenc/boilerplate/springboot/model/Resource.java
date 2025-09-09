@@ -7,7 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -33,6 +36,9 @@ public abstract class Resource {
     @Column(nullable = false, unique = true)
     private String plate;
 
+    @Column(nullable = false)
+    private boolean active = true;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ResourceStatus status;
@@ -42,6 +48,14 @@ public abstract class Resource {
 
     @Column(nullable = false)
     private String brand;
+
+    @CreationTimestamp
+    @Column(name = "created_date", nullable = false, updatable = false)
+    private LocalDateTime createdDate;
+
+    @UpdateTimestamp
+    @Column(name = "updated_date", nullable = false)
+    private LocalDateTime updatedDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "service_line_id", nullable = false)

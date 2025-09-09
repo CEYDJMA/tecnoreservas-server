@@ -24,5 +24,9 @@ public class Talent extends User {
     @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Reservation> reservations;
 
+    @ElementCollection(targetClass = ProjectLine.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "talent_project_lines", joinColumns = @JoinColumn(name = "talent_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "project_line", nullable = false)
     private List<ProjectLine> projectLines;
 }
