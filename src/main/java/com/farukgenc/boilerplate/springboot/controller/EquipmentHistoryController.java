@@ -76,4 +76,25 @@ public class EquipmentHistoryController {
 		EquipmentHistoryResponse response = equipmentHistoryService.findById(id);
 		return ResponseEntity.ok(response);
 	}
+
+	/**
+	 * Deletes an equipment history record by its ID.
+	 * @param id ID of the equipment history record to delete
+	 */
+	@Operation(
+			summary = "Eliminar historial de mantenimiento",
+			description = "Elimina un registro específico de historial de mantenimiento mediante su identificador único."
+	)
+	@ApiResponses(value = {
+			@ApiResponse(
+					responseCode = "204",
+					description = "Historial de mantenimiento eliminado exitosamente"
+			),
+			@ApiResponse(responseCode = "404", description = "Historial de mantenimiento no encontrado")
+	})
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteEquipmentHistory(@PathVariable Long id) {
+		equipmentHistoryService.delete(id);
+		return ResponseEntity.noContent().build();
+	}
 }

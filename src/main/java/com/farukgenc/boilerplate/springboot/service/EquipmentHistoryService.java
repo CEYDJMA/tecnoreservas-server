@@ -81,8 +81,23 @@ public class EquipmentHistoryService implements IEquipmentHistoryService {
 		return null;
 	}
 
+	/**
+	 * Deletes an equipment history record by its unique identifier.
+	 * 
+	 * This method first verifies that the equipment history record exists in the database
+	 * using the provided ID, then proceeds to delete it permanently. If the record is not
+	 * found, it throws a RuntimeException.
+	 * 
+	 * @param id the unique identifier of the equipment history record to delete
+	 * @throws RuntimeException if no equipment history is found with the provided ID
+	 */
 	@Override
 	public void delete(Long id) {
-		// void, no retorna nada
+		// Verify that the equipment history exists before attempting to delete
+		EquipmentHistory history = equipmentHistoryRepository.findById(id)
+			.orElseThrow(() -> new RuntimeException("Equipment history not found with ID: " + id));
+		
+		// Delete the equipment history record
+		equipmentHistoryRepository.delete(history);
 	}
 }
