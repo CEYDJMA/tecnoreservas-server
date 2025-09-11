@@ -4,6 +4,7 @@ import com.farukgenc.boilerplate.springboot.model.Reservation;
 import com.farukgenc.boilerplate.springboot.model.UserRole;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
 import com.farukgenc.boilerplate.springboot.service.ReservationService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,8 @@ public class ReservationController {
     private ReservationService reservationService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<ReservationDto>> getReservations(){
+    public ResponseEntity<List<ReservationDto>> getReservations(HttpServletRequest request){
+        System.out.println("*** LA DIRECCION IP ES: " + request.getRemoteAddr() + " ***");
         return ResponseEntity.ok(reservationService.getReservations());
     }
 
