@@ -1,6 +1,7 @@
 package com.farukgenc.boilerplate.springboot.model;
 
 import com.farukgenc.boilerplate.springboot.model.enums.ReservationStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,8 +21,10 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")//ocupar cada espacio exacto
     private LocalDateTime dateTimeStart;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")//ocupar cada espacio exacto
     private LocalDateTime endDateTime;
 
     @Enumerated(EnumType.STRING)
