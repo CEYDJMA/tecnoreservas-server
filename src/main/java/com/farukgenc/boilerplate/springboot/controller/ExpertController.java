@@ -31,4 +31,9 @@ public class ExpertController {
     public ResponseEntity<String> updateEmail(@PathVariable Long id, @RequestBody String email){
         return ResponseEntity.ok(expertService.updateEmail(id,email));
     }
+
+    @PatchMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody String newPassword){
+        return ResponseEntity.ok(expertService.changePassword(newPassword));
+    }
 }

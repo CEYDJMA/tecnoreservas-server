@@ -1,10 +1,17 @@
 package com.farukgenc.boilerplate.springboot.service;
 
 import com.farukgenc.boilerplate.springboot.model.Expert;
+import com.farukgenc.boilerplate.springboot.model.User;
 import com.farukgenc.boilerplate.springboot.model.UserRole;
 import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
+import com.farukgenc.boilerplate.springboot.repository.UserRepository;
 import com.farukgenc.boilerplate.springboot.security.dto.ExpertDto;
+import com.farukgenc.boilerplate.springboot.security.utils.SecurityConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +23,13 @@ public class ExpertService {
 
     @Autowired
     private ExpertRepository expertRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     public String createExpert(ExpertDto expertDto){
         Expert expert = new Expert();
@@ -51,6 +65,16 @@ public class ExpertService {
         expert.setEmail(email);
         expertRepository.save(expert);
         return "expert's email successfull change";
+    }
+
+    public String changePassword(String newPassword){
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername());
+
+        user.setPassword(bCryptPasswordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return "Passwprd changed";
     }
 
 
