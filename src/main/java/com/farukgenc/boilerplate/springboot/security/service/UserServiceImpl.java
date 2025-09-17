@@ -1,5 +1,6 @@
 package com.farukgenc.boilerplate.springboot.security.service;
 
+import com.farukgenc.boilerplate.springboot.model.enums.UserStatus;
 import com.farukgenc.boilerplate.springboot.service.UserValidationService;
 import com.farukgenc.boilerplate.springboot.model.User;
 import com.farukgenc.boilerplate.springboot.model.UserRole;
@@ -57,6 +58,7 @@ public class UserServiceImpl implements UserService {
 		UserRole role = UserRole.valueOf(registrationRequest.getUserRole().toUpperCase());
         System.out.println("el rol es ..." + registrationRequest.getUserRole().toUpperCase());
         user.setUserRole(role);
+		user.setUserStatus(UserStatus.ACTIVO);
 
 		userRepository.save(user);
 

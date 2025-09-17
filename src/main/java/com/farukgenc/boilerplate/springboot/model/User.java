@@ -1,5 +1,6 @@
 package com.farukgenc.boilerplate.springboot.model;
 
+import com.farukgenc.boilerplate.springboot.model.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,6 +30,9 @@ public class User {
 	private String password;
 
 	private String email;
+
+	@Enumerated(EnumType.STRING)
+	private UserStatus userStatus;
 
 	@Enumerated(EnumType.STRING)
 	private UserRole userRole;

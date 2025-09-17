@@ -62,26 +62,23 @@ public class TalentController {
         return ResponseEntity.ok(talentService.createTalent(talentDto));
     }
 
-    @DeleteMapping("/delete/{id}")
-    @Operation(
-            summary = "Eliminar talento",
-            description = "Elimina un talento existente en el sistema según el ID proporcionado.",
-            tags = "Talent"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Talento eliminado correctamente."
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "No se encontró un talento con el ID proporcionado."
-            )
-    })
-    public ResponseEntity<String> killTalent(
-            @Parameter(description = "ID del talento a eliminar.", required = true)
-            @PathVariable Long id) {
+    @PatchMapping("/update/email/{id}")
+    public ResponseEntity<String> updateEmail(@PathVariable Long id, @RequestBody String email){
+        return ResponseEntity.ok(talentService.updateEmail(id, email));
+    }
 
-        return ResponseEntity.ok(talentService.deleteTalents(id));
+    @PatchMapping("/active/{id}")
+    public ResponseEntity<String> activeTalent(@PathVariable Long id){
+        return ResponseEntity.ok(talentService.talentActive(id));
+    }
+
+    @PatchMapping("/inactive/{id}")
+    public ResponseEntity<String> inactiveExpert(@PathVariable Long id){
+        return ResponseEntity.ok(talentService.talentInactive(id));
+    }
+
+    @PatchMapping("/suspended/{id}")
+    public ResponseEntity<String> suspendedExpert(@PathVariable Long id){
+        return ResponseEntity.ok(talentService.talentSuspended(id));
     }
 }

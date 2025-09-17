@@ -36,4 +36,14 @@ public class ExpertController {
     public ResponseEntity<String> changePassword(@RequestBody String newPassword){
         return ResponseEntity.ok(expertService.changePassword(newPassword));
     }
+
+    @PatchMapping("/active/{id}")
+    public ResponseEntity<String> activeExpert(@PathVariable Long id){
+        return ResponseEntity.ok(expertService.expertActive(id));
+    }
+
+    @PatchMapping("/inactive/{id}")
+    public ResponseEntity<String> inctiveExpert(@PathVariable Long id){
+        return ResponseEntity.ok(expertService.expertInactive(id));
+    }
 }

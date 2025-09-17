@@ -3,10 +3,12 @@ package com.farukgenc.boilerplate.springboot.service;
 import com.farukgenc.boilerplate.springboot.model.Expert;
 import com.farukgenc.boilerplate.springboot.model.User;
 import com.farukgenc.boilerplate.springboot.model.UserRole;
+import com.farukgenc.boilerplate.springboot.model.enums.UserStatus;
 import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
 import com.farukgenc.boilerplate.springboot.security.dto.ExpertDto;
 import com.farukgenc.boilerplate.springboot.security.utils.SecurityConstants;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -74,8 +76,28 @@ public class ExpertService {
 
         user.setPassword(bCryptPasswordEncoder.encode(newPassword));
         userRepository.save(user);
-        return "Passwprd changed";
+        return "Password changed";
     }
 
+    @Transactional
+    public String expertActive(Long id){
+        Expert expert = expertRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Experto no encontrado con id: " + id));
 
+        expert.setUserStatus(UserStatus.ACTIVO);
+        expertRepository.save(expert);
+
+        return "Active expert";
+    }
+
+    @Transactional
+    public String expertInactive(Long id){
+        Expert expert = expertRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Experto no encontrado con id: " + id));
+
+        expert.setUserStatus(UserStatus.INACTIVO);
+        expertRepository.save(expert);
+
+        return "Inactive expert";
+    }
 }
