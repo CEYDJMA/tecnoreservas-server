@@ -11,7 +11,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReservationResource {
+public class  ReservationResource {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
