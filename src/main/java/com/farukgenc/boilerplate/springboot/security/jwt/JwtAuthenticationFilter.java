@@ -1,5 +1,9 @@
 package com.farukgenc.boilerplate.springboot.security.jwt;
 
+import com.farukgenc.boilerplate.springboot.model.SessionLog;
+import com.farukgenc.boilerplate.springboot.model.User;
+import com.farukgenc.boilerplate.springboot.repository.SessionLogRepository;
+import com.farukgenc.boilerplate.springboot.repository.UserRepository;
 import com.farukgenc.boilerplate.springboot.security.service.UserDetailsServiceImpl;
 import com.farukgenc.boilerplate.springboot.security.utils.SecurityConstants;
 import jakarta.servlet.FilterChain;
@@ -9,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -29,6 +35,12 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private SessionLogRepository sessionLogRepository;
 
 	private final JwtTokenManager jwtTokenManager;
 
@@ -76,8 +88,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 		authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 		securityContext.setAuthentication(authentication);
+		System.out.println("Punto de prueba 2!!!");
 
-		log.info("Authentication successful. Logged in username : {} ", username);
+		User dbUser = userRepository.findByUsername(username);
+		SessionLog sessionLog = new SessionLog();
+		sessionLog.setUser(dbUser);
+		sessionLog.setLoginAt(LocalDateTime.now());
+		sessionLog.setIpAddress(request.getRemoteAddr());
+		sessionLogRepository.save(sessionLog);
+
+		System.out.println(username);
+		System.out.println(request.getRemoteAddr());
+		log.info("Authentication successful. Logged in username: {} from IP {}", username, request.getRemoteAddr());
 
 		chain.doFilter(request, response);
 	}

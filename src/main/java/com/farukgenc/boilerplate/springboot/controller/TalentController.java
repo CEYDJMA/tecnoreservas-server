@@ -67,6 +67,11 @@ public class TalentController {
         return ResponseEntity.ok(talentService.updateEmail(id, email));
     }
 
+    @PatchMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody String newPassword){
+        return ResponseEntity.ok(talentService.changePassword(newPassword));
+    }
+
     @PatchMapping("/active/{id}")
     public ResponseEntity<String> activeTalent(@PathVariable Long id){
         return ResponseEntity.ok(talentService.talentActive(id));

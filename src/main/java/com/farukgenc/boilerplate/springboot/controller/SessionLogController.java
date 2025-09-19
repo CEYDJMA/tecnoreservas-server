@@ -16,7 +16,8 @@ public class SessionLogController {
     private SessionLogService sessionLogService;
 
     @GetMapping("/information")
-    public ResponseEntity<String> getInformation(HttpServletRequest request){
-        return ResponseEntity.ok(sessionLogService.registerLog(request));
+    public ResponseEntity getInformation(HttpServletRequest request){
+        return ResponseEntity.ok().build();
+        
     }
 }

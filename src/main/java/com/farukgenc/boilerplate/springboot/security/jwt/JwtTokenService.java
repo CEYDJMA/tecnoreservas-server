@@ -6,8 +6,10 @@ import com.farukgenc.boilerplate.springboot.model.User;
 import com.farukgenc.boilerplate.springboot.security.dto.AuthenticatedUserDto;
 import com.farukgenc.boilerplate.springboot.security.dto.LoginRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.LoginResponse;
+import com.farukgenc.boilerplate.springboot.service.SessionLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class JwtTokenService {
+
+	@Autowired
+	private SessionLogService sessionLogService;
 
 	private final UserService userService;
 

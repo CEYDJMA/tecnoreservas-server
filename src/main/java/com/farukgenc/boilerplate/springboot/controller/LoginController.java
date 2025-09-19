@@ -3,11 +3,13 @@ package com.farukgenc.boilerplate.springboot.controller;
 import com.farukgenc.boilerplate.springboot.security.dto.LoginRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.LoginResponse;
 import com.farukgenc.boilerplate.springboot.security.jwt.JwtTokenService;
+import com.farukgenc.boilerplate.springboot.service.SessionLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
 
 	private final JwtTokenService jwtTokenService;
+    private final SessionLogService sessionLogService;
 
 	@PostMapping
     @Operation(
@@ -47,9 +50,11 @@ public class LoginController {
                     content = @Content(mediaType = "application/json")
             )
     })
-	public ResponseEntity<LoginResponse> loginRequest(@Valid @RequestBody LoginRequest loginRequest) {
+	public ResponseEntity<LoginResponse> loginRequest(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request) {
 
 		final LoginResponse loginResponse = jwtTokenService.getLoginResponse(loginRequest);
+
+        sessionLogService.registerLogin(loginRequest.getUsername(), request);
 
 		return ResponseEntity.ok(loginResponse);
 	}

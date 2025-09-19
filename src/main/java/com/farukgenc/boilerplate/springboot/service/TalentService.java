@@ -74,7 +74,7 @@ public class TalentService {
         return "talent's email successfull change";
     }
 
-    public String changePassword (Long id, String newPassword){
+    public String changePassword (String newPassword){
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = userRepository.findByUsername(userDetails.getUsername());
@@ -82,12 +82,6 @@ public class TalentService {
         user.setPassword(bCryptPasswordEncoder.encode(newPassword));
         userRepository.save(user);
         return "Password changed";
-    }
-
-    public String deleteTalents(Long id){
-        Talent talent = talentRepository.findById(id).orElseThrow();
-        talentRepository.delete(talent);
-        return "Talent eliminated";
     }
 
     @Transactional
