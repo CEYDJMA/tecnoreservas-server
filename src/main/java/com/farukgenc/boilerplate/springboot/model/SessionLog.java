@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -21,7 +22,7 @@ public class SessionLog {
     private Long id;
 
     @Column(nullable = false)
-    private Date loginAt;
+    private LocalDateTime loginAt;
 
     @Column(nullable = false)
     private String ipAddress;
