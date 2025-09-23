@@ -32,5 +32,5 @@ public class ExpertDto {
     @NotEmpty(message = "{registration_role_not_empty}")
     private String userRole;
 
-    private ServiceLine line;
+    private Long line;
 }
