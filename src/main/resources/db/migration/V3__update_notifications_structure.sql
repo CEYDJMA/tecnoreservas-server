@@ -17,3 +17,9 @@ CREATE TABLE notifications (
     CONSTRAINT fk_notifications_users FOREIGN KEY (user_id) REFERENCES users(id),
     CONSTRAINT fk_notifications_reservations FOREIGN KEY (reservation_id) REFERENCES reservations(id)
 );
+
+-- Change the user_role column type to VARCHAR to align with EnumType.STRING in JPA
+ALTER TABLE users ALTER COLUMN user_role TYPE VARCHAR(255) USING user_role::text;
+
+-- Change the user_status column type to VARCHAR to align with EnumType.STRING in JPA
+ALTER TABLE users ALTER COLUMN user_status TYPE VARCHAR(255) USING user_status::text;
