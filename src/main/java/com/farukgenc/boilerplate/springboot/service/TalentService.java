@@ -35,6 +35,7 @@ public class TalentService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+    @Transactional
     public String createTalent(TalentDto talentDto){
         Talent talent = new Talent();
         if (!userRepository.existsByUsername(talentDto.getUsername())){
