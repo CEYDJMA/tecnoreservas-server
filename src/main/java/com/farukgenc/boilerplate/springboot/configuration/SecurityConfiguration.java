@@ -5,6 +5,7 @@ import com.farukgenc.boilerplate.springboot.security.jwt.JwtAuthenticationFilter
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,11 +14,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-/**
- * Created on Ağustos, 2020
- *
- * @author Faruk
- */
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfiguration {
@@ -48,6 +44,33 @@ public class SecurityConfiguration {
 																	      "/swagger-ui.html",
 																	      "/actuator/**")
 													   .permitAll()
+                        // TalentController
+                        .requestMatchers(HttpMethod.POST, "/talents/create").hasAuthority("EXPERT")
+                        .requestMatchers(HttpMethod.PATCH, "/talents/update/email/**").hasAnyAuthority("EXPERT","TALENT")
+                        .requestMatchers(HttpMethod.PATCH, "/talents/change-password").hasAuthority("TALENT")
+                        .requestMatchers(HttpMethod.PATCH, "/talents/active/**").hasAuthority("EXPERT")
+                        .requestMatchers(HttpMethod.PATCH, "/talents/inactive/**").hasAuthority("EXPERT")
+                        .requestMatchers(HttpMethod.PATCH, "/talents/suspended/**").hasAuthority("EXPERT")
+                        // ExpertController
+                        .requestMatchers(HttpMethod.POST, "/experts/create").hasAuthority("SUPERADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/experts/update/email/**").hasAuthority("EXPERT")
+                        .requestMatchers(HttpMethod.PATCH, "/experts/change-password").hasAuthority("EXPERT")
+                        .requestMatchers(HttpMethod.PATCH, "/experts/active/**").hasAuthority("SUPERADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/experts/inactive/**").hasAuthority("SUPERADMIN")
+                        // EquipmentHistoryController
+                        .requestMatchers(HttpMethod.POST, "/equipment/histories/createEquipmentHistory").hasAuthority("EXPERT")
+                        .requestMatchers(HttpMethod.GET, "/equipment/histories/**").hasAuthority("EXPERT")
+                        .requestMatchers(HttpMethod.DELETE, "/equipment/histories/**").hasAuthority("EXPERT")
+                        // ReservationController
+                        .requestMatchers(HttpMethod.GET, "/reservations/user").hasAnyAuthority("EXPERT", "TALENT")
+                        .requestMatchers(HttpMethod.GET, "/reservations/serviceline/**").hasAnyAuthority("EXPERT", "TALENT")
+                        .requestMatchers(HttpMethod.GET, "/reservations/dates").hasAnyAuthority("EXPERT", "TALENT")
+                        .requestMatchers(HttpMethod.POST,"/reservations/create").hasAnyAuthority("EXPERT","TALENT")
+                        .requestMatchers(HttpMethod.PATCH, "/reservations/modify/**").hasAnyAuthority("EXPERT","TALENT")
+                        .requestMatchers(HttpMethod.PATCH,"/reservationa/canceled/**").hasAnyAuthority("EXPERT","TALENT")
+                        .requestMatchers(HttpMethod.PATCH, "/reservations/confirmed/**").hasAuthority("EXPERT")
+                        .requestMatchers(HttpMethod.PATCH,"/reservations/fulfilled/**").hasAuthority("EXPERT")
+                        .requestMatchers(HttpMethod.PATCH,"/reservations/missed/**").hasAuthority("EXPERT")
 													   .anyRequest()
 													   .authenticated())
 				.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
