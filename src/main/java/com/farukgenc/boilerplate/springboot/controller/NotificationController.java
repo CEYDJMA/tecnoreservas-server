@@ -1,5 +1,6 @@
 package com.farukgenc.boilerplate.springboot.controller;
 
+import com.farukgenc.boilerplate.springboot.security.dto.notification.NotificationDTO;
 import com.farukgenc.boilerplate.springboot.security.dto.notification.NotificationPageDTO;
 import com.farukgenc.boilerplate.springboot.service.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +23,8 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<String> streamNotifications() {
-        // Simulación de notificaciones en tiempo real
-        return Flux.interval(Duration.ofSeconds(1))
-                .map(sequence -> "Notificación en tiempo real: " + sequence);
+    public Flux<NotificationDTO> streamNotifications(@RequestParam Long userId) {
+        return notificationService.streamNotifications(userId);
     }
 
     @GetMapping
