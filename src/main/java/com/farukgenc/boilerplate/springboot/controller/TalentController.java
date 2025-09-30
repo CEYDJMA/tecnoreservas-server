@@ -63,26 +63,101 @@ public class TalentController {
     }
 
     @PatchMapping("/update/email/{id}")
+    @Operation(
+            summary = "Actualizar email",
+            description = "Permite al talento cambiar o actualizar email.",
+            tags = "Talent"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Correo actualizado exitosamente."
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Los datos son inválidos o incompletos."
+            )
+    })
     public ResponseEntity<String> updateEmail(@PathVariable Long id, @RequestBody String email){
         return ResponseEntity.ok(talentService.updateEmail(id, email));
     }
 
     @PatchMapping("/change-password")
+    @Operation(
+            summary = "Cambiar contraseña",
+            description = "Permite cambiar o actualizar la contraseña del talento.",
+            tags = "Talent"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Contraseña actualizada."
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Los datos son inválidos o incompletos."
+            )
+    })
     public ResponseEntity<String> changePassword(@RequestBody String newPassword){
         return ResponseEntity.ok(talentService.changePassword(newPassword));
     }
 
     @PatchMapping("/active/{id}")
+    @Operation(
+            summary = "Asignar estado activo",
+            description = "Permite cambiar el estado del talento a activo.",
+            tags = "Talent"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Estado activo actualizado."
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Parametros o peticion mal realizada."
+            )
+    })
     public ResponseEntity<String> activeTalent(@PathVariable Long id){
         return ResponseEntity.ok(talentService.talentActive(id));
     }
 
     @PatchMapping("/inactive/{id}")
+    @Operation(
+            summary = "Asignar estado inactivo",
+            description = "Permite cambiar el estado del talento a inactivo.",
+            tags = "Talent"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Estado inactivo actualizado."
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Parametros o peticion mal realizada."
+            )
+    })
     public ResponseEntity<String> inactiveExpert(@PathVariable Long id){
         return ResponseEntity.ok(talentService.talentInactive(id));
     }
 
     @PatchMapping("/suspended/{id}")
+    @Operation(
+            summary = "Asignar estado suspendido",
+            description = "Permite cambiar el estado del talento a suspendido.",
+            tags = "Talent"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Estado suspendido actualizado."
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Parametros o peticion mal realizada."
+            )
+    })
     public ResponseEntity<String> suspendedExpert(@PathVariable Long id){
         return ResponseEntity.ok(talentService.talentSuspended(id));
     }

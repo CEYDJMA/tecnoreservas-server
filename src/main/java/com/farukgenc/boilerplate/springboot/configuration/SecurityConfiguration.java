@@ -67,7 +67,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/reservations/dates").hasAnyAuthority("EXPERT", "TALENT")
                         .requestMatchers(HttpMethod.POST,"/reservations/create").hasAnyAuthority("EXPERT","TALENT")
                         .requestMatchers(HttpMethod.PATCH, "/reservations/modify/**").hasAnyAuthority("EXPERT","TALENT")
-                        .requestMatchers(HttpMethod.PATCH,"/reservationa/canceled/**").hasAnyAuthority("EXPERT","TALENT")
+                        .requestMatchers(HttpMethod.PATCH,"/reservations/canceled/**").hasAnyAuthority("EXPERT","TALENT")
                         .requestMatchers(HttpMethod.PATCH, "/reservations/confirmed/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH,"/reservations/fulfilled/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH,"/reservations/missed/**").hasAuthority("EXPERT")
