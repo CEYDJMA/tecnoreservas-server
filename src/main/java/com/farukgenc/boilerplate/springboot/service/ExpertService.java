@@ -9,6 +9,7 @@ import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
 import com.farukgenc.boilerplate.springboot.repository.ServiceLineRepository;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
 import com.farukgenc.boilerplate.springboot.security.dto.ExpertDto;
+import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
 import com.farukgenc.boilerplate.springboot.security.utils.SecurityConstants;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +39,8 @@ public class ExpertService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private ReservationService reservationService;
 
     public String createExpert(ExpertDto expertDto){
         Expert expert = new Expert();
@@ -51,6 +55,15 @@ public class ExpertService {
         expert.setPassword(expertDto.getPassword());
         expertRepository.save(expert);
         return "Expert created";
+    }
+
+    public String createReservationsByExpert(ReservationDto reservationDto){
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername());
+        Optional<Expert> expert = expertRepository.findById(user.getId());
+        reservationService.createReservation(reservationDto);
+        return "La reserva ha sido creada.";
     }
 
     public List<ExpertDto> getAllExperts(){
