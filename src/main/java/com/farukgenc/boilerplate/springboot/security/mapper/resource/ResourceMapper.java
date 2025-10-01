@@ -47,7 +47,7 @@ public class ResourceMapper {
         dto.setUpdatedDate(resource.getUpdatedDate());
         if (resource.getServiceLine() != null) {
             dto.setServiceLineId(resource.getServiceLine().getId());
-            dto.setServiceLineName(resource.getServiceLine().getServiceLineName());
+            dto.setServiceLineName(String.valueOf(resource.getServiceLine().getServiceLineName()));
         }
         if (resource instanceof BiotechnologyResource biotechResource) {
             dto.setMaxUsuariosSimultaneos(biotechResource.getMaxUsuariosSimultaneos());
@@ -219,7 +219,7 @@ public class ResourceMapper {
         // Map ServiceLine information
         if (resource.getServiceLine() != null && serviceLine.isPresent()) {
             response.setServiceLineId(resource.getServiceLine().getId());
-            response.setServiceLineName(serviceLine.get().getServiceLineName());
+            response.setServiceLineName(String.valueOf(serviceLine.get().getServiceLineName()));
         }
 
         return response;

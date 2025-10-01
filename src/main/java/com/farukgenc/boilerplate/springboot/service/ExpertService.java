@@ -1,10 +1,12 @@
 package com.farukgenc.boilerplate.springboot.service;
 
 import com.farukgenc.boilerplate.springboot.model.Expert;
+import com.farukgenc.boilerplate.springboot.model.ServiceLine;
 import com.farukgenc.boilerplate.springboot.model.User;
 import com.farukgenc.boilerplate.springboot.model.UserRole;
 import com.farukgenc.boilerplate.springboot.model.enums.UserStatus;
 import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
+import com.farukgenc.boilerplate.springboot.repository.ServiceLineRepository;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
 import com.farukgenc.boilerplate.springboot.security.dto.ExpertDto;
 import com.farukgenc.boilerplate.springboot.security.utils.SecurityConstants;
@@ -30,18 +32,22 @@ public class ExpertService {
     private UserRepository userRepository;
 
     @Autowired
+    private ServiceLineRepository serviceLineRepository;
+
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     public String createExpert(ExpertDto expertDto){
         Expert expert = new Expert();
+        Long idService = expertDto.getLine();
+        ServiceLine service = serviceLineRepository.getReferenceById(idService);
         expert.setName(expertDto.getName());
         expert.setLastname(expertDto.getLastname());
         expert.setEmail(expertDto.getEmail());
         expert.setUsername(expertDto.getUsername());
-        expert.setServiceLine(expertDto.getLine());
+        expert.setServiceLine(service);
         expert.setUserRole(UserRole.EXPERT);
-        expert.setServiceLine(expertDto.getLine());
         expert.setPassword(expertDto.getPassword());
         expertRepository.save(expert);
         return "Expert created";
@@ -56,7 +62,7 @@ public class ExpertService {
             expertDto.setLastname(expert.getLastname());
             expertDto.setUsername(expert.getUsername());
             expertDto.setEmail(expert.getEmail());
-            expertDto.setLine(expert.getServiceLine());
+            expertDto.setLine(expert.getServiceLine().getId());
             expertDtoList.add(expertDto);
         }
         return expertDtoList;

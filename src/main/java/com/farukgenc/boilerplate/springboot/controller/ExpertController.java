@@ -2,6 +2,9 @@ package com.farukgenc.boilerplate.springboot.controller;
 
 import com.farukgenc.boilerplate.springboot.security.dto.ExpertDto;
 import com.farukgenc.boilerplate.springboot.service.ExpertService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.http.client.HttpComponentsHttpAsyncClientBuilder;
 import org.springframework.http.HttpStatus;
@@ -18,32 +21,122 @@ public class ExpertController {
     private ExpertService expertService;
 
     @PostMapping("/create")
+    @Operation(
+            summary = "Registra expertos",
+            description = "Permite registrar expertos en el sistema.",
+            tags = "Expert"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Experto registrado."
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Parametros o peticion mal realizada."
+            )
+    })
     public ResponseEntity<String> createExpert(@RequestBody ExpertDto expertDto){
         return ResponseEntity.ok(expertService.createExpert(expertDto));
     }
 
     @GetMapping("/all")
+    @Operation(
+            summary = "Lista de todos los expertos",
+            description = "Permite la vista de la lista de todos los expertos",
+            tags = "Expert"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Lista de expertos."
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Parametros o peticion mal realizada."
+            )
+    })
     public ResponseEntity<List<ExpertDto>> getAllExperts(){
         return ResponseEntity.ok(expertService.getAllExperts());
     }
 
     @PatchMapping("/update/email/{id}")
+    @Operation(
+            summary = "Actualizar email",
+            description = "Permite al experto cambiar o actualizar email.",
+            tags = "Expert"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Correo actualizado exitosamente."
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Los datos son inválidos o incompletos."
+            )
+    })
     public ResponseEntity<String> updateEmail(@PathVariable Long id, @RequestBody String email){
         return ResponseEntity.ok(expertService.updateEmail(id,email));
     }
 
     @PatchMapping("/change-password")
+    @Operation(
+            summary = "Cambiar contraseña",
+            description = "Permite cambiar o actualizar la contraseña del experto.",
+            tags = "Expert"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Contraseña actualizada."
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Los datos son inválidos o incompletos."
+            )
+    })
     public ResponseEntity<String> changePassword(@RequestBody String newPassword){
         return ResponseEntity.ok(expertService.changePassword(newPassword));
     }
 
     @PatchMapping("/active/{id}")
+    @Operation(
+            summary = "Asignar estado activo",
+            description = "Permite cambiar el estado del experto a activo.",
+            tags = "Expert"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Estado activo actualizado."
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Parametros o peticion mal realizada."
+            )
+    })
     public ResponseEntity<String> activeExpert(@PathVariable Long id){
         return ResponseEntity.ok(expertService.expertActive(id));
     }
 
     @PatchMapping("/inactive/{id}")
-    public ResponseEntity<String> inctiveExpert(@PathVariable Long id){
+    @Operation(
+            summary = "Asignar estado inactivo",
+            description = "Permite cambiar el estado del experto a inactivo.",
+            tags = "Expert"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Estado inactivo actualizado."
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Parametros o peticion mal realizada."
+            )
+    })
+    public ResponseEntity<String> inactiveExpert(@PathVariable Long id){
         return ResponseEntity.ok(expertService.expertInactive(id));
     }
 }
