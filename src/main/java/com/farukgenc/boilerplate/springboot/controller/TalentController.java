@@ -1,5 +1,6 @@
 package com.farukgenc.boilerplate.springboot.controller;
 
+import com.farukgenc.boilerplate.springboot.security.dto.ReservationRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.TalentDto;
 import com.farukgenc.boilerplate.springboot.service.TalentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -160,5 +161,10 @@ public class TalentController {
     })
     public ResponseEntity<String> suspendedExpert(@PathVariable Long id){
         return ResponseEntity.ok(talentService.talentSuspended(id));
+    }
+
+    @PostMapping("/create/reservation")
+    public ResponseEntity<String> createReservationByTalent(@RequestBody ReservationRequest request){
+        return ResponseEntity.ok().body(talentService.createReservation(request));
     }
 }
