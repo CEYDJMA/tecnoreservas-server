@@ -41,11 +41,6 @@ public class ExpertController {
         return ResponseEntity.ok(expertService.createExpert(expertDto));
     }
 
-    @PostMapping("/create-reservations")
-    public ResponseEntity<String> createReservationsByExpert(@RequestBody ReservationDto reservationDto){
-        return ResponseEntity.ok(expertService.createReservationsByExpert(reservationDto));
-    }
-
     @GetMapping("/all")
     @Operation(
             summary = "Lista de todos los expertos",

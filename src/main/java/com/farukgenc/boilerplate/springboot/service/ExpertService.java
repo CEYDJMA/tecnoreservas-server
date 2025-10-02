@@ -1,9 +1,6 @@
 package com.farukgenc.boilerplate.springboot.service;
 
-import com.farukgenc.boilerplate.springboot.model.Expert;
-import com.farukgenc.boilerplate.springboot.model.ServiceLine;
-import com.farukgenc.boilerplate.springboot.model.User;
-import com.farukgenc.boilerplate.springboot.model.UserRole;
+import com.farukgenc.boilerplate.springboot.model.*;
 import com.farukgenc.boilerplate.springboot.model.enums.UserStatus;
 import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
 import com.farukgenc.boilerplate.springboot.repository.ServiceLineRepository;
@@ -55,15 +52,6 @@ public class ExpertService {
         expert.setPassword(expertDto.getPassword());
         expertRepository.save(expert);
         return "Expert created";
-    }
-
-    public String createReservationsByExpert(ReservationDto reservationDto){
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userRepository.findByUsername(userDetails.getUsername());
-        Optional<Expert> expert = expertRepository.findById(user.getId());
-        reservationService.createReservation(reservationDto);
-        return "La reserva ha sido creada.";
     }
 
     public List<ExpertDto> getAllExperts(){
