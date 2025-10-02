@@ -141,7 +141,6 @@ public class TalentService {
         User user = userRepository.findByUsername(userDetails.getUsername());
         Expert expert = expertRepository.findByServiceLine_Id(request.getServiceLine());
 
-
         ReservationDto reservationDto = new ReservationDto();
         reservationDto.setDateTimeStart(request.getStartDate());
         reservationDto.setEndDateTime(request.getEndDate());

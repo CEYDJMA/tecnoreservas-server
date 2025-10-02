@@ -172,7 +172,7 @@ public class ReservationService {
         newReservation.setTalent(talent.get());
         reservationRepository.save(newReservation);
         Optional<User> userTalento = userRepository.findById(talentId);
-        return userTalento.get().getName() + " ha agendado con exito";
+        return " Reserva agendada con exito";
     }
 
     public String modification(Long id, ReservationDto reservationDto) {
