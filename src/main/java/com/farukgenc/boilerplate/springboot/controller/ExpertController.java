@@ -1,6 +1,8 @@
 package com.farukgenc.boilerplate.springboot.controller;
 
 import com.farukgenc.boilerplate.springboot.security.dto.ExpertDto;
+import com.farukgenc.boilerplate.springboot.security.dto.ReservationByExpertRequest;
+import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
 import com.farukgenc.boilerplate.springboot.service.ExpertService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,7 +22,7 @@ public class ExpertController {
     @Autowired
     private ExpertService expertService;
 
-    @PostMapping("/create")
+    @PostMapping("/create-expert")
     @Operation(
             summary = "Registra expertos",
             description = "Permite registrar expertos en el sistema.",
@@ -38,6 +40,11 @@ public class ExpertController {
     })
     public ResponseEntity<String> createExpert(@RequestBody ExpertDto expertDto){
         return ResponseEntity.ok(expertService.createExpert(expertDto));
+    }
+
+    @PostMapping("/create-reservations")
+    public ResponseEntity<String> createReservations(@RequestBody ReservationByExpertRequest request){
+        return ResponseEntity.ok(expertService.createReservationsByExpert(request));
     }
 
     @GetMapping("/all")
