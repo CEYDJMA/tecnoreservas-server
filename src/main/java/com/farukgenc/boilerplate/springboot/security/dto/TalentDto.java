@@ -25,9 +25,6 @@ public class TalentDto {
     @NotEmpty(message = "{registration_password_not_empty}")
     private String password;
 
-    @NotEmpty(message = "{registration_role_not_empty}")
-    private String userRole;
-
     private String AssociatedProject;
 
     private List<ProjectLine> ProjectLines;

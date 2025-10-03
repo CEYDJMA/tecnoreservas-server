@@ -1,12 +1,15 @@
 package com.farukgenc.boilerplate.springboot.service;
 
-import com.farukgenc.boilerplate.springboot.model.Expert;
-import com.farukgenc.boilerplate.springboot.model.User;
-import com.farukgenc.boilerplate.springboot.model.UserRole;
+import com.farukgenc.boilerplate.springboot.model.*;
 import com.farukgenc.boilerplate.springboot.model.enums.UserStatus;
 import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
+import com.farukgenc.boilerplate.springboot.repository.ServiceLineRepository;
+import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
 import com.farukgenc.boilerplate.springboot.security.dto.ExpertDto;
+import com.farukgenc.boilerplate.springboot.security.dto.ReservationByExpertRequest;
+import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
+import com.farukgenc.boilerplate.springboot.security.dto.ReservationRequest;
 import com.farukgenc.boilerplate.springboot.security.utils.SecurityConstants;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,21 +34,44 @@ public class ExpertService {
     private UserRepository userRepository;
 
     @Autowired
+    private ServiceLineRepository serviceLineRepository;
+
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private ReservationService reservationService;
+
+    @Autowired
+    private TalentRepository talentRepository;
 
     public String createExpert(ExpertDto expertDto){
         Expert expert = new Expert();
+        Long idService = expertDto.getLine();
+        ServiceLine service = serviceLineRepository.getReferenceById(idService);
         expert.setName(expertDto.getName());
         expert.setLastname(expertDto.getLastname());
         expert.setEmail(expertDto.getEmail());
         expert.setUsername(expertDto.getUsername());
-        expert.setServiceLine(expertDto.getLine());
+        expert.setServiceLine(service);
         expert.setUserRole(UserRole.EXPERT);
-        expert.setServiceLine(expertDto.getLine());
         expert.setPassword(expertDto.getPassword());
         expertRepository.save(expert);
         return "Expert created";
+    }
+
+    public String createReservationsByExpert(ReservationByExpertRequest request){
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername());
+        Talent talent = talentRepository.findById(request.getTalent()).orElseThrow();
+
+        ReservationDto reservationDto = new ReservationDto();
+        reservationDto.setDateTimeStart(request.getStartDate());
+        reservationDto.setEndDateTime(request.getEndDate());
+        reservationDto.setTalent(talent.getId());
+        reservationDto.setExpert(user.getId());
+        return reservationService.createReservation(reservationDto);
     }
 
     public List<ExpertDto> getAllExperts(){
@@ -56,7 +83,7 @@ public class ExpertService {
             expertDto.setLastname(expert.getLastname());
             expertDto.setUsername(expert.getUsername());
             expertDto.setEmail(expert.getEmail());
-            expertDto.setLine(expert.getServiceLine());
+            expertDto.setLine(expert.getServiceLine().getId());
             expertDtoList.add(expertDto);
         }
         return expertDtoList;
