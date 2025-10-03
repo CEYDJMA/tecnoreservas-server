@@ -20,11 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Locale;
 
-/**
- * Created on Ağustos, 2020
- *
- * @author Faruk
- */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor

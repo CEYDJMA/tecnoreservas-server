@@ -1,12 +1,13 @@
 package com.farukgenc.boilerplate.springboot.service;
 
-import com.farukgenc.boilerplate.springboot.model.Expert;
-import com.farukgenc.boilerplate.springboot.model.Talent;
-import com.farukgenc.boilerplate.springboot.model.User;
-import com.farukgenc.boilerplate.springboot.model.UserRole;
+import com.farukgenc.boilerplate.springboot.model.*;
+import com.farukgenc.boilerplate.springboot.model.enums.ProjectLine;
 import com.farukgenc.boilerplate.springboot.model.enums.UserStatus;
+import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
 import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
+import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
+import com.farukgenc.boilerplate.springboot.security.dto.ReservationRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.TalentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TalentService {
@@ -29,26 +31,42 @@ public class TalentService {
     @Autowired
     private TalentRepository talentRepository;
 
+    @Autowired
+    private ExpertRepository expertRepository;
+
+    @Autowired
+    private ReservationService reservationService;
+
     final private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public TalentService(BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+    @Transactional
     public String createTalent(TalentDto talentDto){
-        Talent talent = new Talent();
-        if (!userRepository.existsByUsername(talentDto.getUsername())){
-            talent.setName(talentDto.getName());
-            talent.setLastname(talentDto.getLastname());
-            talent.setEmail(talentDto.getEmail());
-            talent.setUsername(talentDto.getUsername());
-            talent.setPassword(bCryptPasswordEncoder.encode(talentDto.getPassword()));
-            talent.setAssociatedProject(talentDto.getAssociatedProject());
-            talent.setProjectLines(talentDto.getProjectLines());
-            talent.setUserRole(UserRole.TALENT);
-            talentRepository.save(talent);
+        try {
+
+            Talent talent = new Talent();
+            if (!userRepository.existsByUsername(talentDto.getUsername())) {
+                talent.setName(talentDto.getName());
+                talent.setLastname(talentDto.getLastname());
+                talent.setEmail(talentDto.getEmail());
+                talent.setUsername(talentDto.getUsername());
+                talent.setPassword(bCryptPasswordEncoder.encode(talentDto.getPassword()));
+                talent.setAssociatedProject(talentDto.getAssociatedProject());
+                talent.setProjectLines(talentDto.getProjectLines());
+                talent.setUserRole(UserRole.TALENT);
+                talent.setUserStatus(UserStatus.ACTIVO);
+
+                talentRepository.save(talent);
+                return "Talento creado exitosamente";
+            } else {
+                return "El talento " + talentDto.getUsername() + " ya existe.";
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return "Talento creado exitosamente";
     }
 
     public List<TalentDto> getTalents(){
@@ -115,5 +133,26 @@ public class TalentService {
         talentRepository.save(talent);
 
         return "Suspended talent";
+    }
+
+    public String createReservation(ReservationRequest request){
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername());
+        Expert expert = expertRepository.findByServiceLine_Id(request.getServiceLine());
+
+        ReservationDto reservationDto = new ReservationDto();
+        reservationDto.setDateTimeStart(request.getStartDate());
+        reservationDto.setEndDateTime(request.getEndDate());
+        reservationDto.setExpert(expert.getId());
+        if (user.getUserRole().equals(UserRole.TALENT)){
+            reservationDto.setTalent(user.getId());
+        }
+        System.out.println("La reserva del talento es: \n"
+                            + reservationDto.getDateTimeStart() + "\n"+
+                reservationDto.getEndDateTime() + "\n" +
+                reservationDto.getTalent() + "\n" +
+                reservationDto.getExpert());
+        return reservationService.createReservation(reservationDto);
     }
 }

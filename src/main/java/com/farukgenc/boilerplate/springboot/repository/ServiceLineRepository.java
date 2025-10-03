@@ -13,4 +13,5 @@ public interface ServiceLineRepository extends JpaRepository<ServiceLine, Long> 
 
     @Query("SELECT r FROM Resource r JOIN FETCH r.serviceLine WHERE r.id = :id")
     Optional<Resource> findByIdWithServiceLine(Long id);
+
 }

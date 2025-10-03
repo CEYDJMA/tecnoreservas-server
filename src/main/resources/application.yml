@@ -13,7 +13,7 @@ spring:
       pool-name: SpringBootBoilerplateHikariPool
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: ${JPA_HIBERNATE_DDL_AUTO}
     open-in-view: false
     properties:
       hibernate:
@@ -58,11 +58,10 @@ jwt:
   expirationMinute: 60
 
 swagger:
-  contact-name: Faruk Genc
-  contact-mail: omer@farukgenc.com
-  contact-url: https://farukgenc.com
-  app-name: Spring Boot Boilerplate Project
-  app-description: "Spring Boot Boilerplate is a starter kit. This project includes : Spring Boot(3.5.0), Spring Data JPA, Spring Validation, Spring Security + JWT Token, PostgreSQL, Mapstruct, Lombok, Swagger (Open API)"
-  app-version: 3.5.0
+  contact-name: Tecnoparque nodo Bogotá
+  contact-mail: soporte-agenda@tecnoparque.com
+  app-name: AgendaPark
+  app-description: "AgendaPark. This project includes : Spring Boot(3.5.0), Spring Data JPA, Spring Validation, Spring Security + JWT Token, PostgreSQL, Mapstruct, Lombok, Swagger (Open API)"
+  app-version: 1.0.0
   app-license-url: https://www.apache.org/licenses/LICENSE-2.0.html
   app-license: Apache 2.0

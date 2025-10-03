@@ -1,5 +1,6 @@
 package com.farukgenc.boilerplate.springboot.model;
 
+import com.farukgenc.boilerplate.springboot.model.enums.ProjectLine;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,8 @@ public class ServiceLine {
     private Long id;
 
     @Column(unique = true)
-    private String serviceLineName;
+    @Enumerated(EnumType.STRING)
+    private ProjectLine serviceLineName;
 
     @OneToMany(mappedBy = "serviceLine", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonBackReference

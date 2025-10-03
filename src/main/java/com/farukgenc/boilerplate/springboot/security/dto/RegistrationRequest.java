@@ -32,13 +32,16 @@ public class RegistrationRequest {
 	@NotEmpty(message = "{registration_email_not_empty}")
 	private String email;
 
-	@NotEmpty(message = "{registration_username_not_empty}")
-	private String username;
-
 	@NotEmpty(message = "{registration_password_not_empty}")
 	private String password;
 
     @NotEmpty(message = "{registration_role_not_empty}")
     private String userRole;
+
+	@NotEmpty(message = "{registration_status_not_empty}")
+	private String UserStatus;
+
+	@NotEmpty(message = "{registration_username_not_empty}")
+	private String username;
 
 }
