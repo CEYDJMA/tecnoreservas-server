@@ -7,6 +7,7 @@ import com.farukgenc.boilerplate.springboot.repository.ReservationRepository;
 import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
+import com.farukgenc.boilerplate.springboot.security.dto.ReservationResponse;
 import com.farukgenc.boilerplate.springboot.security.service.UserServiceImpl;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,7 +124,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public String createReservation(ReservationDto reservationDto) {
+    public ReservationResponse createReservation(ReservationDto reservationDto) {
         //Validacion del experto y talento
         Long expertId = reservationDto.getExpert();
         Optional<Expert> expert = expertRepository.findById(expertId);
@@ -172,7 +173,14 @@ public class ReservationService {
         newReservation.setTalent(talent.get());
         reservationRepository.save(newReservation);
         Optional<User> userTalento = userRepository.findById(talentId);
-        return " Reserva agendada con exito";
+        ReservationResponse response = new ReservationResponse();
+        ReservationResponse reservationResponse = new ReservationResponse();
+        reservationResponse.setDateTimeStart(reservationResponse.getDateTimeStart());
+        reservationResponse.setEndDateTime(reservationResponse.getEndDateTime());
+        reservationResponse.setReservationStatus(reservationResponse.getReservationStatus());
+        reservationResponse.setServiceLine(reservationResponse.getServiceLine());
+        reservationResponse.setExpert(reservationResponse.getExpert());
+        return response ;
     }
 
     public String modification(Long id, ReservationDto reservationDto) {
