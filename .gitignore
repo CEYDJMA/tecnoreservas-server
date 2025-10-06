@@ -35,7 +35,3 @@ build/
 
 .env
 /docs
-
-src/main/resources/application.yml
-
-### prueba de gitignore###

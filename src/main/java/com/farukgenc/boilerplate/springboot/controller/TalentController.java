@@ -1,6 +1,7 @@
 package com.farukgenc.boilerplate.springboot.controller;
 
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationRequest;
+import com.farukgenc.boilerplate.springboot.security.dto.ReservationResponse;
 import com.farukgenc.boilerplate.springboot.security.dto.TalentDto;
 import com.farukgenc.boilerplate.springboot.service.TalentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -164,7 +165,7 @@ public class TalentController {
     }
 
     @PostMapping("/create/reservation")
-    public ResponseEntity<String> createReservationByTalent(@RequestBody ReservationRequest request){
+    public ResponseEntity<ReservationResponse> createReservationByTalent(@RequestBody ReservationRequest request){
         return ResponseEntity.ok().body(talentService.createReservation(request));
     }
 }
