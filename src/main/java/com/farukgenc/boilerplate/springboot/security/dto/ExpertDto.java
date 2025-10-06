@@ -26,11 +26,5 @@ public class ExpertDto {
     @NotEmpty(message = "{registration_password_not_empty}")
     private String password;
 
-    @NotEmpty(message = "{registration_status_not_empty")
-    private String userStatus;
-
-    @NotEmpty(message = "{registration_role_not_empty}")
-    private String userRole;
-
     private Long line;
 }
