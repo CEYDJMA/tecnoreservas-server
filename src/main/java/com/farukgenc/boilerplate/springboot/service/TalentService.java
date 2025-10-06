@@ -1,7 +1,6 @@
 package com.farukgenc.boilerplate.springboot.service;
 
 import com.farukgenc.boilerplate.springboot.model.*;
-import com.farukgenc.boilerplate.springboot.model.enums.ProjectLine;
 import com.farukgenc.boilerplate.springboot.model.enums.UserStatus;
 import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
 import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
@@ -18,10 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TalentService {

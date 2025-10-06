@@ -1,6 +1,5 @@
 package com.farukgenc.boilerplate.springboot.security.dto;
 
-import com.farukgenc.boilerplate.springboot.model.enums.ProjectLine;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
@@ -27,5 +26,5 @@ public class TalentDto {
 
     private String AssociatedProject;
 
-    private List<ProjectLine> ProjectLines;
+    private List<Long> ProjectLines;
 }

@@ -1,12 +1,9 @@
 package com.farukgenc.boilerplate.springboot.security.dto;
 
-import com.farukgenc.boilerplate.springboot.model.ServiceLine;
-import com.farukgenc.boilerplate.springboot.model.enums.ProjectLine;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
-import java.util.List;
 @Data
 public class ExpertDto {
 

@@ -14,10 +14,4 @@ public class SessionLogController {
 
     @Autowired
     private SessionLogService sessionLogService;
-
-    @GetMapping("/information")
-    public ResponseEntity getInformation(HttpServletRequest request){
-        return ResponseEntity.ok().build();
-        
-    }
 }
