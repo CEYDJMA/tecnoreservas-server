@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public RegistrationResponse registration(RegistrationRequest registrationRequest) {
-        System.out.println(registrationRequest);
+        System.out.println("Este es el valor de Request: "+registrationRequest);
 		userValidationService.validateUser(registrationRequest);
 
 		final User user = UserMapper.INSTANCE.convertToUser(registrationRequest);

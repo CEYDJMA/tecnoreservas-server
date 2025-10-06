@@ -55,7 +55,8 @@ public class ExpertService {
         expert.setUsername(expertDto.getUsername());
         expert.setServiceLine(service);
         expert.setUserRole(UserRole.EXPERT);
-        expert.setPassword(expertDto.getPassword());
+        expert.setPassword(bCryptPasswordEncoder.encode(expertDto.getPassword()));
+        expert.setUserStatus(UserStatus.ACTIVO);
         expertRepository.save(expert);
         return "Expert created";
     }

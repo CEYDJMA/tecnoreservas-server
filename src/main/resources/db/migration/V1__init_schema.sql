@@ -22,13 +22,7 @@ DROP TYPE IF EXISTS history_event_type;
 DROP TYPE IF EXISTS project_line;
 DROP TYPE IF EXISTS reservation_status;
 DROP TYPE IF EXISTS resource_status;
-
--- Create ENUM types
-CREATE TYPE user_role AS ENUM ('USER', 'ADMIN', 'SUPERADMIN', 'EXPERT', 'TALENT', 'SECURITY');
-CREATE TYPE history_event_type AS ENUM ('MANTENIMIENTO_PREVENTIVO', 'MANTENIMIENTO_CORRECTIVO', 'CALIBRACION', 'ACTUALIZACION', 'REPORTE_DE_INCIDENTE', 'DE_BAJA');
-CREATE TYPE project_line AS ENUM ('Tics_e_Inteligencia_artificial', 'Diseno_de_Productos', 'Produccion_y_Transformacion', 'Materiales_y_Biotecnologia');
-CREATE TYPE reservation_status AS ENUM ('SOLICITADA', 'CONFIRMADA', 'CANCELADA', 'CUMPLIDA', 'INCUMPLIDA');
-CREATE TYPE resource_status AS ENUM ('DISPONIBLE', 'NO_DISPONIBLE', 'EN_USO_COMPARTIDO');
+DROP TYPE IF EXISTS user_status;
 
 -- Create Tables
 CREATE TABLE users (
@@ -38,7 +32,8 @@ CREATE TABLE users (
     username VARCHAR(255) UNIQUE,
     password VARCHAR(255),
     email VARCHAR(255),
-    user_role user_role
+    user_status VARCHAR(100) NOT NULL,
+    user_role VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE service_lines (
@@ -66,7 +61,7 @@ CREATE TABLE resources (
     description TEXT,
     plate VARCHAR(255) NOT NULL UNIQUE,
     active BOOLEAN NOT NULL DEFAULT TRUE,
-    status resource_status NOT NULL,
+    status VARCHAR(100) NOT NULL,
     model VARCHAR(255) NOT NULL,
     brand VARCHAR(255) NOT NULL,
     created_date TIMESTAMP NOT NULL,
@@ -91,7 +86,7 @@ CREATE TABLE reservations (
     id BIGSERIAL PRIMARY KEY,
     date_time_start TIMESTAMP,
     end_date_time TIMESTAMP,
-    reservation_status reservation_status,
+    reservation_status VARCHAR(100) NOT NULL,
     creation_date TIMESTAMP,
     last_modified_date TIMESTAMP,
     expert_id BIGINT NOT NULL,
@@ -103,7 +98,7 @@ CREATE TABLE reservations (
 CREATE TABLE equipment_history (
     id BIGSERIAL PRIMARY KEY,
     event_date TIMESTAMP NOT NULL,
-    event_type history_event_type NOT NULL,
+    event_type VARCHAR(100) NOT NULL,
     details VARCHAR(1000),
     resource_id BIGINT NOT NULL,
     CONSTRAINT fk_equipment_history_resources FOREIGN KEY (resource_id) REFERENCES resources(id) ON DELETE CASCADE
@@ -131,15 +126,19 @@ CREATE TABLE digital_records (
     CONSTRAINT fk_digital_records_reservations FOREIGN KEY (reservation_id) REFERENCES reservations(id)
 );
 
+-- Recreate the notifications table with the updated structure
 CREATE TABLE notifications (
     id BIGSERIAL PRIMARY KEY,
-    id_user BIGINT,
+    sender_id BIGINT NOT NULL,
     message VARCHAR(255),
     notification_type VARCHAR(255) NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL,
     sent_at TIMESTAMP,
-    status VARCHAR(255),
     user_id BIGINT NOT NULL,
-    CONSTRAINT fk_notifications_users FOREIGN KEY (user_id) REFERENCES users(id)
+    reservation_id BIGINT NOT NULL,
+    CONSTRAINT fk_notifications_users FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT fk_notifications_reservations FOREIGN KEY (reservation_id) REFERENCES reservations(id)
 );
 
 CREATE TABLE sessions_logs (
@@ -150,9 +149,10 @@ CREATE TABLE sessions_logs (
     CONSTRAINT fk_sessions_logs_users FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+-- Tabla para representar la colección @ElementCollection
 CREATE TABLE talent_project_lines (
     talent_id BIGINT NOT NULL,
-    project_line project_line NOT NULL,
-    PRIMARY KEY (talent_id, project_line),
-    CONSTRAINT fk_talent_project_lines_talents FOREIGN KEY (talent_id) REFERENCES talents(id)
+    project_line VARCHAR(100) NOT NULL,
+    CONSTRAINT fk_talent_project_lines_talents FOREIGN KEY (talent_id) REFERENCES talents(id) ON DELETE CASCADE,
+    PRIMARY KEY (talent_id, project_line)
 );
