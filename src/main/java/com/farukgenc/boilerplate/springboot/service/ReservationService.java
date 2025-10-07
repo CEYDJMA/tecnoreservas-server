@@ -129,7 +129,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public String createReservation(ReservationDto reservationDto) {
+    public String createReservation(ReservationDto reservationDto, int flag) {
         //Validacion del experto y talento
         Long expertId = reservationDto.getExpert();
         Optional<Expert> expert = expertRepository.findById(expertId);
@@ -177,10 +177,10 @@ public class ReservationService {
         newReservation.setExpert(expert.get());
         newReservation.setTalent(talent.get());
         // Crear nueva notificacion
-        Reservation reservationid = reservationRepository.save(newReservation);
+        Reservation reservation = reservationRepository.save(newReservation);
         CreateNotificationRequest notificationRequestDto =
-                NotificationMapper.buildCreateNotificationRequest(talentId,expertId,reservationid.getId());
-        NotificationDTO notificationDTO = notificationService.createNotification(notificationRequestDto);
+                NotificationMapper.buildCreateNotificationRequest(talent.get(),expert.get(),reservation);
+        NotificationDTO notificationDTO = notificationService.createNotification(notificationRequestDto, flag);
         Optional<User> userTalento = userRepository.findById(talentId);
         return " Reserva agendada con exito";
     }

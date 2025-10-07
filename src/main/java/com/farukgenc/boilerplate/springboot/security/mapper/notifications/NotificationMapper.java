@@ -1,6 +1,9 @@
 package com.farukgenc.boilerplate.springboot.security.mapper.notifications;
 
+import com.farukgenc.boilerplate.springboot.model.Expert;
 import com.farukgenc.boilerplate.springboot.model.Notification;
+import com.farukgenc.boilerplate.springboot.model.Reservation;
+import com.farukgenc.boilerplate.springboot.model.Talent;
 import com.farukgenc.boilerplate.springboot.security.dto.notification.CreateNotificationRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.notification.NotificationDTO;
 import com.farukgenc.boilerplate.springboot.security.dto.notification.NotificationPageDTO;
@@ -11,11 +14,11 @@ public class NotificationMapper {
     /**
      * Builds a CreateNotificationRequest from the provided parameters.
      */
-    public static CreateNotificationRequest buildCreateNotificationRequest(Long senderId, Long userId, Long reservationId) {
+    public static CreateNotificationRequest buildCreateNotificationRequest(Talent talent, Expert expert, Reservation reservation) {
         CreateNotificationRequest request = new CreateNotificationRequest();
-        request.setSenderId(senderId);
-        request.setUserId(userId);
-        request.setReservationId(reservationId);
+        request.setTalent(talent);
+        request.setExpert(expert);
+        request.setReservation(reservation);
         return request;
     }
 

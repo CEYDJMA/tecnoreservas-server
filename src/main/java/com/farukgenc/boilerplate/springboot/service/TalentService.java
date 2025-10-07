@@ -138,6 +138,7 @@ public class TalentService {
     public String createReservation(ReservationRequest request){
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        int flag = 1;
         User user = userRepository.findByUsername(userDetails.getUsername());
         Expert expert = expertRepository.findByServiceLine_Id(request.getServiceLine());
 
@@ -153,6 +154,6 @@ public class TalentService {
                 reservationDto.getEndDateTime() + "\n" +
                 reservationDto.getTalent() + "\n" +
                 reservationDto.getExpert());
-        return reservationService.createReservation(reservationDto);
+        return reservationService.createReservation(reservationDto, flag);
     }
 }

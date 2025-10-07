@@ -1,5 +1,8 @@
 package com.farukgenc.boilerplate.springboot.security.dto.notification;
 
+import com.farukgenc.boilerplate.springboot.model.Expert;
+import com.farukgenc.boilerplate.springboot.model.Reservation;
+import com.farukgenc.boilerplate.springboot.model.Talent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateNotificationRequest {
 
-    private Long senderId;
-    private Long userId;
-    private Long reservationId;
+    private Talent talent;
+    private Expert expert;
+    private Reservation reservation;
 }

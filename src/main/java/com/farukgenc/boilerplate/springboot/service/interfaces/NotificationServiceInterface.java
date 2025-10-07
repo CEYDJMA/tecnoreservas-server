@@ -14,6 +14,6 @@ public interface NotificationServiceInterface {
 
     Flux<NotificationDTO> streamNotifications(Long userId);
 
-    NotificationDTO createNotification(CreateNotificationRequest request);
+    NotificationDTO createNotification(CreateNotificationRequest request, int flag);
 
 }

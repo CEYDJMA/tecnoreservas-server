@@ -74,24 +74,29 @@ public class NotificationService implements NotificationServiceInterface {
     }
 
     @Override
-    public NotificationDTO createNotification(CreateNotificationRequest request) {
-        // 1. Buscar las entidades relacionadas
-        User recipient = userRepository.findById(request.getUserId())
-            .orElseThrow(() -> new RuntimeException("Usuario destinatario no encontrado con id: " + request.getUserId()));
-        
-        User sender = userRepository.findById(request.getSenderId())
-            .orElseThrow(() -> new RuntimeException("Usuario remitente no encontrado con id: " + request.getSenderId()));
-        
-        Reservation reservation = reservationRepository.findById(request.getReservationId())
-            .orElseThrow(() -> new RuntimeException("Reserva no encontrada con id: " + request.getReservationId()));
+    public NotificationDTO createNotification(CreateNotificationRequest request, int flag) {
+        // 1. Asignar las entidades relacionadas
+        User recipient = request.getTalent();
+        User sender = request.getExpert();
+        Reservation reservation = request.getReservation();
         
         // 2. Crear la entidad Notification
         Notification notification = new Notification();
-        notification.setSenderId(request.getSenderId());
-        notification.setUser(recipient);
+        //Notificacion creada del lado del Experto
+        if (flag == 0){
+            notification.setSenderId(sender.getId());
+            notification.setUser(recipient);
+            notification.setNotificationType(NotificationType.ACCEPTED);
+            notification.setStatus(NotificationStatus.VIEWED);
+        }
+        //Notificacion creada del lado del Talento
+        if (flag == 1){
+            notification.setSenderId(recipient.getId());
+            notification.setUser(sender);
+            notification.setNotificationType(NotificationType.NEW_RESERVATION);
+            notification.setStatus(NotificationStatus.PENDING);
+        }
         notification.setReservation(reservation);
-        notification.setNotificationType(NotificationType.NEW_RESERVATION);
-        notification.setStatus(NotificationStatus.PENDING);
         notification.setCreatedAt(LocalDateTime.now());
         notification.setSentAt(LocalDateTime.now());
         

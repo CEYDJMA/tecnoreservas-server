@@ -149,7 +149,8 @@ public class ReservationController {
     })
     @PostMapping("/create")
     public ResponseEntity<String> createReservations(@RequestBody ReservationDto reservationDto){
-        return ResponseEntity.ok(reservationService.createReservation(reservationDto));
+        int flag = 2;
+        return ResponseEntity.ok(reservationService.createReservation(reservationDto, flag));
     }
 
     @Operation(
