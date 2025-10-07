@@ -48,4 +48,25 @@ public class Notification {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reservation_id", nullable = false)
     private Reservation reservation;
+
+    /**
+     * Generates a personalized message based on the notification type.
+     * 
+     * @param senderName Name of the user who triggered the notification
+     * @param projectName Name of the associated project
+     * @return Personalized notification message
+     */
+    public String generateMessage(String senderName, String projectName) {
+        if (this.reservation == null) {
+            return "Notificación del sistema";
+        }
+        
+        Long reservationId = this.reservation.getId();
+        
+        return switch (this.notificationType) {
+            case NEW_RESERVATION -> "Nueva solicitud de reserva #" + reservationId + " de " + senderName + " para el proyecto " + projectName;
+            case ACCEPTED -> senderName + " ha aceptado tu reserva #" + reservationId + " para el proyecto " + projectName;
+            case REJECTED -> senderName + " ha rechazado tu reserva #" + reservationId + " para el proyecto " + projectName;
+        };
+    }
 }

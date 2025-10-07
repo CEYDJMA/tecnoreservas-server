@@ -43,7 +43,8 @@ public class SecurityConfiguration {
 																          "/swagger-ui/**",
 																	      "/swagger-ui.html",
 																	      "/actuator/**",
-																	      "/notifications/stream")
+																	      "/notifications/stream",
+                                                                          "/talents/create/reservation")
 													   .permitAll()
                         // TalentController
                         .requestMatchers(HttpMethod.POST, "/talents/create").hasAnyAuthority("EXPERT","SUPERADMIN")
@@ -73,7 +74,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PATCH,"/reservations/fulfilled/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH,"/reservations/missed/**").hasAuthority("EXPERT")
                         //ResourceController
-                        .requestMatchers(HttpMethod.GET, "/resources").hasAnyAuthority("EXPERT", "TALENT")
+                        .requestMatchers(HttpMethod.GET, "/resources/**").hasAnyAuthority("EXPERT", "TALENT")
                         .requestMatchers(HttpMethod.POST, "/resources/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH, "/resources/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.DELETE, "/resources/**").hasAuthority("EXPERT")

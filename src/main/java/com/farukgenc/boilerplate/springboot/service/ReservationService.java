@@ -7,6 +7,9 @@ import com.farukgenc.boilerplate.springboot.repository.ReservationRepository;
 import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
+import com.farukgenc.boilerplate.springboot.security.dto.notification.CreateNotificationRequest;
+import com.farukgenc.boilerplate.springboot.security.dto.notification.NotificationDTO;
+import com.farukgenc.boilerplate.springboot.security.mapper.notifications.NotificationMapper;
 import com.farukgenc.boilerplate.springboot.security.service.UserServiceImpl;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,9 @@ public class ReservationService {
 
     @Autowired
     private UserServiceImpl userServiceImpl;
+
+    @Autowired
+    private NotificationService notificationService;
 
     public List<ReservationDto> getReservations() {
         List<Reservation> listaReservas = reservationRepository.findAll();
@@ -170,7 +176,11 @@ public class ReservationService {
         newReservation.setLastModifiedDate(LocalDateTime.now());
         newReservation.setExpert(expert.get());
         newReservation.setTalent(talent.get());
-        reservationRepository.save(newReservation);
+        // Crear nueva notificacion
+        Reservation reservationid = reservationRepository.save(newReservation);
+        CreateNotificationRequest notificationRequestDto =
+                NotificationMapper.buildCreateNotificationRequest(talentId,expertId,reservationid.getId());
+        NotificationDTO notificationDTO = notificationService.createNotification(notificationRequestDto);
         Optional<User> userTalento = userRepository.findById(talentId);
         return " Reserva agendada con exito";
     }

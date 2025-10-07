@@ -1,11 +1,23 @@
 package com.farukgenc.boilerplate.springboot.security.mapper.notifications;
 
 import com.farukgenc.boilerplate.springboot.model.Notification;
+import com.farukgenc.boilerplate.springboot.security.dto.notification.CreateNotificationRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.notification.NotificationDTO;
 import com.farukgenc.boilerplate.springboot.security.dto.notification.NotificationPageDTO;
 import org.springframework.data.domain.Page;
 
 public class NotificationMapper {
+
+    /**
+     * Builds a CreateNotificationRequest from the provided parameters.
+     */
+    public static CreateNotificationRequest buildCreateNotificationRequest(Long senderId, Long userId, Long reservationId) {
+        CreateNotificationRequest request = new CreateNotificationRequest();
+        request.setSenderId(senderId);
+        request.setUserId(userId);
+        request.setReservationId(reservationId);
+        return request;
+    }
 
     /**
      * Maps a Page of Notification entities to a NotificationPageDTO.
