@@ -87,7 +87,7 @@ public class NotificationService implements NotificationServiceInterface {
             notification.setSenderId(sender.getId());
             notification.setUser(recipient);
             notification.setNotificationType(NotificationType.ACCEPTED);
-            notification.setStatus(NotificationStatus.VIEWED);
+            notification.setStatus(NotificationStatus.PENDING);
         }
         //Notificacion creada del lado del Talento
         if (flag == 1){
