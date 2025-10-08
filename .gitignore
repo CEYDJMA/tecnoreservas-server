@@ -35,5 +35,3 @@ build/
 
 .env
 /docs
-
-src/main/resources/application.yml

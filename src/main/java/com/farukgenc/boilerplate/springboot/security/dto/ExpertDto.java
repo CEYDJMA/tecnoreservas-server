@@ -1,12 +1,9 @@
 package com.farukgenc.boilerplate.springboot.security.dto;
 
-import com.farukgenc.boilerplate.springboot.model.ServiceLine;
-import com.farukgenc.boilerplate.springboot.model.enums.ProjectLine;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
-import java.util.List;
 @Data
 public class ExpertDto {
 
@@ -25,12 +22,6 @@ public class ExpertDto {
 
     @NotEmpty(message = "{registration_password_not_empty}")
     private String password;
-
-    @NotEmpty(message = "{registration_status_not_empty")
-    private String userStatus;
-
-    @NotEmpty(message = "{registration_role_not_empty}")
-    private String userRole;
 
     private Long line;
 }

@@ -4,6 +4,7 @@ import com.farukgenc.boilerplate.springboot.model.Reservation;
 import com.farukgenc.boilerplate.springboot.model.ServiceLine;
 import com.farukgenc.boilerplate.springboot.model.UserRole;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
+import com.farukgenc.boilerplate.springboot.security.dto.ReservationResponse;
 import com.farukgenc.boilerplate.springboot.service.ReservationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -148,7 +149,7 @@ public class ReservationController {
                     content = @Content)
     })
     @PostMapping("/create")
-    public ResponseEntity<String> createReservations(@RequestBody ReservationDto reservationDto){
+    public ResponseEntity<ReservationResponse> createReservations(@RequestBody ReservationDto reservationDto){
         return ResponseEntity.ok(reservationService.createReservation(reservationDto));
     }
 

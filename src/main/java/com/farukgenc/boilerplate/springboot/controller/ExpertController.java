@@ -3,6 +3,7 @@ package com.farukgenc.boilerplate.springboot.controller;
 import com.farukgenc.boilerplate.springboot.security.dto.ExpertDto;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationByExpertRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
+import com.farukgenc.boilerplate.springboot.security.dto.ReservationResponse;
 import com.farukgenc.boilerplate.springboot.service.ExpertService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -43,7 +44,7 @@ public class ExpertController {
     }
 
     @PostMapping("/create-reservations")
-    public ResponseEntity<String> createReservations(@RequestBody ReservationByExpertRequest request){
+    public ResponseEntity<ReservationResponse> createReservations(@RequestBody ReservationByExpertRequest request){
         return ResponseEntity.ok(expertService.createReservationsByExpert(request));
     }
 

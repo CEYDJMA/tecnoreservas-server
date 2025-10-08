@@ -11,11 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * Created on Ağustos, 2020
- *
- * @author Faruk
- */
+
 @Getter
 @Setter
 @ToString

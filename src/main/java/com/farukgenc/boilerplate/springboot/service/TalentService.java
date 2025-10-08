@@ -1,13 +1,13 @@
 package com.farukgenc.boilerplate.springboot.service;
 
 import com.farukgenc.boilerplate.springboot.model.*;
-import com.farukgenc.boilerplate.springboot.model.enums.ProjectLine;
 import com.farukgenc.boilerplate.springboot.model.enums.UserStatus;
 import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
 import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationRequest;
+import com.farukgenc.boilerplate.springboot.security.dto.ReservationResponse;
 import com.farukgenc.boilerplate.springboot.security.dto.TalentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -17,10 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TalentService {
@@ -54,11 +52,8 @@ public class TalentService {
                 talent.setEmail(talentDto.getEmail());
                 talent.setUsername(talentDto.getUsername());
                 talent.setPassword(bCryptPasswordEncoder.encode(talentDto.getPassword()));
-                talent.setAssociatedProject(talentDto.getAssociatedProject());
-                talent.setProjectLines(talentDto.getProjectLines());
                 talent.setUserRole(UserRole.TALENT);
                 talent.setUserStatus(UserStatus.ACTIVO);
-
                 talentRepository.save(talent);
                 return "Talento creado exitosamente";
             } else {
@@ -78,8 +73,6 @@ public class TalentService {
             talentDto.setLastname(talent.getLastname());
             talentDto.setEmail(talent.getEmail());
             talentDto.setUsername(talent.getUsername());
-            talentDto.setAssociatedProject(talent.getAssociatedProject());
-            talentDto.setProjectLines(talent.getProjectLines());
             talentDtoList.add(talentDto);
         }
         return talentDtoList;
@@ -135,7 +128,7 @@ public class TalentService {
         return "Suspended talent";
     }
 
-    public String createReservation(ReservationRequest request){
+    public ReservationResponse createReservation(ReservationRequest request){
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = userRepository.findByUsername(userDetails.getUsername());
