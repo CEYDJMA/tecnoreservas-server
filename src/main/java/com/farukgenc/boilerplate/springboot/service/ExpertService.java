@@ -61,6 +61,7 @@ public class ExpertService {
     public ReservationResponse createReservationsByExpert(ReservationByExpertRequest request){
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        int flag = 0;
         User user = userRepository.findByUsername(userDetails.getUsername());
         Talent talent = talentRepository.findById(request.getTalent()).orElseThrow();
 
@@ -69,7 +70,7 @@ public class ExpertService {
         reservationDto.setEndDateTime(request.getEndDate());
         reservationDto.setTalent(talent.getId());
         reservationDto.setExpert(user.getId());
-        return reservationService.createReservation(reservationDto);
+        return reservationService.createReservation(reservationDto, flag);
     }
 
     public List<ExpertDto> getAllExperts(){
