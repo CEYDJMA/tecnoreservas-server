@@ -52,11 +52,8 @@ public class TalentService {
                 talent.setEmail(talentDto.getEmail());
                 talent.setUsername(talentDto.getUsername());
                 talent.setPassword(bCryptPasswordEncoder.encode(talentDto.getPassword()));
-                talent.setAssociatedProject(talentDto.getAssociatedProject());
-                talent.setProjectLines(talentDto.getProjectLines());
                 talent.setUserRole(UserRole.TALENT);
                 talent.setUserStatus(UserStatus.ACTIVO);
-
                 talentRepository.save(talent);
                 return "Talento creado exitosamente";
             } else {
@@ -76,8 +73,6 @@ public class TalentService {
             talentDto.setLastname(talent.getLastname());
             talentDto.setEmail(talent.getEmail());
             talentDto.setUsername(talent.getUsername());
-            talentDto.setAssociatedProject(talent.getAssociatedProject());
-            talentDto.setProjectLines(talent.getProjectLines());
             talentDtoList.add(talentDto);
         }
         return talentDtoList;

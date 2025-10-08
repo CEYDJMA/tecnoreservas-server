@@ -29,4 +29,7 @@ public class ServiceLine {
 
     @OneToMany(mappedBy = "serviceLine", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Resource> resources;
+
+    @OneToMany(mappedBy = "serviceLine", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<TalentProjectDetail> talentProjectDetails;
 }
