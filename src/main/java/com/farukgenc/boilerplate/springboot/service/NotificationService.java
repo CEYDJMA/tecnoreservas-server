@@ -22,6 +22,7 @@ import reactor.core.publisher.Sinks;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NotificationService implements NotificationServiceInterface {
@@ -115,6 +116,29 @@ public class NotificationService implements NotificationServiceInterface {
         publishNotification(notificationDTO);
         
         // 7. Retornar el DTO
+        return notificationDTO;
+    }
+
+    @Override
+    public NotificationDTO updateNotificationStatusByReservation(Reservation reservation) {
+        //1. Buscar la notificacion por el id de la reserva y el id del usuario
+        Optional<Notification> notification =
+                notificationRepository.findByReservationIdAndUserId(reservation.getId(),
+                        reservation.getExpert().getId());
+        //2. Asignar el recurso encontrado
+        Notification updateNotification = notification.get();
+
+        //3. Actualizar los estados de la notificacion
+        updateNotification.setNotificationType(NotificationType.ACCEPTED);
+        updateNotification.setStatus(NotificationStatus.VIEWED);
+        Notification savedNotification = notificationRepository.save(updateNotification);
+
+        //4. Convertir a DTO
+        NotificationDTO notificationDTO = NotificationMapper.mapEntityToDTO(savedNotification);
+
+        //5. Publicar por SSE
+        publishNotification(notificationDTO);
+
         return notificationDTO;
     }
 

@@ -245,7 +245,10 @@ public class ReservationService {
                 .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada con ID: " + id));
 
         reservation.setReservationStatus(ReservationStatus.CONFIRMADA);
-        reservationRepository.save(reservation);
+        Reservation reservationResponse = reservationRepository.save(reservation);
+
+        //Cambiar el estado de la notifcación de PENDING a VIEWED
+        NotificationDTO notificationDTO =notificationService.updateNotificationStatusByReservation(reservationResponse);
 
         return "La reserva de " + reservation.getTalent().getName() + " ha sido confirmada.";
     }
