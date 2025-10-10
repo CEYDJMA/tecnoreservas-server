@@ -4,10 +4,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class TalentDto {
+
     @NotEmpty(message = "{registration_name_not_empty}")
     private String name;
 
