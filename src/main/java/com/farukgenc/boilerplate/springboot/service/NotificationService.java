@@ -103,7 +103,7 @@ public class NotificationService implements NotificationServiceInterface {
         
         // 3. Generar y asignar el mensaje personalizado
         String senderName = sender.getName() + " " + sender.getLastname();
-        String projectName = reservation.getTalent().getAssociatedProject();
+        String projectName = reservation.getTalent().getTalentProjectDetails().getFirst().getAssociatedProject();
         notification.setMessage(notification.generateMessage(senderName, projectName));
         
         // 4. Guardar en la base de datos

@@ -13,6 +13,8 @@ DROP TABLE IF EXISTS generic_resource CASCADE;
 DROP TABLE IF EXISTS resources CASCADE;
 DROP TABLE IF EXISTS reservations CASCADE;
 DROP TABLE IF EXISTS experts CASCADE;
+DROP TABLE IF EXISTS talent_project_details CASCADE;
+DROP TABLE IF EXISTS trl_of_projects CASCADE;
 DROP TABLE IF EXISTS talents CASCADE;
 DROP TABLE IF EXISTS service_lines CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
@@ -43,8 +45,23 @@ CREATE TABLE service_lines (
 
 CREATE TABLE talents (
     id BIGINT PRIMARY KEY,
-    associated_project VARCHAR(255) UNIQUE,
     CONSTRAINT fk_talents_users FOREIGN KEY (id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE trl_of_projects (
+    id BIGSERIAL PRIMARY KEY,
+    trl VARCHAR(255) UNIQUE NOT NULL
+);
+
+CREATE TABLE talent_project_details (
+    id BIGSERIAL PRIMARY KEY,
+    associated_project VARCHAR(255) UNIQUE,
+    trl_id BIGINT NOT NULL,
+    talent_id BIGINT NOT NULL,
+    service_line_id BIGINT NOT NULL,
+    CONSTRAINT fk_talent_project_details_trl FOREIGN KEY (trl_id) REFERENCES trl_of_projects(id),
+    CONSTRAINT fk_talent_project_details_talent FOREIGN KEY (talent_id) REFERENCES talents(id) ON DELETE CASCADE,
+    CONSTRAINT fk_talent_project_details_service_line FOREIGN KEY (service_line_id) REFERENCES service_lines(id)
 );
 
 CREATE TABLE experts (
@@ -156,3 +173,8 @@ CREATE TABLE talent_project_lines (
     CONSTRAINT fk_talent_project_lines_talents FOREIGN KEY (talent_id) REFERENCES talents(id) ON DELETE CASCADE,
     PRIMARY KEY (talent_id, project_line)
 );
+
+-- Índices adicionales para mejorar el rendimiento
+CREATE INDEX idx_talent_project_details_talent ON talent_project_details(talent_id);
+CREATE INDEX idx_talent_project_details_trl ON talent_project_details(trl_id);
+CREATE INDEX idx_talent_project_details_service_line ON talent_project_details(service_line_id);
