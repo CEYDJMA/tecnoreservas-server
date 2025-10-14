@@ -12,6 +12,7 @@ spring:
     hikari:
       pool-name: SpringBootBoilerplateHikariPool
   jpa:
+    
     hibernate:
       ddl-auto: ${JPA_HIBERNATE_DDL_AUTO}
     open-in-view: false

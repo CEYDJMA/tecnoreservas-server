@@ -16,7 +16,7 @@ public class ServiceLineService {
         ServiceLine serviceLine = serviceLineRepository.findById(id).orElseThrow();
         LineDto lineDto = new LineDto();
         lineDto.setId(serviceLine.getId());
-        lineDto.setName(serviceLine.getServiceLineName().toString());
+        lineDto.setName(serviceLine.getServiceLineName());
         return lineDto;
     }
 }

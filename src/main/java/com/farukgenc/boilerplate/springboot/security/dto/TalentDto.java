@@ -1,14 +1,12 @@
 package com.farukgenc.boilerplate.springboot.security.dto;
 
-import com.farukgenc.boilerplate.springboot.model.enums.ProjectLine;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class TalentDto {
+
     @NotEmpty(message = "{registration_name_not_empty}")
     private String name;
 
@@ -25,7 +23,4 @@ public class TalentDto {
     @NotEmpty(message = "{registration_password_not_empty}")
     private String password;
 
-    private String AssociatedProject;
-
-    private List<ProjectLine> ProjectLines;
 }

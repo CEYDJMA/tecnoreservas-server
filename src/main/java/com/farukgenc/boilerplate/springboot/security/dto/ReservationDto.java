@@ -9,6 +9,7 @@ import java.util.Date;
 
 @Data
 public class ReservationDto {
+
     @FutureOrPresent(message = "La fecha de inicio no puede ser menor a la actual")
     private LocalDateTime dateTimeStart;
     @FutureOrPresent(message = "La fecha de fin no puede ser menor a la actual")

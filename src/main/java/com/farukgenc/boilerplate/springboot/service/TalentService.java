@@ -1,14 +1,12 @@
 package com.farukgenc.boilerplate.springboot.service;
 
 import com.farukgenc.boilerplate.springboot.model.*;
-import com.farukgenc.boilerplate.springboot.model.enums.ProjectLine;
 import com.farukgenc.boilerplate.springboot.model.enums.UserStatus;
 import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
+import com.farukgenc.boilerplate.springboot.repository.TalentProjectDetailRepository;
 import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
-import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
-import com.farukgenc.boilerplate.springboot.security.dto.ReservationRequest;
-import com.farukgenc.boilerplate.springboot.security.dto.TalentDto;
+import com.farukgenc.boilerplate.springboot.security.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,13 +15,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TalentService {
+
+    @Autowired
+    private TalentProjectDetailService talentProjectDetailService;
 
     @Autowired
     private UserRepository userRepository;
@@ -44,9 +43,8 @@ public class TalentService {
     }
 
     @Transactional
-    public String createTalent(TalentDto talentDto){
+    public String createTalent(TalentDto talentDto, ProjectDetailDto projectDetailDto){
         try {
-
             Talent talent = new Talent();
             if (!userRepository.existsByUsername(talentDto.getUsername())) {
                 talent.setName(talentDto.getName());
@@ -54,13 +52,14 @@ public class TalentService {
                 talent.setEmail(talentDto.getEmail());
                 talent.setUsername(talentDto.getUsername());
                 talent.setPassword(bCryptPasswordEncoder.encode(talentDto.getPassword()));
-                talent.setAssociatedProject(talentDto.getAssociatedProject());
-                talent.setProjectLines(talentDto.getProjectLines());
                 talent.setUserRole(UserRole.TALENT);
                 talent.setUserStatus(UserStatus.ACTIVO);
-
                 talentRepository.save(talent);
-                return "Talento creado exitosamente";
+
+                TalentProjectDetail projectDetail = talentProjectDetailService.assignDetails(projectDetailDto, talent);
+                return "Talento creado exitosamente y datos de proyecto asignados." +
+                        "Fase de proyecto: " + projectDetail.getProjectPhase() +
+                        " | TRL asignado: " + projectDetail.getNameTrl();
             } else {
                 return "El talento " + talentDto.getUsername() + " ya existe.";
             }
@@ -78,8 +77,6 @@ public class TalentService {
             talentDto.setLastname(talent.getLastname());
             talentDto.setEmail(talent.getEmail());
             talentDto.setUsername(talent.getUsername());
-            talentDto.setAssociatedProject(talent.getAssociatedProject());
-            talentDto.setProjectLines(talent.getProjectLines());
             talentDtoList.add(talentDto);
         }
         return talentDtoList;
@@ -135,9 +132,10 @@ public class TalentService {
         return "Suspended talent";
     }
 
-    public String createReservation(ReservationRequest request){
+    public ReservationResponse createReservation(ReservationRequest request){
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        int flag = 1;
         User user = userRepository.findByUsername(userDetails.getUsername());
         Expert expert = expertRepository.findByServiceLine_Id(request.getServiceLine());
 
@@ -153,6 +151,6 @@ public class TalentService {
                 reservationDto.getEndDateTime() + "\n" +
                 reservationDto.getTalent() + "\n" +
                 reservationDto.getExpert());
-        return reservationService.createReservation(reservationDto);
+        return reservationService.createReservation(reservationDto, flag);
     }
 }

@@ -43,17 +43,18 @@ public class SecurityConfiguration {
 																          "/swagger-ui/**",
 																	      "/swagger-ui.html",
 																	      "/actuator/**",
-																	      "/notifications/stream")
+																	      "/notifications/stream",
+                                                                          "/talents/create/reservation")
 													   .permitAll()
                         // TalentController
-                        .requestMatchers(HttpMethod.POST, "/talents/create").hasAuthority("EXPERT")
+                        .requestMatchers(HttpMethod.POST, "/talents/create").hasAnyAuthority("EXPERT","SUPERADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/talents/update/email/**").hasAnyAuthority("EXPERT","TALENT")
                         .requestMatchers(HttpMethod.PATCH, "/talents/change-password").hasAuthority("TALENT")
                         .requestMatchers(HttpMethod.PATCH, "/talents/active/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH, "/talents/inactive/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH, "/talents/suspended/**").hasAuthority("EXPERT")
                         // ExpertController
-                        .requestMatchers(HttpMethod.POST, "/experts/create").hasAuthority("SUPERADMIN")
+                        .requestMatchers(HttpMethod.POST, "/experts/create-expert").hasAuthority("SUPERADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/experts/update/email/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH, "/experts/change-password").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH, "/experts/active/**").hasAuthority("SUPERADMIN")
@@ -72,6 +73,12 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PATCH, "/reservations/confirmed/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH,"/reservations/fulfilled/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH,"/reservations/missed/**").hasAuthority("EXPERT")
+                        //ResourceController
+                        .requestMatchers(HttpMethod.GET, "/resources/**").hasAnyAuthority("EXPERT", "TALENT")
+                        .requestMatchers(HttpMethod.POST, "/resources/**").hasAuthority("EXPERT")
+                        .requestMatchers(HttpMethod.PATCH, "/resources/**").hasAuthority("EXPERT")
+                        .requestMatchers(HttpMethod.DELETE, "/resources/**").hasAuthority("EXPERT")
+
 													   .anyRequest()
 													   .authenticated())
 				.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

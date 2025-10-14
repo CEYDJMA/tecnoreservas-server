@@ -6,10 +6,7 @@ import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
 import com.farukgenc.boilerplate.springboot.repository.ServiceLineRepository;
 import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
-import com.farukgenc.boilerplate.springboot.security.dto.ExpertDto;
-import com.farukgenc.boilerplate.springboot.security.dto.ReservationByExpertRequest;
-import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
-import com.farukgenc.boilerplate.springboot.security.dto.ReservationRequest;
+import com.farukgenc.boilerplate.springboot.security.dto.*;
 import com.farukgenc.boilerplate.springboot.security.utils.SecurityConstants;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,14 +52,16 @@ public class ExpertService {
         expert.setUsername(expertDto.getUsername());
         expert.setServiceLine(service);
         expert.setUserRole(UserRole.EXPERT);
-        expert.setPassword(expertDto.getPassword());
+        expert.setUserStatus(UserStatus.ACTIVO);
+        expert.setPassword(bCryptPasswordEncoder.encode(expertDto.getPassword()));
         expertRepository.save(expert);
         return "Expert created";
     }
 
-    public String createReservationsByExpert(ReservationByExpertRequest request){
+    public ReservationResponse createReservationsByExpert(ReservationByExpertRequest request){
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        int flag = 0;
         User user = userRepository.findByUsername(userDetails.getUsername());
         Talent talent = talentRepository.findById(request.getTalent()).orElseThrow();
 
@@ -71,7 +70,7 @@ public class ExpertService {
         reservationDto.setEndDateTime(request.getEndDate());
         reservationDto.setTalent(talent.getId());
         reservationDto.setExpert(user.getId());
-        return reservationService.createReservation(reservationDto);
+        return reservationService.createReservation(reservationDto, flag);
     }
 
     public List<ExpertDto> getAllExperts(){
