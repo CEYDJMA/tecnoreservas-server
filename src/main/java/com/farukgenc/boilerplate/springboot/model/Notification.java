@@ -61,12 +61,12 @@ public class Notification {
             return "Notificación del sistema";
         }
         
-        Long reservationId = this.reservation.getId();
+        //Long reservationId = this.reservation.getId();
         
         return switch (this.notificationType) {
-            case NEW_RESERVATION -> "Nueva solicitud de reserva #" + reservationId + " de " + senderName + " para el proyecto " + projectName;
-            case ACCEPTED -> senderName + " ha aceptado tu reserva #" + reservationId + " para el proyecto " + projectName;
-            case REJECTED -> senderName + " ha rechazado tu reserva #" + reservationId + " para el proyecto " + projectName;
+            case NEW_RESERVATION -> "Nueva solicitud de reserva " + /*reservationId +*/ " de " + senderName + " para el proyecto " + projectName;
+            case ACCEPTED -> senderName + " ha aceptado tu reserva " +/*reservationId +*/" para el proyecto " + projectName;
+            case REJECTED -> senderName + " ha rechazado tu reserva " +/*reservationId +*/" para el proyecto " + projectName;
         };
     }
 }

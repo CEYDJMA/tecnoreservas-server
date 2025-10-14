@@ -14,7 +14,6 @@ DROP TABLE IF EXISTS resources CASCADE;
 DROP TABLE IF EXISTS reservations CASCADE;
 DROP TABLE IF EXISTS experts CASCADE;
 DROP TABLE IF EXISTS talent_project_details CASCADE;
-DROP TABLE IF EXISTS trl_of_projects CASCADE;
 DROP TABLE IF EXISTS talents CASCADE;
 DROP TABLE IF EXISTS service_lines CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
@@ -40,7 +39,7 @@ CREATE TABLE users (
 
 CREATE TABLE service_lines (
     id BIGSERIAL PRIMARY KEY,
-    service_line_name VARCHAR(255) UNIQUE
+    service_line_name VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE talents (
@@ -48,18 +47,13 @@ CREATE TABLE talents (
     CONSTRAINT fk_talents_users FOREIGN KEY (id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE trl_of_projects (
-    id BIGSERIAL PRIMARY KEY,
-    trl VARCHAR(255) UNIQUE NOT NULL
-);
-
 CREATE TABLE talent_project_details (
     id BIGSERIAL PRIMARY KEY,
     associated_project VARCHAR(255) UNIQUE,
-    trl_id BIGINT NOT NULL,
+    project_phase VARCHAR(50),
+    name_trl VARCHAR(20),
     talent_id BIGINT NOT NULL,
     service_line_id BIGINT NOT NULL,
-    CONSTRAINT fk_talent_project_details_trl FOREIGN KEY (trl_id) REFERENCES trl_of_projects(id),
     CONSTRAINT fk_talent_project_details_talent FOREIGN KEY (talent_id) REFERENCES talents(id) ON DELETE CASCADE,
     CONSTRAINT fk_talent_project_details_service_line FOREIGN KEY (service_line_id) REFERENCES service_lines(id)
 );
@@ -166,15 +160,6 @@ CREATE TABLE sessions_logs (
     CONSTRAINT fk_sessions_logs_users FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- Tabla para representar la colección @ElementCollection
-CREATE TABLE talent_project_lines (
-    talent_id BIGINT NOT NULL,
-    project_line VARCHAR(100) NOT NULL,
-    CONSTRAINT fk_talent_project_lines_talents FOREIGN KEY (talent_id) REFERENCES talents(id) ON DELETE CASCADE,
-    PRIMARY KEY (talent_id, project_line)
-);
-
 -- Índices adicionales para mejorar el rendimiento
 CREATE INDEX idx_talent_project_details_talent ON talent_project_details(talent_id);
-CREATE INDEX idx_talent_project_details_trl ON talent_project_details(trl_id);
 CREATE INDEX idx_talent_project_details_service_line ON talent_project_details(service_line_id);

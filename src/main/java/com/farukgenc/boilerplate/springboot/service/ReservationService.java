@@ -182,6 +182,8 @@ public class ReservationService {
         CreateNotificationRequest notificationRequestDto =
                 NotificationMapper.buildCreateNotificationRequest(talent.get(),expert.get(),reservation);
         NotificationDTO notificationDTO = notificationService.createNotification(notificationRequestDto, flag);
+        //Fin del registro de una notificación
+
         Optional<User> userTalento = userRepository.findById(talentId);
         ReservationResponse reservationResponse = new ReservationResponse();
         reservationResponse.setDateTimeStart(reservationResponse.getDateTimeStart());

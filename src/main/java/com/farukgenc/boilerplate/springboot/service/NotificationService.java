@@ -77,34 +77,42 @@ public class NotificationService implements NotificationServiceInterface {
     @Override
     public NotificationDTO createNotification(CreateNotificationRequest request, int flag) {
         // 1. Asignar las entidades relacionadas
-        User recipient = request.getTalent();
-        User sender = request.getExpert();
+        User talent = request.getTalent();
+        User expert = request.getExpert();
         Reservation reservation = request.getReservation();
         
         // 2. Crear la entidad Notification
         Notification notification = new Notification();
-        //Notificacion creada del lado del Experto
-        if (flag == 0){
-            notification.setSenderId(sender.getId());
-            notification.setUser(recipient);
-            notification.setNotificationType(NotificationType.ACCEPTED);
-            notification.setStatus(NotificationStatus.PENDING);
-        }
-        //Notificacion creada del lado del Talento
-        if (flag == 1){
-            notification.setSenderId(recipient.getId());
-            notification.setUser(sender);
-            notification.setNotificationType(NotificationType.NEW_RESERVATION);
-            notification.setStatus(NotificationStatus.PENDING);
-        }
         notification.setReservation(reservation);
         notification.setCreatedAt(LocalDateTime.now());
         notification.setSentAt(LocalDateTime.now());
+        //Notificacion creada del lado del Experto
+        if (flag == 0){
+            notification.setSenderId(expert.getId());
+            notification.setUser(talent);
+            notification.setNotificationType(NotificationType.ACCEPTED);
+            notification.setStatus(NotificationStatus.PENDING);
+            // 3. Generar y asignar el mensaje personalizado
+            String senderName = expert.getName() + " " + expert.getLastname();
+            String projectName = reservation.getTalent().getTalentProjectDetails().getFirst().getAssociatedProject();
+            notification.setMessage(notification.generateMessage(senderName, projectName));
+        }
+        //Notificacion creada del lado del Talento
+        if (flag == 1){
+            notification.setSenderId(talent.getId());
+            notification.setUser(expert);
+            notification.setNotificationType(NotificationType.NEW_RESERVATION);
+            notification.setStatus(NotificationStatus.PENDING);
+            // 3. Generar y asignar el mensaje personalizado
+            String senderName = talent.getName() + " " + talent.getLastname();
+            String projectName = reservation.getTalent().getTalentProjectDetails().getFirst().getAssociatedProject();
+            notification.setMessage(notification.generateMessage(senderName, projectName));
+        }
         
         // 3. Generar y asignar el mensaje personalizado
-        String senderName = sender.getName() + " " + sender.getLastname();
-        String projectName = reservation.getTalent().getTalentProjectDetails().getFirst().getAssociatedProject();
-        notification.setMessage(notification.generateMessage(senderName, projectName));
+        //String senderName = talent.getName() + " " + talent.getLastname();
+        //String projectName = reservation.getTalent().getTalentProjectDetails().getFirst().getAssociatedProject();
+        //notification.setMessage(notification.generateMessage(senderName, projectName));
         
         // 4. Guardar en la base de datos
         Notification savedNotification = notificationRepository.save(notification);
