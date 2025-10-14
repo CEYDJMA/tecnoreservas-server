@@ -130,7 +130,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationResponse createReservation(ReservationDto reservationDto, int flag) {
+    public ReservationResponse createReservation(ReservationDto reservationDto, UserRole userRole,int flag) {
         //Validacion del experto y talento
         Long expertId = reservationDto.getExpert();
         Optional<Expert> expert = expertRepository.findById(expertId);
@@ -151,6 +151,7 @@ public class ReservationService {
         LocalDate fecha2 = end.toLocalDate();
         LocalTime inicio = LocalTime.of(8,0);
         LocalTime fin = LocalTime.of(16,0);
+        LocalDate hoy = LocalDate.now();
         boolean intersectaConAlmuerzo = !endTime.isBefore(almuerzoInicio) && !startTime.isAfter(almuerzoFin);
 
         if (time.isBefore(inicio) || time.isAfter(fin)) {
@@ -162,7 +163,10 @@ public class ReservationService {
         if (end.getHour() - start.getHour() < 1) {
             throw new IllegalArgumentException("El tiempo de reserva no puede ser inferior a una hora.");
         }
-        if (!fecha1.equals(fecha2)) {
+        if (fecha1.isBefore(hoy)) {
+            throw new IllegalArgumentException("Solo se puede reservar hoy o en los siguientes dias.");
+        }
+        if (!fecha1.atStartOfDay().equals(fecha2.atStartOfDay())) {
             throw new IllegalArgumentException("Las fechas de inicio y fin de la reserva deben ser en el mismo día.");
         }
         if (intersectaConAlmuerzo) {
@@ -172,7 +176,11 @@ public class ReservationService {
         Reservation newReservation = new Reservation();
         newReservation.setDateTimeStart(reservationDto.getDateTimeStart());
         newReservation.setEndDateTime(reservationDto.getEndDateTime());
-        newReservation.setReservationStatus(ReservationStatus.SOLICITADA);
+        if (userRole.equals(UserRole.EXPERT)){
+            newReservation.setReservationStatus(ReservationStatus.CONFIRMADA);
+        } else if (userRole.equals(UserRole.TALENT)) {
+            newReservation.setReservationStatus(ReservationStatus.SOLICITADA);
+        }
         newReservation.setCreationDate(LocalDateTime.now());
         newReservation.setLastModifiedDate(LocalDateTime.now());
         newReservation.setExpert(expert.get());

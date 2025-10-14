@@ -64,13 +64,14 @@ public class ExpertService {
         int flag = 0;
         User user = userRepository.findByUsername(userDetails.getUsername());
         Talent talent = talentRepository.findById(request.getTalent()).orElseThrow();
+        UserRole userRole = user.getUserRole();
 
         ReservationDto reservationDto = new ReservationDto();
         reservationDto.setDateTimeStart(request.getStartDate());
         reservationDto.setEndDateTime(request.getEndDate());
         reservationDto.setTalent(talent.getId());
         reservationDto.setExpert(user.getId());
-        return reservationService.createReservation(reservationDto, flag);
+        return reservationService.createReservation(reservationDto, userRole, flag);
     }
 
     public List<ExpertDto> getAllExperts(){
