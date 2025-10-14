@@ -133,7 +133,7 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.getReservationByDates(start, end));
     }
 
-    @Operation(
+    /*@Operation(
             summary = "Crea una reserva.",
             description = "Registra una reserva a partir de los datos enviados.",
             tags = "Reservations")
@@ -151,7 +151,7 @@ public class ReservationController {
     @PostMapping("/create")
     public ResponseEntity<ReservationResponse> createReservations(@RequestBody ReservationDto reservationDto){
         return ResponseEntity.ok(reservationService.createReservation(reservationDto));
-    }
+    }*/
 
     @Operation(
             summary = "Modifica la reserva.",

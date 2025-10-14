@@ -124,7 +124,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationResponse createReservation(ReservationDto reservationDto) {
+    public ReservationResponse createReservation(ReservationDto reservationDto, UserRole userRole) {
         //Validacion del experto y talento
         Long expertId = reservationDto.getExpert();
         Optional<Expert> expert = expertRepository.findById(expertId);
@@ -145,6 +145,7 @@ public class ReservationService {
         LocalDate fecha2 = end.toLocalDate();
         LocalTime inicio = LocalTime.of(8,0);
         LocalTime fin = LocalTime.of(16,0);
+        LocalDate hoy = LocalDate.now();
         boolean intersectaConAlmuerzo = !endTime.isBefore(almuerzoInicio) && !startTime.isAfter(almuerzoFin);
 
         if (time.isBefore(inicio) || time.isAfter(fin)) {
@@ -156,7 +157,10 @@ public class ReservationService {
         if (end.getHour() - start.getHour() < 1) {
             throw new IllegalArgumentException("El tiempo de reserva no puede ser inferior a una hora.");
         }
-        if (!fecha1.equals(fecha2)) {
+        if (fecha1.isBefore(hoy)) {
+            throw new IllegalArgumentException("Solo se puede reservar hoy o en los siguientes dias.");
+        }
+        if (!fecha1.atStartOfDay().equals(fecha2.atStartOfDay())) {
             throw new IllegalArgumentException("Las fechas de inicio y fin de la reserva deben ser en el mismo día.");
         }
         if (intersectaConAlmuerzo) {
@@ -166,21 +170,27 @@ public class ReservationService {
         Reservation newReservation = new Reservation();
         newReservation.setDateTimeStart(reservationDto.getDateTimeStart());
         newReservation.setEndDateTime(reservationDto.getEndDateTime());
-        newReservation.setReservationStatus(ReservationStatus.SOLICITADA);
+        if (userRole.equals(UserRole.EXPERT)){
+            newReservation.setReservationStatus(ReservationStatus.CONFIRMADA);
+        } else if (userRole.equals(UserRole.TALENT)) {
+            newReservation.setReservationStatus(ReservationStatus.SOLICITADA);
+        }
         newReservation.setCreationDate(LocalDateTime.now());
         newReservation.setLastModifiedDate(LocalDateTime.now());
         newReservation.setExpert(expert.get());
         newReservation.setTalent(talent.get());
         reservationRepository.save(newReservation);
         Optional<User> userTalento = userRepository.findById(talentId);
-        ReservationResponse response = new ReservationResponse();
         ReservationResponse reservationResponse = new ReservationResponse();
-        reservationResponse.setDateTimeStart(reservationResponse.getDateTimeStart());
-        reservationResponse.setEndDateTime(reservationResponse.getEndDateTime());
-        reservationResponse.setReservationStatus(reservationResponse.getReservationStatus());
-        reservationResponse.setServiceLine(reservationResponse.getServiceLine());
-        reservationResponse.setExpert(reservationResponse.getExpert());
-        return response ;
+
+        reservationResponse.setDateTimeStart(newReservation.getDateTimeStart());
+        reservationResponse.setEndDateTime(newReservation.getEndDateTime());
+        reservationResponse.setReservationStatus(Optional.ofNullable(newReservation.getReservationStatus()).map(Enum::name).orElse(null));
+        String serviceLineName = Optional.ofNullable(newReservation).map(Reservation::getExpert).map(Expert::getServiceLine).map(ServiceLine::getServiceLineName).orElse(null);
+        reservationResponse.setServiceLine(serviceLineName);
+        reservationResponse.setExpert(newReservation.getExpert().getName() + " " + newReservation.getExpert().getLastname());
+        reservationResponse.setTalent(newReservation.getTalent().getName() + " " + newReservation.getTalent().getLastname());
+        return reservationResponse;
     }
 
     public String modification(Long id, ReservationDto reservationDto) {

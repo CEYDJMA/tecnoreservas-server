@@ -137,6 +137,7 @@ public class TalentService {
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = userRepository.findByUsername(userDetails.getUsername());
         Expert expert = expertRepository.findByServiceLine_Id(request.getServiceLine());
+        UserRole userRole = user.getUserRole();
 
         ReservationDto reservationDto = new ReservationDto();
         reservationDto.setDateTimeStart(request.getStartDate());
@@ -145,11 +146,6 @@ public class TalentService {
         if (user.getUserRole().equals(UserRole.TALENT)){
             reservationDto.setTalent(user.getId());
         }
-        System.out.println("La reserva del talento es: \n"
-                            + reservationDto.getDateTimeStart() + "\n"+
-                reservationDto.getEndDateTime() + "\n" +
-                reservationDto.getTalent() + "\n" +
-                reservationDto.getExpert());
-        return reservationService.createReservation(reservationDto);
+        return reservationService.createReservation(reservationDto, userRole);
     }
 }
