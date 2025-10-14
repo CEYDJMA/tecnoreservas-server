@@ -5,12 +5,8 @@ import lombok.Data;
 @Data
 public class ProjectDetailDto {
 
-    private String AssociatedProject;
+    private String associatedProject;
 
-    private Long trlOfProject;
-
-    private Long talent;
-
-    private Long serviceLine;
+    private String projectPhase;
 
 }

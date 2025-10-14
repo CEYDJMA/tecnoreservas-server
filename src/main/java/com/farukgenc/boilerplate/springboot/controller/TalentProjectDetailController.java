@@ -14,13 +14,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/Project/Details")
 public class TalentProjectDetailController {
-
-    @Autowired
-    TalentProjectDetailService talentProjectDetailService;
-
-    @PostMapping("/assign")
-    public ResponseEntity<String> assignDetailsProject(@RequestBody ProjectDetailDto projectDetailDto){
-        return ResponseEntity.ok(talentProjectDetailService.assignDetails(projectDetailDto));
-    }
-
 }

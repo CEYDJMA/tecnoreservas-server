@@ -1,5 +1,7 @@
 package com.farukgenc.boilerplate.springboot.model;
 
+import com.farukgenc.boilerplate.springboot.model.enums.NameTrl;
+import com.farukgenc.boilerplate.springboot.model.enums.ProjectPhase;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,9 +23,11 @@ public class TalentProjectDetail {
     @Column(unique = true)
     private String associatedProject;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "trl_id", nullable = false)
-    private TrlOfProject trlOfProject;
+    @Enumerated(EnumType.STRING)
+    private ProjectPhase projectPhase;
+
+    @Enumerated(EnumType.STRING)
+    private NameTrl nameTrl;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "talent_id", nullable = false)

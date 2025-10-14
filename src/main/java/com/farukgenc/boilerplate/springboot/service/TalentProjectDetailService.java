@@ -1,9 +1,14 @@
 package com.farukgenc.boilerplate.springboot.service;
 
 import com.farukgenc.boilerplate.springboot.model.*;
+import com.farukgenc.boilerplate.springboot.model.enums.NameTrl;
+import com.farukgenc.boilerplate.springboot.model.enums.ProjectPhase;
 import com.farukgenc.boilerplate.springboot.repository.*;
 import com.farukgenc.boilerplate.springboot.security.dto.ProjectDetailDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,35 +18,56 @@ import java.util.Optional;
 public class TalentProjectDetailService {
 
     @Autowired
-    ServiceLineRepository serviceLineRepository;
+    private ServiceLineRepository serviceLineRepository;
 
     @Autowired
-    TalentRepository talentRepository;
+    private TalentRepository talentRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    TrlOfProjectRepository trlOfProjectRepository;
+    private TalentProjectDetailRepository talentProjectDetailRepository;
 
     @Autowired
-    TalentProjectDetailRepository talentProjectDetailRepository;
+    private ExpertRepository expertRepository;
 
-    public String assignDetails(ProjectDetailDto projectDetailDto){
-        Long trlOfProjectId = projectDetailDto.getTrlOfProject();
-        Optional<TrlOfProject> trlOfProject = trlOfProjectRepository.findById(trlOfProjectId);
-        Long serviceLineId = projectDetailDto.getServiceLine();
-        Optional<ServiceLine> serviceLine = serviceLineRepository.findById(serviceLineId);
-        Long talentId = projectDetailDto.getTalent();
-        Optional<Talent> talent = talentRepository.findById(talentId);
+    public TalentProjectDetail assignDetails(ProjectDetailDto projectDetailDto, Talent talent) {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername());
+        Expert expert = expertRepository.findById(user.getId()).orElseThrow();
+        Long serviceLineId = expert.getServiceLine().getId();
+        ServiceLine serviceLine = serviceLineRepository.findById(serviceLineId).orElseThrow();
 
         TalentProjectDetail projectDetail = new TalentProjectDetail();
-        projectDetail.setAssociatedProject(projectDetailDto.getAssociatedProject());
-        projectDetail.setTrlOfProject(trlOfProject.get());
-        projectDetail.setServiceLine(serviceLine.get());
-        projectDetail.setTalent(talent.get());
-        talentProjectDetailRepository.save(projectDetail);
 
-        return "Informacion de proyecto guardada.";
+        if (projectDetailDto.getProjectPhase() == null) {
+            throw new IllegalArgumentException("La fase no puede ser nula.");
+        }
+        //convertir texto a mayusculas
+        String phase = projectDetailDto.getProjectPhase().toUpperCase();
+
+        switch (phase) {
+            case "INICIO":
+            case "PLANEACION":
+                projectDetail.setNameTrl(NameTrl.TRL6);
+                break;
+
+            case "EJECUCION":
+            case "CIERRE":
+                projectDetail.setNameTrl(NameTrl.TRL7);
+                break;
+
+            default:
+                throw new IllegalArgumentException("Fase no valida: " + projectDetailDto.getProjectPhase());
+        }
+
+        projectDetail.setProjectPhase(ProjectPhase.valueOf(phase));
+        projectDetail.setAssociatedProject(projectDetailDto.getAssociatedProject());
+        projectDetail.setServiceLine(serviceLine);
+        projectDetail.setTalent(talent);
+        talentProjectDetailRepository.save(projectDetail);
+        return projectDetail;
     }
 }

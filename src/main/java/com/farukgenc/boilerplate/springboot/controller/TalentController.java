@@ -1,8 +1,6 @@
 package com.farukgenc.boilerplate.springboot.controller;
 
-import com.farukgenc.boilerplate.springboot.security.dto.ReservationRequest;
-import com.farukgenc.boilerplate.springboot.security.dto.ReservationResponse;
-import com.farukgenc.boilerplate.springboot.security.dto.TalentDto;
+import com.farukgenc.boilerplate.springboot.security.dto.*;
 import com.farukgenc.boilerplate.springboot.service.TalentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -59,9 +57,8 @@ public class TalentController {
     })
     public ResponseEntity<String> createTalent(
             @Parameter(description = "Información del talento a crear.", required = true)
-            @RequestBody TalentDto talentDto) {
-
-        return ResponseEntity.ok(talentService.createTalent(talentDto));
+            @RequestBody TalentAndProjectDto talentAndProjectDto) {
+        return ResponseEntity.ok(talentService.createTalent(talentAndProjectDto.getTalentDto(), talentAndProjectDto.getProjectDetailDto()));
     }
 
     @PatchMapping("/update/email/{id}")
