@@ -1,8 +1,7 @@
 package com.farukgenc.boilerplate.springboot.controller;
 
-import com.farukgenc.boilerplate.springboot.model.Reservation;
-import com.farukgenc.boilerplate.springboot.model.ServiceLine;
-import com.farukgenc.boilerplate.springboot.model.UserRole;
+import com.farukgenc.boilerplate.springboot.model.*;
+import com.farukgenc.boilerplate.springboot.repository.UserRepository;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationResponse;
 import com.farukgenc.boilerplate.springboot.service.ReservationService;
@@ -14,6 +13,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -28,6 +30,9 @@ public class ReservationController {
 
     @Autowired
     private ReservationService reservationService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Operation(
             summary = "obtiene todas las reservas.",
@@ -151,7 +156,11 @@ public class ReservationController {
     @PostMapping("/create")
     public ResponseEntity<ReservationResponse> createReservations(@RequestBody ReservationDto reservationDto){
         int flag = 2;
-        return ResponseEntity.ok(reservationService.createReservation(reservationDto, flag));
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername());
+        UserRole userRole = user.getUserRole();
+        return ResponseEntity.ok(reservationService.createReservation(reservationDto, userRole, flag));
     }
 
     @Operation(
