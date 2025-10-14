@@ -135,6 +135,7 @@ public class TalentService {
     public ReservationResponse createReservation(ReservationRequest request){
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        int flag = 1;
         User user = userRepository.findByUsername(userDetails.getUsername());
         Expert expert = expertRepository.findByServiceLine_Id(request.getServiceLine());
         UserRole userRole = user.getUserRole();
@@ -146,6 +147,6 @@ public class TalentService {
         if (user.getUserRole().equals(UserRole.TALENT)){
             reservationDto.setTalent(user.getId());
         }
-        return reservationService.createReservation(reservationDto, userRole);
+        return reservationService.createReservation(reservationDto, userRole, flag);
     }
 }

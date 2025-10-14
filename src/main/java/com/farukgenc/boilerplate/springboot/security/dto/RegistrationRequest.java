@@ -34,7 +34,7 @@ public class RegistrationRequest {
     @NotEmpty(message = "{registration_role_not_empty}")
     private String userRole;
 
-	@NotEmpty(message = "{registration_status_not_empty}")
+	//@NotEmpty(message = "{registration_status_not_empty}")
 	private String UserStatus;
 
 	@NotEmpty(message = "{registration_username_not_empty}")

@@ -8,6 +8,9 @@ import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationResponse;
+import com.farukgenc.boilerplate.springboot.security.dto.notification.CreateNotificationRequest;
+import com.farukgenc.boilerplate.springboot.security.dto.notification.NotificationDTO;
+import com.farukgenc.boilerplate.springboot.security.mapper.notifications.NotificationMapper;
 import com.farukgenc.boilerplate.springboot.security.service.UserServiceImpl;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,9 @@ public class ReservationService {
 
     @Autowired
     private UserServiceImpl userServiceImpl;
+
+    @Autowired
+    private NotificationService notificationService;
 
     public List<ReservationDto> getReservations() {
         List<Reservation> listaReservas = reservationRepository.findAll();
@@ -124,7 +130,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationResponse createReservation(ReservationDto reservationDto, UserRole userRole) {
+    public ReservationResponse createReservation(ReservationDto reservationDto, UserRole userRole,int flag) {
         //Validacion del experto y talento
         Long expertId = reservationDto.getExpert();
         Optional<Expert> expert = expertRepository.findById(expertId);
@@ -179,18 +185,21 @@ public class ReservationService {
         newReservation.setLastModifiedDate(LocalDateTime.now());
         newReservation.setExpert(expert.get());
         newReservation.setTalent(talent.get());
-        reservationRepository.save(newReservation);
+        // Crear nueva notificacion
+        Reservation reservation = reservationRepository.save(newReservation);
+        CreateNotificationRequest notificationRequestDto =
+                NotificationMapper.buildCreateNotificationRequest(talent.get(),expert.get(),reservation);
+        NotificationDTO notificationDTO = notificationService.createNotification(notificationRequestDto, flag);
+        //Fin del registro de una notificación
+
         Optional<User> userTalento = userRepository.findById(talentId);
         ReservationResponse reservationResponse = new ReservationResponse();
-
-        reservationResponse.setDateTimeStart(newReservation.getDateTimeStart());
-        reservationResponse.setEndDateTime(newReservation.getEndDateTime());
-        reservationResponse.setReservationStatus(Optional.ofNullable(newReservation.getReservationStatus()).map(Enum::name).orElse(null));
-        String serviceLineName = Optional.ofNullable(newReservation).map(Reservation::getExpert).map(Expert::getServiceLine).map(ServiceLine::getServiceLineName).orElse(null);
-        reservationResponse.setServiceLine(serviceLineName);
-        reservationResponse.setExpert(newReservation.getExpert().getName() + " " + newReservation.getExpert().getLastname());
-        reservationResponse.setTalent(newReservation.getTalent().getName() + " " + newReservation.getTalent().getLastname());
-        return reservationResponse;
+        reservationResponse.setDateTimeStart(reservationResponse.getDateTimeStart());
+        reservationResponse.setEndDateTime(reservationResponse.getEndDateTime());
+        reservationResponse.setReservationStatus(reservationResponse.getReservationStatus());
+        reservationResponse.setServiceLine(reservationResponse.getServiceLine());
+        reservationResponse.setExpert(reservationResponse.getExpert());
+        return reservationResponse ;
     }
 
     public String modification(Long id, ReservationDto reservationDto) {
@@ -253,7 +262,10 @@ public class ReservationService {
                 .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada con ID: " + id));
 
         reservation.setReservationStatus(ReservationStatus.CONFIRMADA);
-        reservationRepository.save(reservation);
+        Reservation reservationResponse = reservationRepository.save(reservation);
+
+        //Cambiar el estado de la notifcación de PENDING a VIEWED
+        NotificationDTO notificationDTO =notificationService.updateNotificationStatusByReservation(reservationResponse);
 
         return "La reserva de " + reservation.getTalent().getName() + " ha sido confirmada.";
     }
