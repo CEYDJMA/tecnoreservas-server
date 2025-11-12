@@ -16,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/talents")
+@CrossOrigin("http://localhost:5173")
 public class TalentController {
 
     @Autowired

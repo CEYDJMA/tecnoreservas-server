@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/service/lines")
+@CrossOrigin("http://localhost:5173")
 public class ServiceLineController {
 
     @Autowired

@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
 import java.time.Duration;
@@ -18,6 +15,7 @@ import java.time.Duration;
 @RestController
 @RequestMapping("/notifications")
 @RequiredArgsConstructor
+@CrossOrigin("http://localhost:5173")
 public class NotificationController {
 
     private final NotificationService notificationService;
