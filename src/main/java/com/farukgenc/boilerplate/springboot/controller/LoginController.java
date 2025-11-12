@@ -2,6 +2,7 @@ package com.farukgenc.boilerplate.springboot.controller;
 
 import com.farukgenc.boilerplate.springboot.security.dto.LoginRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.LoginResponse;
+import com.farukgenc.boilerplate.springboot.security.dto.TalentDto;
 import com.farukgenc.boilerplate.springboot.security.jwt.JwtTokenService;
 import com.farukgenc.boilerplate.springboot.service.SessionLogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin("*")
 @RequestMapping("/login")
 public class LoginController {
 

@@ -1,5 +1,6 @@
 package com.farukgenc.boilerplate.springboot.security.jwt;
 
+import com.farukgenc.boilerplate.springboot.security.dto.UserDto;
 import com.farukgenc.boilerplate.springboot.security.mapper.UserMapper;
 import com.farukgenc.boilerplate.springboot.security.service.UserService;
 import com.farukgenc.boilerplate.springboot.model.User;
@@ -14,11 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-/**
- * Created on Ağustos, 2020
- *
- * @author Faruk
- */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -49,7 +46,7 @@ public class JwtTokenService {
 
 		log.info("{} has successfully logged in!", user.getUsername());
 
-		return new LoginResponse(token);
+		return new LoginResponse(token, authenticatedUserDto);
 	}
 
 }
