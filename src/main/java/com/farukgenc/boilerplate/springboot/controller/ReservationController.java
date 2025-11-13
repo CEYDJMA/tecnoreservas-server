@@ -109,9 +109,9 @@ public class ReservationController {
             @ApiResponse(responseCode = "401", description = "acceso restringido",
                     content = @Content)
     })
-    @GetMapping("/serviceline/{serviceLine}")
-    public ResponseEntity<List<ReservationDto>> getReservationsByServiceLine(@PathVariable ServiceLine serviceLine){
-        return ResponseEntity.ok(reservationService.getReservationByServiceLine(serviceLine));
+    @GetMapping("/serviceline/{idServiceLine}")
+    public ResponseEntity<List<ReservationDto>> getReservationsByServiceLine(@PathVariable Long idServiceLine){
+        return ResponseEntity.ok(reservationService.getReservationByServiceLine(idServiceLine));
     }
 
     @Operation(

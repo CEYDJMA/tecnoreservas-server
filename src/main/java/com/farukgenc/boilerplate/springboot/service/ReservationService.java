@@ -101,8 +101,9 @@ public class ReservationService {
             return response;
     }
 
-    public List<ReservationDto> getReservationByServiceLine(ServiceLine serviceLine){
-        List<Reservation> listServiceLine = reservationRepository.findAllByExpert_ServiceLine(serviceLine);
+    public List<ReservationDto> getReservationByServiceLine(Long idServiceLine){
+
+        List<Reservation> listServiceLine = reservationRepository.findAllById(Collections.singleton(idServiceLine));
         List<ReservationDto> response = new ArrayList<>();
         for (Reservation reservation: listServiceLine) {
             ReservationDto reservationDto = new ReservationDto();
