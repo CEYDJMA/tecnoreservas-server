@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin("*")
 @RequestMapping("/login")
-@CrossOrigin("http://localhost:5173")
 public class LoginController {
 
 	private final JwtTokenService jwtTokenService;
