@@ -101,8 +101,9 @@ public class ReservationService {
             return response;
     }
 
-    public List<ReservationDto> getReservationByServiceLine(ServiceLine serviceLine){
-        List<Reservation> listServiceLine = reservationRepository.findAllByExpert_ServiceLine(serviceLine);
+    public List<ReservationDto> getReservationByServiceLine(Long idServiceLine){
+
+        List<Reservation> listServiceLine = reservationRepository.findAllById(Collections.singleton(idServiceLine));
         List<ReservationDto> response = new ArrayList<>();
         for (Reservation reservation: listServiceLine) {
             ReservationDto reservationDto = new ReservationDto();
@@ -194,12 +195,13 @@ public class ReservationService {
 
         Optional<User> userTalento = userRepository.findById(talentId);
         ReservationResponse reservationResponse = new ReservationResponse();
-        reservationResponse.setDateTimeStart(reservationResponse.getDateTimeStart());
-        reservationResponse.setEndDateTime(reservationResponse.getEndDateTime());
-        reservationResponse.setReservationStatus(reservationResponse.getReservationStatus());
-        reservationResponse.setServiceLine(reservationResponse.getServiceLine());
-        reservationResponse.setExpert(reservationResponse.getExpert());
-        return reservationResponse ;
+        reservationResponse.setDateTimeStart(reservation.getDateTimeStart());
+        reservationResponse.setEndDateTime(reservation.getEndDateTime());
+        reservationResponse.setReservationStatus(reservation.getReservationStatus());
+        reservationResponse.setServiceLine(reservation.getExpert().getServiceLine().getId().toString());
+        reservationResponse.setExpert(reservation.getExpert().getId().toString());
+        reservationResponse.setTalent(reservation.getTalent().getId().toString());
+        return reservationResponse;
     }
 
     public String modification(Long id, ReservationDto reservationDto) {
