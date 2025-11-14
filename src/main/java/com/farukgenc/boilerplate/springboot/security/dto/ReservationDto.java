@@ -1,5 +1,6 @@
 package com.farukgenc.boilerplate.springboot.security.dto;
 
+import com.farukgenc.boilerplate.springboot.model.enums.ReservationStatus;
 import jakarta.validation.constraints.FutureOrPresent;
 import lombok.Data;
 
@@ -18,5 +19,7 @@ public class ReservationDto {
     private Long expert;
 
     private Long talent;
+
+    private ReservationStatus status;
 
 }

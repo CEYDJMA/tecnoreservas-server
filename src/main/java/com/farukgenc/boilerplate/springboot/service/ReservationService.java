@@ -49,6 +49,7 @@ public class ReservationService {
             reservationDto.setEndDateTime(reservation.getEndDateTime());
             reservationDto.setExpert(reservation.getExpert().getId());
             reservationDto.setTalent(reservation.getTalent().getId());
+            reservationDto.setStatus(reservation.getReservationStatus());
             response.add(reservationDto);
         }
         return response;
@@ -63,6 +64,7 @@ public class ReservationService {
             reservationDto.setEndDateTime(reservation.getEndDateTime());
             reservationDto.setExpert(reservation.getExpert().getId());
             reservationDto.setTalent(reservation.getTalent().getId());
+            reservationDto.setStatus(reservation.getReservationStatus());
             response.add(reservationDto);
         }
         return response;
@@ -83,6 +85,7 @@ public class ReservationService {
                     reservationDto.setEndDateTime(reservation.getEndDateTime());
                     reservationDto.setExpert(reservation.getExpert().getId());
                     reservationDto.setTalent(reservation.getTalent().getId());
+                    reservationDto.setStatus(reservation.getReservationStatus());
                     response.add(reservationDto);
                 }
                 return response;
@@ -95,6 +98,7 @@ public class ReservationService {
                 reservationDto.setEndDateTime(reservation.getEndDateTime());
                 reservationDto.setExpert(reservation.getExpert().getId());
                 reservationDto.setTalent(reservation.getTalent().getId());
+                reservationDto.setStatus(reservation.getReservationStatus());
                 response.add(reservationDto);
             }
         }
@@ -111,6 +115,7 @@ public class ReservationService {
             reservationDto.setEndDateTime(reservation.getEndDateTime());
             reservationDto.setExpert(reservation.getExpert().getId());
             reservationDto.setTalent(reservation.getTalent().getId());
+            reservationDto.setStatus(reservation.getReservationStatus());
             response.add(reservationDto);
         }
         return response;
@@ -125,6 +130,7 @@ public class ReservationService {
             reservationDto.setEndDateTime(reservation.getEndDateTime());
             reservationDto.setExpert(reservation.getExpert().getId());
             reservationDto.setTalent(reservation.getTalent().getId());
+            reservationDto.setStatus(reservation.getReservationStatus());
             response.add(reservationDto);
         }
         return response;
@@ -197,7 +203,7 @@ public class ReservationService {
         ReservationResponse reservationResponse = new ReservationResponse();
         reservationResponse.setDateTimeStart(reservation.getDateTimeStart());
         reservationResponse.setEndDateTime(reservation.getEndDateTime());
-        reservationResponse.setReservationStatus(reservation.getReservationStatus());
+        reservationResponse.setStatus(reservation.getReservationStatus());
         reservationResponse.setServiceLine(reservation.getExpert().getServiceLine().getId().toString());
         reservationResponse.setExpert(reservation.getExpert().getId().toString());
         reservationResponse.setTalent(reservation.getTalent().getId().toString());
@@ -224,7 +230,10 @@ public class ReservationService {
         boolean intersectaConAlmuerzo = !endTime.isBefore(almuerzoInicio) && !startTime.isAfter(almuerzoFin);
 
         if (time.isBefore(inicio) || time.isAfter(fin)) {
-            throw new IllegalArgumentException("solo se permiten reservas entre las 8:00 y 16:00 horas.");
+            throw new IllegalArgumentException("Solo se permiten reservas entre las 8:00 y 16:00 horas.");
+        }
+        if (endTime.isAfter(fin)) {
+            throw new IllegalArgumentException("La hora de fin no puede ser despues de las 16:00");
         }
         if (end.isBefore(start)) {
             throw new IllegalArgumentException("El tiempo de fin de la reserva no puede ser menor al tiempo de inicio de la reserva.");

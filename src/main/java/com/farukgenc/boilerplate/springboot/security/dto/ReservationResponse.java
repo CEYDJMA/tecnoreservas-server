@@ -18,7 +18,7 @@ public class ReservationResponse {
 
     private LocalDateTime endDateTime;
 
-    private ReservationStatus reservationStatus;
+    private ReservationStatus status;
 
     private String serviceLine;
 
