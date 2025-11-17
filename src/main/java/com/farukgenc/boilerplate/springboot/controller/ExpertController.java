@@ -1,9 +1,6 @@
 package com.farukgenc.boilerplate.springboot.controller;
 
-import com.farukgenc.boilerplate.springboot.security.dto.ExpertDto;
-import com.farukgenc.boilerplate.springboot.security.dto.ReservationByExpertRequest;
-import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
-import com.farukgenc.boilerplate.springboot.security.dto.ReservationResponse;
+import com.farukgenc.boilerplate.springboot.security.dto.*;
 import com.farukgenc.boilerplate.springboot.service.ExpertService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/experts")
-@CrossOrigin("http://localhost:5173")
+@CrossOrigin("*")
 public class ExpertController {
 
     @Autowired
@@ -65,7 +62,7 @@ public class ExpertController {
                     description = "Parametros o peticion mal realizada."
             )
     })
-    public ResponseEntity<List<ExpertDto>> getAllExperts(){
+    public ResponseEntity<List<ExpertResponseDto>> getAllExperts(){
         return ResponseEntity.ok(expertService.getAllExperts());
     }
 

@@ -6,6 +6,9 @@ import com.farukgenc.boilerplate.springboot.security.dto.LineDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class ServiceLineService {
 
@@ -18,5 +21,14 @@ public class ServiceLineService {
         lineDto.setId(serviceLine.getId());
         lineDto.setName(serviceLine.getServiceLineName());
         return lineDto;
+    }
+
+    public List<String> getLines(){
+        List<ServiceLine> lines = serviceLineRepository.findAll();
+        List<String> list = new ArrayList<>();
+        for (ServiceLine line: lines){
+            list.add(line.getServiceLineName());
+        }
+        return list;
     }
 }

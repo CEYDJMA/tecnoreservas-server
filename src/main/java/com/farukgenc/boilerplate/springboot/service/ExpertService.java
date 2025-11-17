@@ -74,16 +74,16 @@ public class ExpertService {
         return reservationService.createReservation(reservationDto, userRole, flag);
     }
 
-    public List<ExpertDto> getAllExperts(){
+    public List<ExpertResponseDto> getAllExperts(){
         List<Expert> experts = expertRepository.findAll();
-        List<ExpertDto> expertDtoList = new ArrayList<>();
+        List<ExpertResponseDto> expertDtoList = new ArrayList<>();
         for (Expert expert: experts){
-            ExpertDto expertDto = new ExpertDto();
-            expertDto.setName(expert.getName());
-            expertDto.setLastname(expert.getLastname());
+            ExpertResponseDto expertDto = new ExpertResponseDto();
+            expertDto.setId(expert.getId());
+            expertDto.setName(expert.getName() + " " + expert.getLastname());
             expertDto.setUsername(expert.getUsername());
             expertDto.setEmail(expert.getEmail());
-            expertDto.setLine(expert.getServiceLine().getId());
+            expertDto.setLineId(expert.getServiceLine().getId());
             expertDtoList.add(expertDto);
         }
         return expertDtoList;

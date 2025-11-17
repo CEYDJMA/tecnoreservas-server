@@ -70,4 +70,9 @@ public class TalentProjectDetailService {
         talentProjectDetailRepository.save(projectDetail);
         return projectDetail;
     }
+
+    public Long getLineProjectTalentId(Long talentId){
+        TalentProjectDetail projectDetail = talentProjectDetailRepository.findByTalentId(talentId);
+        return projectDetail.getId();
+    }
 }
