@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/resources")
-@CrossOrigin("http://localhost:5173")
+@CrossOrigin("*")
 public class ResourceController {
 
     private final ResourceService resourceService;

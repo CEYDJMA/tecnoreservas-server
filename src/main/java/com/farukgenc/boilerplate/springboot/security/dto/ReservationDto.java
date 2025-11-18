@@ -22,4 +22,10 @@ public class ReservationDto {
 
     private ReservationStatus status;
 
+    private String nameTalent;
+
+    private String nameExpert;
+
+    private String associateProject;
+
 }

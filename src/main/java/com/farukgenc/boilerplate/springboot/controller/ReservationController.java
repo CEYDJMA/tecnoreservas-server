@@ -25,7 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/reservations")
-@CrossOrigin("http://localhost:5173")
+@CrossOrigin("*")
 public class ReservationController {
 
     @Autowired

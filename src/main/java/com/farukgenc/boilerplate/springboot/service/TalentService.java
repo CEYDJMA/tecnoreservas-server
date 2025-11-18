@@ -68,15 +68,16 @@ public class TalentService {
         }
     }
 
-    public List<TalentDto> getTalents(){
+    public List<TalentResponseDto> getTalents(){
         List<Talent> talentList = talentRepository.findAll();
-        List<TalentDto> talentDtoList = new ArrayList<>();
+        List<TalentResponseDto> talentDtoList = new ArrayList<>();
         for (Talent talent: talentList){
-            TalentDto talentDto = new TalentDto();
-            talentDto.setName(talent.getName());
-            talentDto.setLastname(talent.getLastname());
+            TalentResponseDto talentDto = new TalentResponseDto();
+            talentDto.setId(talent.getId());
+            talentDto.setName(talent.getName() + " " + talent.getLastname());
             talentDto.setEmail(talent.getEmail());
             talentDto.setUsername(talent.getUsername());
+            talentDto.setLineProjectId(talentProjectDetailService.getLineProjectTalentId(talent.getId()));
             talentDtoList.add(talentDto);
         }
         return talentDtoList;

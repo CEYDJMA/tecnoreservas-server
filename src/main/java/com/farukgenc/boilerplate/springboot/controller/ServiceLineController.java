@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/service/lines")
-@CrossOrigin("http://localhost:5173")
+@CrossOrigin("*")
 public class ServiceLineController {
 
     @Autowired
@@ -17,5 +19,10 @@ public class ServiceLineController {
     @GetMapping("/{id}")
     public ResponseEntity<LineDto> getServiceLineById(@PathVariable Long id){
         return ResponseEntity.ok().body(serviceLineService.getLineById(id));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<String>> getServiceLines(){
+        return ResponseEntity.ok().body(serviceLineService.getLines());
     }
 }

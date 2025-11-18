@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TalentProjectDetailRepository extends JpaRepository<TalentProjectDetail, Long> {
-
+    TalentProjectDetail findByTalentId(Long talentId);
 }

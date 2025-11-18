@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/talents")
-@CrossOrigin("http://localhost:5173")
+@CrossOrigin("*")
 public class TalentController {
 
     @Autowired
@@ -36,7 +36,7 @@ public class TalentController {
                     schema = @Schema(implementation = TalentDto.class)
             )
     )
-    public ResponseEntity<List<TalentDto>> getAll() {
+    public ResponseEntity<List<TalentResponseDto>> getAll() {
         return ResponseEntity.ok(talentService.getTalents());
     }
 
