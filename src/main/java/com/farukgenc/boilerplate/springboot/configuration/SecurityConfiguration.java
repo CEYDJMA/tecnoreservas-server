@@ -124,7 +124,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PATCH, "/resources/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.DELETE, "/resources/**").hasAuthority("EXPERT")
                         //ServiceLineController
-                        .requestMatchers(HttpMethod.GET, "/service/lines/**").hasAuthority("SECURITY")
+                        .requestMatchers(HttpMethod.GET, "/service/lines/**").hasAnyAuthority("SECURITY","EXPERT","TALENT")
 
 													   .anyRequest()
 													   .authenticated())
