@@ -23,11 +23,14 @@ public class ServiceLineService {
         return lineDto;
     }
 
-    public List<String> getLines(){
+    public List<LineDto> getLines(){
         List<ServiceLine> lines = serviceLineRepository.findAll();
-        List<String> list = new ArrayList<>();
+        List<LineDto> list = new ArrayList<>();
         for (ServiceLine line: lines){
-            list.add(line.getServiceLineName());
+            LineDto lineDto = new LineDto();
+            lineDto.setId(line.getId());
+            lineDto.setName(line.getServiceLineName());
+            list.add(lineDto);
         }
         return list;
     }

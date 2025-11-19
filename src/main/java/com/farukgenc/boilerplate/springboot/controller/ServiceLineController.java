@@ -22,7 +22,7 @@ public class ServiceLineController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<String>> getServiceLines(){
+    public ResponseEntity<List<LineDto>> getServiceLines(){
         return ResponseEntity.ok().body(serviceLineService.getLines());
     }
 }

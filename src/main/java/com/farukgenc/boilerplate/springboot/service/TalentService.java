@@ -83,6 +83,22 @@ public class TalentService {
         return talentDtoList;
     }
 
+    public TalentResponseDto getTalent(){
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername());
+
+        Talent talent = talentRepository.findById(user.getId()).orElseThrow();
+
+        TalentResponseDto talentResponseDto = new TalentResponseDto();
+        talentResponseDto.setId(talent.getId());
+        talentResponseDto.setName(talent.getName() + " " + talent.getLastname());
+        talentResponseDto.setEmail(talent.getEmail());
+        talentResponseDto.setLineProjectId(talent.getTalentProjectDetails().get(0).getServiceLine().getId());
+        talentResponseDto.setUsername(talent.getUsername());
+        return talentResponseDto;
+    }
+
     public String updateEmail(Long id, String email){
         Talent talent = talentRepository.findById(id).orElseThrow();
         talent.setEmail(email);

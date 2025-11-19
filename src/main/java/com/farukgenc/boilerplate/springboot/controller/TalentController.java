@@ -40,6 +40,11 @@ public class TalentController {
         return ResponseEntity.ok(talentService.getTalents());
     }
 
+    @GetMapping("/talent/session")
+    public ResponseEntity<TalentResponseDto> getTalent(){
+        return ResponseEntity.ok().body(talentService.getTalent());
+    }
+
     @PostMapping("/create")
     @Operation(
             summary = "Crear nuevo talento",
