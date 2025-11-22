@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.*;
@@ -17,7 +18,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -34,44 +34,6 @@ public class SecurityConfiguration {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        // Orígenes permitidos
-        configuration.setAllowedOriginPatterns(Arrays.asList(
-                "http://localhost:*",
-                "http://127.0.0.1:*",
-                "http://192.168.1.13:*"
-        ));
-
-        // Métodos HTTP permitidos
-        configuration.setAllowedMethods(Arrays.asList(
-                "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
-        ));
-
-        // Headers permitidos
-        configuration.setAllowedHeaders(List.of("*"));
-
-        // Exponer headers de respuesta
-        configuration.setExposedHeaders(Arrays.asList(
-                "Authorization",
-                "Content-Type"
-        ));
-
-        // Permitir credenciales (cookies, headers de autorización)
-        configuration.setAllowCredentials(true);
-
-        // Cachear preflight por 1 hora
-        configuration.setMaxAge(3600L);
-
-        // Aplicar a todas las rutas
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-
-        return source;
-    }
-
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -79,7 +41,7 @@ public class SecurityConfiguration {
 
 		return http
 				.csrf(CsrfConfigurer::disable)
-				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(Customizer.withDefaults())
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.authorizeHttpRequests(request -> request.requestMatchers("/register",
 																	      "/login",
@@ -98,6 +60,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PATCH, "/talents/inactive/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH, "/talents/suspended/**").hasAuthority("EXPERT")
                         // ExpertController
+                        .requestMatchers(HttpMethod.POST, "/experts/all").hasAnyAuthority("TALENT", "EXPERT")
                         .requestMatchers(HttpMethod.POST, "/experts/create-expert").hasAuthority("SUPERADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/experts/update/email/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH, "/experts/change-password").hasAuthority("EXPERT")
@@ -108,10 +71,9 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/equipment/histories/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.DELETE, "/equipment/histories/**").hasAuthority("EXPERT")
                         // ReservationController
-                        .requestMatchers(HttpMethod.GET, "/reservations/user").hasAnyAuthority("EXPERT", "TALENT", "SECURITY")
-                        .requestMatchers(HttpMethod.GET, "/reservations/all").hasAnyAuthority("EXPERT","TALENT","SECURITY")
-                        .requestMatchers(HttpMethod.GET, "/reservations/serviceline/**").hasAnyAuthority("EXPERT", "TALENT", "SECURITY")
-                        .requestMatchers(HttpMethod.GET, "/reservations/dates").hasAnyAuthority("EXPERT", "TALENT", "SECURITY")
+                        .requestMatchers(HttpMethod.GET, "/reservations/user").hasAnyAuthority("EXPERT", "TALENT")
+                        .requestMatchers(HttpMethod.GET, "/reservations/serviceline/**").hasAnyAuthority("EXPERT", "TALENT")
+                        .requestMatchers(HttpMethod.GET, "/reservations/dates").hasAnyAuthority("EXPERT", "TALENT")
                         .requestMatchers(HttpMethod.POST,"/reservations/create").hasAnyAuthority("EXPERT","TALENT")
                         .requestMatchers(HttpMethod.PATCH, "/reservations/modify/**").hasAnyAuthority("EXPERT","TALENT")
                         .requestMatchers(HttpMethod.PATCH,"/reservations/canceled/**").hasAnyAuthority("EXPERT","TALENT")
@@ -119,12 +81,10 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PATCH,"/reservations/fulfilled/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH,"/reservations/missed/**").hasAuthority("EXPERT")
                         //ResourceController
-                        .requestMatchers(HttpMethod.GET, "/resources/**").hasAnyAuthority("EXPERT", "TALENT", "SECURITY")
+                        .requestMatchers(HttpMethod.GET, "/resources/**").hasAnyAuthority("EXPERT", "TALENT")
                         .requestMatchers(HttpMethod.POST, "/resources/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH, "/resources/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.DELETE, "/resources/**").hasAuthority("EXPERT")
-                        //ServiceLineController
-                        .requestMatchers(HttpMethod.GET, "/service/lines/**").hasAnyAuthority("SECURITY","EXPERT","TALENT")
 
 													   .anyRequest()
 													   .authenticated())
@@ -134,5 +94,19 @@ public class SecurityConfiguration {
 
 		//@formatter:on
 	}
+
+    // 👇 Configuración global de CORS
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
 }

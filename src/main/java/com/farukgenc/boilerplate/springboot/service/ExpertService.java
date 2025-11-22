@@ -93,12 +93,12 @@ public class ExpertService {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = userRepository.findByUsername(userDetails.getUsername());
-        Expert expert = expertRepository.findById(user.getId()).orElseThrow();
 
+        Expert expert = expertRepository.findById(user.getId()).orElseThrow();
         ExpertResponseDto expertResponseDto = new ExpertResponseDto();
         expertResponseDto.setId(expert.getId());
-        expertResponseDto.setUsername(expert.getUsername());
         expertResponseDto.setName(expert.getName() + " " + expert.getLastname());
+        expertResponseDto.setUsername(expert.getUsername());
         expertResponseDto.setEmail(expert.getEmail());
         expertResponseDto.setLineId(expert.getServiceLine().getId());
         return expertResponseDto;

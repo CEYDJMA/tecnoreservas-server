@@ -50,8 +50,8 @@ public class ReservationService {
             reservationDto.setEndDateTime(reservation.getEndDateTime());
             reservationDto.setExpert(reservation.getExpert().getId());
             reservationDto.setTalent(reservation.getTalent().getId());
-            reservationDto.setNameExpert(reservation.getExpert().getName());
-            reservationDto.setNameTalent(reservation.getTalent().getName());
+            reservationDto.setNameExpert(reservation.getExpert().getName() +" "+ reservation.getExpert().getLastname() );
+            reservationDto.setNameTalent(reservation.getTalent().getName() +" "+ reservation.getTalent().getLastname());
             if (reservation.getTalent() != null &&
                     reservation.getTalent().getTalentProjectDetails() != null) {
                 reservationDto.setAssociateProject(
