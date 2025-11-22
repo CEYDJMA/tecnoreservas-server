@@ -26,11 +26,13 @@ public class ReservationDto {
 
     private Long talent;
 
-    private ReservationStatus status;
+    private String status;
 
     private String nameTalent;
 
     private String nameExpert;
+
+    private Long serviceLineId;
 
     private String associateProject;
 

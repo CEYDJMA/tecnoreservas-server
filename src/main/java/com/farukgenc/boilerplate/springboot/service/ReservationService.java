@@ -48,6 +48,7 @@ public class ReservationService {
             reservationDto.setId(reservation.getId());
             reservationDto.setDateTimeStart(reservation.getDateTimeStart());
             reservationDto.setEndDateTime(reservation.getEndDateTime());
+            reservationDto.setServiceLineId(reservation.getExpert().getServiceLine().getId());
             reservationDto.setExpert(reservation.getExpert().getId());
             reservationDto.setTalent(reservation.getTalent().getId());
             reservationDto.setNameExpert(reservation.getExpert().getName() +" "+ reservation.getExpert().getLastname() );
@@ -57,19 +58,22 @@ public class ReservationService {
                 reservationDto.setAssociateProject(
                         reservation.getTalent().getTalentProjectDetails().get(0).getAssociatedProject());
             }
-            reservationDto.setStatus(reservation.getReservationStatus());
+            reservationDto.setStatus(reservation.getReservationStatus().toString());
             response.add(reservationDto);
         }
         return response;
     }
 
     public List<ReservationDto> getReservationByStatus(String status){
-        List<Reservation> listStatus = reservationRepository.findAllByReservationStatus(status);
+        ReservationStatus statusEnum = ReservationStatus.valueOf(status);
+        List<Reservation> listStatus = reservationRepository.findAllByReservationStatus(statusEnum);
         List<ReservationDto> response = new ArrayList<>();
         for (Reservation reservation: listStatus) {
             ReservationDto reservationDto = new ReservationDto();
+            reservationDto.setId(reservation.getId());
             reservationDto.setDateTimeStart(reservation.getDateTimeStart());
             reservationDto.setEndDateTime(reservation.getEndDateTime());
+            reservationDto.setServiceLineId(reservation.getExpert().getServiceLine().getId());
             reservationDto.setExpert(reservation.getExpert().getId());
             reservationDto.setTalent(reservation.getTalent().getId());
             reservationDto.setNameExpert(reservation.getExpert().getName());
@@ -79,7 +83,7 @@ public class ReservationService {
                 reservationDto.setAssociateProject(
                         reservation.getTalent().getTalentProjectDetails().get(0).getAssociatedProject());
             }
-            reservationDto.setStatus(reservation.getReservationStatus());
+            reservationDto.setStatus(String.valueOf(ReservationStatus.valueOf(reservation.getReservationStatus().toString())));
             response.add(reservationDto);
         }
         return response;
@@ -96,8 +100,10 @@ public class ReservationService {
             List<Reservation> listado = reservationRepository.findAllByExpert_Id(user.getId());
             for (Reservation reservation : listado) {
                     ReservationDto reservationDto = new ReservationDto();
+                    reservationDto.setId(reservation.getId());
                     reservationDto.setDateTimeStart(reservation.getDateTimeStart());
                     reservationDto.setEndDateTime(reservation.getEndDateTime());
+                    reservationDto.setServiceLineId(reservation.getExpert().getServiceLine().getId());
                     reservationDto.setExpert(reservation.getExpert().getId());
                     reservationDto.setTalent(reservation.getTalent().getId());
                     reservationDto.setNameExpert(reservation.getExpert().getName());
@@ -107,6 +113,7 @@ public class ReservationService {
                         reservationDto.setAssociateProject(
                                 reservation.getTalent().getTalentProjectDetails().get(0).getAssociatedProject());
                     }
+                    reservationDto.setStatus(reservation.getReservationStatus().toString());
                     response.add(reservationDto);
                 }
                 return response;
@@ -115,8 +122,10 @@ public class ReservationService {
             List<Reservation> listado = reservationRepository.findAllByTalent_Id(user.getId());
             for (Reservation reservation : listado) {
                 ReservationDto reservationDto = new ReservationDto();
+                reservationDto.setId(reservationDto.getId());
                 reservationDto.setDateTimeStart(reservation.getDateTimeStart());
                 reservationDto.setEndDateTime(reservation.getEndDateTime());
+                reservationDto.setServiceLineId(reservation.getExpert().getServiceLine().getId());
                 reservationDto.setExpert(reservation.getExpert().getId());
                 reservationDto.setTalent(reservation.getTalent().getId());
                 reservationDto.setNameExpert(reservation.getExpert().getName());
@@ -126,7 +135,7 @@ public class ReservationService {
                     reservationDto.setAssociateProject(
                             reservation.getTalent().getTalentProjectDetails().get(0).getAssociatedProject());
                 }
-                reservationDto.setStatus(reservation.getReservationStatus());
+                reservationDto.setStatus(reservation.getReservationStatus().toString());
                 response.add(reservationDto);
             }
         }
@@ -139,8 +148,10 @@ public class ReservationService {
         List<ReservationDto> response = new ArrayList<>();
         for (Reservation reservation: listServiceLine) {
             ReservationDto reservationDto = new ReservationDto();
+            reservationDto.setId(reservation.getId());
             reservationDto.setDateTimeStart(reservation.getDateTimeStart());
             reservationDto.setEndDateTime(reservation.getEndDateTime());
+            reservationDto.setServiceLineId(reservation.getExpert().getServiceLine().getId());
             reservationDto.setExpert(reservation.getExpert().getId());
             reservationDto.setTalent(reservation.getTalent().getId());
             reservationDto.setNameExpert(reservation.getExpert().getName());
@@ -150,7 +161,7 @@ public class ReservationService {
                 reservationDto.setAssociateProject(
                         reservation.getTalent().getTalentProjectDetails().get(0).getAssociatedProject());
             }
-            reservationDto.setStatus(reservation.getReservationStatus());
+            reservationDto.setStatus(reservation.getReservationStatus().toString());
             response.add(reservationDto);
         }
         return response;
@@ -163,6 +174,7 @@ public class ReservationService {
             ReservationDto reservationDto = new ReservationDto();
             reservationDto.setDateTimeStart(reservation.getDateTimeStart());
             reservationDto.setEndDateTime(reservation.getEndDateTime());
+            reservationDto.setServiceLineId(reservation.getExpert().getServiceLine().getId());
             reservationDto.setExpert(reservation.getExpert().getId());
             reservationDto.setTalent(reservation.getTalent().getId());
             reservationDto.setNameExpert(reservation.getExpert().getName());
@@ -172,7 +184,7 @@ public class ReservationService {
                 reservationDto.setAssociateProject(
                         reservation.getTalent().getTalentProjectDetails().get(0).getAssociatedProject());
             }
-            reservationDto.setStatus(reservation.getReservationStatus());
+            reservationDto.setStatus(reservation.getReservationStatus().toString());
             response.add(reservationDto);
         }
         return response;

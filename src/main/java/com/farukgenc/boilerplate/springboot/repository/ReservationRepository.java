@@ -3,6 +3,7 @@ package com.farukgenc.boilerplate.springboot.repository;
 import com.farukgenc.boilerplate.springboot.model.Reservation;
 import com.farukgenc.boilerplate.springboot.model.ServiceLine;
 import com.farukgenc.boilerplate.springboot.model.UserRole;
+import com.farukgenc.boilerplate.springboot.model.enums.ReservationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-    List<Reservation> findAllByReservationStatus(String status);
+    List<Reservation> findAllByReservationStatus(ReservationStatus status);
     List<Reservation> findAllByExpert_ServiceLine(ServiceLine serviceLine);
     List<Reservation> findByDateTimeStartBetween(LocalDateTime date1, LocalDateTime date2);
     List<Reservation> findAllByTalent_Id(Long id);
