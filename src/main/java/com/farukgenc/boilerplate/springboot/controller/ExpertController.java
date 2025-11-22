@@ -66,6 +66,11 @@ public class ExpertController {
         return ResponseEntity.ok(expertService.getAllExperts());
     }
 
+    @GetMapping("/expert/session")
+    public ResponseEntity<ExpertResponseDto> getExpert(){
+        return ResponseEntity.ok().body(expertService.getExpert());
+    }
+
     @PatchMapping("/update/email/{id}")
     @Operation(
             summary = "Actualizar email",

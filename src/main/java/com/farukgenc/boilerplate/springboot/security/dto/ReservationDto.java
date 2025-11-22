@@ -2,14 +2,20 @@ package com.farukgenc.boilerplate.springboot.security.dto;
 
 import com.farukgenc.boilerplate.springboot.model.enums.ReservationStatus;
 import jakarta.validation.constraints.FutureOrPresent;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class ReservationDto {
+
+    private Long id;
 
     @FutureOrPresent(message = "La fecha de inicio no puede ser menor a la actual")
     private LocalDateTime dateTimeStart;
