@@ -144,25 +144,28 @@ public class ReservationService {
 
     public List<ReservationDto> getReservationByServiceLine(Long idServiceLine){
 
-        List<Reservation> listServiceLine = reservationRepository.findAllById(Collections.singleton(idServiceLine));
+        List<Reservation> listServiceLine = reservationRepository.findAllByExpert_ServiceLine_Id(idServiceLine);
+        System.out.println(listServiceLine);
         List<ReservationDto> response = new ArrayList<>();
         for (Reservation reservation: listServiceLine) {
-            ReservationDto reservationDto = new ReservationDto();
-            reservationDto.setId(reservation.getId());
-            reservationDto.setDateTimeStart(reservation.getDateTimeStart());
-            reservationDto.setEndDateTime(reservation.getEndDateTime());
-            reservationDto.setServiceLineId(reservation.getExpert().getServiceLine().getId());
-            reservationDto.setExpert(reservation.getExpert().getId());
-            reservationDto.setTalent(reservation.getTalent().getId());
-            reservationDto.setNameExpert(reservation.getExpert().getName());
-            reservationDto.setNameTalent(reservation.getTalent().getName());
-            if (reservation.getTalent() != null &&
-                    reservation.getTalent().getTalentProjectDetails() != null) {
-                reservationDto.setAssociateProject(
-                        reservation.getTalent().getTalentProjectDetails().get(0).getAssociatedProject());
+            if (reservation.getExpert().getServiceLine().getId().equals(idServiceLine)){
+                ReservationDto reservationDto = new ReservationDto();
+                reservationDto.setId(reservation.getId());
+                reservationDto.setDateTimeStart(reservation.getDateTimeStart());
+                reservationDto.setEndDateTime(reservation.getEndDateTime());
+                reservationDto.setServiceLineId(reservation.getExpert().getServiceLine().getId());
+                reservationDto.setExpert(reservation.getExpert().getId());
+                reservationDto.setTalent(reservation.getTalent().getId());
+                reservationDto.setNameExpert(reservation.getExpert().getName());
+                reservationDto.setNameTalent(reservation.getTalent().getName());
+                if (reservation.getTalent() != null &&
+                        reservation.getTalent().getTalentProjectDetails() != null) {
+                    reservationDto.setAssociateProject(
+                            reservation.getTalent().getTalentProjectDetails().get(0).getAssociatedProject());
+                }
+                reservationDto.setStatus(reservation.getReservationStatus().toString());
+                response.add(reservationDto);
             }
-            reservationDto.setStatus(reservation.getReservationStatus().toString());
-            response.add(reservationDto);
         }
         return response;
     }

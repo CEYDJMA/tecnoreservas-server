@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     List<Reservation> findAllByReservationStatus(ReservationStatus status);
-    List<Reservation> findAllByExpert_ServiceLine(ServiceLine serviceLine);
+    List<Reservation> findAllByExpert_ServiceLine_Id(Long serviceLine);
     List<Reservation> findByDateTimeStartBetween(LocalDateTime date1, LocalDateTime date2);
     List<Reservation> findAllByTalent_Id(Long id);
     List<Reservation> findAllByExpert_Id(Long id);
