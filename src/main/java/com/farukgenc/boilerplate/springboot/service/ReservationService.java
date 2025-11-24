@@ -172,6 +172,7 @@ public class ReservationService {
         List<ReservationDto> response = new ArrayList<>();
         for (Reservation reservation : listByDates) {
             ReservationDto reservationDto = new ReservationDto();
+            reservationDto.setId(reservation.getId());
             reservationDto.setDateTimeStart(reservation.getDateTimeStart());
             reservationDto.setEndDateTime(reservation.getEndDateTime());
             reservationDto.setServiceLineId(reservation.getExpert().getServiceLine().getId());
