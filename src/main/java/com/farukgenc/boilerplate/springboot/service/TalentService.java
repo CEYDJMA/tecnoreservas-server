@@ -25,6 +25,9 @@ public class TalentService {
     private TalentProjectDetailService talentProjectDetailService;
 
     @Autowired
+    private TalentProjectDetailRepository talentProjectDetailRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -165,5 +168,28 @@ public class TalentService {
             reservationDto.setTalent(user.getId());
         }
         return reservationService.createReservation(reservationDto, userRole, flag);
+    }
+
+    public List<TalentAndProjectDto> getTalentsByServiceLine(Long serviceLineId){
+        List<TalentProjectDetail> talentProjects = talentProjectDetailRepository.findAllByServiceLine_Id(serviceLineId);
+        List<TalentAndProjectDto> talents = new ArrayList<>();
+        for (TalentProjectDetail projects : talentProjects){
+            Talent talent = talentRepository.findById(projects.getTalent().getId()).orElseThrow();
+            TalentAndProjectDto response = new TalentAndProjectDto();
+
+            TalentDto talentDto = new TalentDto();
+            talentDto.setName(talent.getName());
+            talentDto.setUsername(talent.getUsername());
+            talentDto.setEmail(talent.getEmail());
+
+            ProjectDetailDto projectDetailDto = new ProjectDetailDto();
+            projectDetailDto.setAssociatedProject(projects.getAssociatedProject());
+            projectDetailDto.setProjectPhase(projects.getProjectPhase().toString());
+
+            response.setTalentDto(talentDto);
+            response.setProjectDetailDto(projectDetailDto);
+            talents.add(response);
+        }
+        return talents;
     }
 }

@@ -4,7 +4,10 @@ import com.farukgenc.boilerplate.springboot.model.TalentProjectDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface TalentProjectDetailRepository extends JpaRepository<TalentProjectDetail, Long> {
     TalentProjectDetail findByTalentId(Long talentId);
+    List<TalentProjectDetail> findAllByServiceLine_Id(Long serviceLineId);
 }
