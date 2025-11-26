@@ -50,12 +50,14 @@ public class SecurityConfiguration {
 																	      "/swagger-ui.html",
 																	      "/actuator/**",
 																	      "/notifications/stream",
+                                                                          "/notifications",
                                                                           "/talents/create/reservation")
 													   .permitAll()
                         // TalentController
                         .requestMatchers(HttpMethod.POST, "/talents/create").hasAnyAuthority("EXPERT","SUPERADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/talents/update/email/**").hasAnyAuthority("EXPERT","TALENT")
                         .requestMatchers(HttpMethod.PATCH, "/talents/change-password").hasAuthority("TALENT")
+                        .requestMatchers(HttpMethod.GET, "/talents/talent/**").hasAuthority("TALENT")
                         .requestMatchers(HttpMethod.PATCH, "/talents/active/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH, "/talents/inactive/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH, "/talents/suspended/**").hasAuthority("EXPERT")
@@ -80,6 +82,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PATCH, "/reservations/confirmed/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH,"/reservations/fulfilled/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH,"/reservations/missed/**").hasAuthority("EXPERT")
+                        // ServiceLine Controller
+                        .requestMatchers(HttpMethod.GET, "/service/**").hasAnyAuthority("EXPERT", "TALENT","SUPERADMIN")
                         //ResourceController
                         .requestMatchers(HttpMethod.GET, "/resources/**").hasAnyAuthority("EXPERT", "TALENT")
                         .requestMatchers(HttpMethod.POST, "/resources/**").hasAuthority("EXPERT")
