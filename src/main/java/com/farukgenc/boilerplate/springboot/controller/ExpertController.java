@@ -42,6 +42,21 @@ public class ExpertController {
     }
 
     @PostMapping("/create-reservations")
+    @Operation(
+            summary = "Crea una reserva por experto",
+            description = "Crea una reserva especificamente para el rol",
+            tags = "Expert"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Reserva creada"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error al crear la reserva"
+            )
+    })
     public ResponseEntity<ReservationResponse> createReservations(@RequestBody ReservationByExpertRequest request){
         return ResponseEntity.ok(expertService.createReservationsByExpert(request));
     }
@@ -67,6 +82,21 @@ public class ExpertController {
     }
 
     @GetMapping("/expert/session")
+    @Operation(
+            summary = "Muestra el experto en sesion",
+            description = "Muestra el experto en sesion",
+            tags = "Expert"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Experto en sesion retornado."
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Parametros o peticion mal realizada."
+            )
+    })
     public ResponseEntity<ExpertResponseDto> getExpert(){
         return ResponseEntity.ok().body(expertService.getExpert());
     }
