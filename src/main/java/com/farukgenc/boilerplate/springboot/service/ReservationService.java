@@ -6,6 +6,7 @@ import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
 import com.farukgenc.boilerplate.springboot.repository.ReservationRepository;
 import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
+import com.farukgenc.boilerplate.springboot.security.dto.CreateReservationWithResourcesRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationResponse;
 import com.farukgenc.boilerplate.springboot.security.dto.notification.CreateNotificationRequest;
@@ -39,6 +40,9 @@ public class ReservationService {
 
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private ReservationResourceService reservationResourceService;
 
     public List<ReservationDto> getReservations() {
         List<Reservation> listaReservas = reservationRepository.findAll();
@@ -360,4 +364,57 @@ public class ReservationService {
 
         return "La reserva de " + reservation.getTalent().getName() + " ha sido incumplida.";
     }
+
+    @Transactional
+    public ReservationResponse createReservationWithResource(CreateReservationWithResourcesRequest request) {
+
+        // Obtener el usuario autenticado
+        String username = userServiceImpl.getLoggedUser();
+        User user = userRepository.findByUsername(username);
+        UserRole userRole = user.getUserRole();
+
+        // Validar experto y talento
+        Expert expert = expertRepository.findById(request.getExpertId())
+                .orElseThrow(() -> new RuntimeException("Expert not found " + request.getExpertId()));
+
+        Talent talent = talentRepository.findById(request.getTalentId())
+                .orElseThrow(() -> new RuntimeException("Talent not found " + request.getTalentId()));
+
+        // Crear reserva base
+        Reservation reservation = new Reservation();
+        reservation.setExpert(expert);
+        reservation.setTalent(talent);
+        reservation.setDateTimeStart(request.getStartDate());
+        reservation.setEndDateTime(request.getEndDate());
+        reservation.setCreationDate(LocalDateTime.now());
+        reservation.setLastModifiedDate(LocalDateTime.now());
+
+        // Estado según rol
+        if (userRole == UserRole.EXPERT) {
+            reservation.setReservationStatus(ReservationStatus.CONFIRMADA);
+        } else {
+            reservation.setReservationStatus(ReservationStatus.SOLICITADA);
+        }
+
+        // Guardar reserva
+        reservation = reservationRepository.save(reservation);
+
+        // Asignar recursos usando tu servicio actual
+        if (request.getResourceIds() != null && !request.getResourceIds().isEmpty()) {
+            reservationResourceService.assignResource(request.getResourceIds(), reservation.getId());
+        }
+
+        // Respuesta
+        ReservationResponse response = new ReservationResponse();
+        response.setDateTimeStart(reservation.getDateTimeStart());
+        response.setEndDateTime(reservation.getEndDateTime());
+        response.setStatus(reservation.getReservationStatus());
+        response.setServiceLine(expert.getServiceLine().getServiceLineName());
+        response.setExpert(expert.getName() + " " + expert.getLastname());
+        response.setTalent(talent.getName() + " " + talent.getLastname());
+
+        return response;
+    }
+
+
 }
