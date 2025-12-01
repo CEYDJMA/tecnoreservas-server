@@ -41,6 +41,21 @@ public class TalentController {
     }
 
     @GetMapping("/talent/session")
+    @Operation(
+            summary = "Muestra el talento en sesion",
+            description = "Muestra el talento que sta en la sesion actual",
+            tags = "Talent"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Talento en sesion retornado."
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Parametros o peticion mal realizada."
+            )
+    })
     public ResponseEntity<TalentResponseDto> getTalent(){
         return ResponseEntity.ok().body(talentService.getTalent());
     }
@@ -143,7 +158,7 @@ public class TalentController {
                     description = "Parametros o peticion mal realizada."
             )
     })
-    public ResponseEntity<String> inactiveExpert(@PathVariable Long id){
+    public ResponseEntity<String> inactiveTalent(@PathVariable Long id){
         return ResponseEntity.ok(talentService.talentInactive(id));
     }
 
@@ -163,11 +178,26 @@ public class TalentController {
                     description = "Parametros o peticion mal realizada."
             )
     })
-    public ResponseEntity<String> suspendedExpert(@PathVariable Long id){
+    public ResponseEntity<String> suspendedTalent(@PathVariable Long id){
         return ResponseEntity.ok(talentService.talentSuspended(id));
     }
 
     @PostMapping("/create/reservation")
+    @Operation(
+            summary = "Crear reserva con rol de talento",
+            description = "Crear reservas especificamente para el rol de talento",
+            tags = "Talent"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Reserva creada"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "La reserva no se pudo crear"
+            )
+    })
     public ResponseEntity<ReservationResponse> createReservationByTalent(@RequestBody ReservationRequest request){
         return ResponseEntity.ok().body(talentService.createReservation(request));
     }

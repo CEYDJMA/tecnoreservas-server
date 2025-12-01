@@ -139,31 +139,6 @@ public class ReservationController {
     }
 
     @Operation(
-            summary = "Crea una reserva.",
-            description = "Registra una reserva a partir de los datos enviados.",
-            tags = "Reservations")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Reserva creada correctamente",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Reservation.class))),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor",
-                    content = @Content),
-            @ApiResponse(responseCode = "400", description = "parametros o peticion mal realizada",
-                    content = @Content),
-            @ApiResponse(responseCode = "401", description = "acceso restringido",
-                    content = @Content)
-    })
-    @PostMapping("/create")
-    public ResponseEntity<ReservationResponse> createReservations(@RequestBody ReservationDto reservationDto){
-        int flag = 2;
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userRepository.findByUsername(userDetails.getUsername());
-        UserRole userRole = user.getUserRole();
-        return ResponseEntity.ok(reservationService.createReservation(reservationDto, userRole, flag));
-    }
-
-    @Operation(
             summary = "Modifica la reserva.",
             description = "Actualiza los datos de una reserva existente a partir de su identificador.",
             tags = "Reservations")
