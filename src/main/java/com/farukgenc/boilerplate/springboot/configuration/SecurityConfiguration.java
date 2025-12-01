@@ -83,7 +83,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PATCH,"/reservations/fulfilled/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH,"/reservations/missed/**").hasAuthority("EXPERT")
                         // ServiceLine Controller
-                        .requestMatchers(HttpMethod.GET, "/service/**").hasAnyAuthority("EXPERT", "TALENT","SUPERADMIN")
+                        .requestMatchers(HttpMethod.GET, "/service/**").hasAnyAuthority("EXPERT", "TALENT","SUPERADMIN","SECURITY")
                         //ResourceController
                         .requestMatchers(HttpMethod.GET, "/resources/**").hasAnyAuthority("EXPERT", "TALENT")
                         .requestMatchers(HttpMethod.POST, "/resources/**").hasAuthority("EXPERT")
