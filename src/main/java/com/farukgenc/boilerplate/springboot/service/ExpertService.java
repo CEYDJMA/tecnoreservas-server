@@ -7,7 +7,6 @@ import com.farukgenc.boilerplate.springboot.repository.ServiceLineRepository;
 import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
 import com.farukgenc.boilerplate.springboot.security.dto.*;
-import com.farukgenc.boilerplate.springboot.security.utils.SecurityConstants;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -18,8 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ExpertService {
@@ -73,6 +70,8 @@ public class ExpertService {
         reservationDto.setExpert(user.getId());
         return reservationService.createReservation(reservationDto, userRole, flag);
     }
+
+
 
     public List<ExpertResponseDto> getAllExperts(){
         List<Expert> experts = expertRepository.findAll();
@@ -141,5 +140,12 @@ public class ExpertService {
         expertRepository.save(expert);
 
         return "Inactive expert";
+    }
+
+    public ReservationResponse createReservationResourceRequest (ReservationWithResourcesRequest createReservationWithResourcesRequest) {
+        if (createReservationWithResourcesRequest.getResourceIds().isEmpty() || createReservationWithResourcesRequest.getResourceIds().get(0) == 0) {
+            createReservationWithResourcesRequest.setResourceIds(null);
+        }
+        return reservationService.createReservationWithResource(createReservationWithResourcesRequest);
     }
 }

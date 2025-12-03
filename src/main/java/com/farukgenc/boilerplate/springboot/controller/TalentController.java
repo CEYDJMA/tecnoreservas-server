@@ -182,7 +182,7 @@ public class TalentController {
         return ResponseEntity.ok(talentService.talentSuspended(id));
     }
 
-    @PostMapping("/create/reservation")
+    /*@PostMapping("/create/reservation")
     @Operation(
             summary = "Crear reserva con rol de talento",
             description = "Crear reservas especificamente para el rol de talento",
@@ -200,5 +200,25 @@ public class TalentController {
     })
     public ResponseEntity<ReservationResponse> createReservationByTalent(@RequestBody ReservationRequest request){
         return ResponseEntity.ok().body(talentService.createReservation(request));
+    }*/
+
+    @PostMapping("/with-resources")
+    @Operation(
+            summary = "Crear reserva con rol de talento",
+            description = "Crear reservas especificamente para el rol de talento y con recursos si son necesarios",
+            tags = "Talent"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Reserva creada"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "La reserva no se pudo crear"
+            )
+    })
+    public ResponseEntity<ReservationResponse> createReservationWithResources(@RequestBody ReservationWithResourcesRequest reservationWithResourcesRequest){
+        return ResponseEntity.ok().body(talentService.createReservationWithResources(reservationWithResourcesRequest));
     }
 }

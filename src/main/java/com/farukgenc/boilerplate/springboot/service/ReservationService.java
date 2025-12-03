@@ -6,7 +6,7 @@ import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
 import com.farukgenc.boilerplate.springboot.repository.ReservationRepository;
 import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
-import com.farukgenc.boilerplate.springboot.security.dto.CreateReservationWithResourcesRequest;
+import com.farukgenc.boilerplate.springboot.security.dto.ReservationWithResourcesRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationResponse;
 import com.farukgenc.boilerplate.springboot.security.dto.notification.CreateNotificationRequest;
@@ -366,7 +366,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationResponse createReservationWithResource(CreateReservationWithResourcesRequest request) {
+    public ReservationResponse createReservationWithResource(ReservationWithResourcesRequest request) {
 
         // Obtener el usuario autenticado
         String username = userServiceImpl.getLoggedUser();

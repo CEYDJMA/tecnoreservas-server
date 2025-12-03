@@ -1,6 +1,6 @@
 package com.farukgenc.boilerplate.springboot.controller;
 
-import com.farukgenc.boilerplate.springboot.security.dto.CreateReservationWithResourcesRequest;
+import com.farukgenc.boilerplate.springboot.security.dto.ReservationWithResourcesRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationResponse;
 import com.farukgenc.boilerplate.springboot.service.ReservationResourceService;
 import com.farukgenc.boilerplate.springboot.service.ReservationService;
@@ -27,7 +27,7 @@ public class ReservationResourceController {
     }
 
     @PostMapping("/create-reservation-with-resource")
-    public ResponseEntity<ReservationResponse> createReservationWithResources(@RequestBody CreateReservationWithResourcesRequest reservationWithResourcesRequest){
+    public ResponseEntity<ReservationResponse> createReservationWithResources(@RequestBody ReservationWithResourcesRequest reservationWithResourcesRequest){
         return ResponseEntity.ok().body(reservationService.createReservationWithResource(reservationWithResourcesRequest));
     }
 }

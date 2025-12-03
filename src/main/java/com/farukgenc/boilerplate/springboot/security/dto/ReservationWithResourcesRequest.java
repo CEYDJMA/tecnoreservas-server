@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateReservationWithResourcesRequest {
+public class ReservationWithResourcesRequest {
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;

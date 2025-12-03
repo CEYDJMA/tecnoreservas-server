@@ -6,8 +6,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.http.client.HttpComponentsHttpAsyncClientBuilder;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +39,7 @@ public class ExpertController {
         return ResponseEntity.ok(expertService.createExpert(expertDto));
     }
 
-    @PostMapping("/create-reservations")
+    /*@PostMapping("/create-reservations")
     @Operation(
             summary = "Crea una reserva por experto",
             description = "Crea una reserva especificamente para el rol",
@@ -59,7 +57,7 @@ public class ExpertController {
     })
     public ResponseEntity<ReservationResponse> createReservations(@RequestBody ReservationByExpertRequest request){
         return ResponseEntity.ok(expertService.createReservationsByExpert(request));
-    }
+    }*/
 
     @GetMapping("/all")
     @Operation(
@@ -179,5 +177,25 @@ public class ExpertController {
     })
     public ResponseEntity<String> inactiveExpert(@PathVariable Long id){
         return ResponseEntity.ok(expertService.expertInactive(id));
+    }
+
+    @PostMapping("/with-resources")
+    @Operation(
+            summary = "Crea una reserva por experto",
+            description = "Crea una reserva especificamente para experto y con recursos si son necesarios",
+            tags = "Expert"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Reserva creada"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error al crear la reserva"
+            )
+    })
+    public ResponseEntity<ReservationResponse> createReservationWithResourcesRequest (@RequestBody ReservationWithResourcesRequest createReservationWithResourcesRequest) {
+        return ResponseEntity.ok().body(expertService.createReservationResourceRequest(createReservationWithResourcesRequest));
     }
 }
