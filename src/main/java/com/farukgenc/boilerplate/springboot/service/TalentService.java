@@ -197,6 +197,7 @@ public class TalentService {
         if (reservationWithResourcesRequest.getResourceIds().isEmpty() || reservationWithResourcesRequest.getResourceIds().get(0) == 0){
             reservationWithResourcesRequest.setResourceIds(null);
         }
+
         return reservationService.createReservationWithResource(reservationWithResourcesRequest);
     }
 }

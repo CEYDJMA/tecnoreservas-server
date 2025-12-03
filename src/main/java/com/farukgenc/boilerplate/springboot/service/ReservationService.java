@@ -2,15 +2,13 @@ package com.farukgenc.boilerplate.springboot.service;
 
 import com.farukgenc.boilerplate.springboot.model.*;
 import com.farukgenc.boilerplate.springboot.model.enums.ReservationStatus;
-import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
-import com.farukgenc.boilerplate.springboot.repository.ReservationRepository;
-import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
-import com.farukgenc.boilerplate.springboot.repository.UserRepository;
+import com.farukgenc.boilerplate.springboot.repository.*;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationWithResourcesRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationDto;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationResponse;
 import com.farukgenc.boilerplate.springboot.security.dto.notification.CreateNotificationRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.notification.NotificationDTO;
+import com.farukgenc.boilerplate.springboot.security.dto.resource.CreateResourceResponse;
 import com.farukgenc.boilerplate.springboot.security.mapper.notifications.NotificationMapper;
 import com.farukgenc.boilerplate.springboot.security.service.UserServiceImpl;
 import jakarta.transaction.Transactional;
@@ -43,6 +41,12 @@ public class ReservationService {
 
     @Autowired
     private ReservationResourceService reservationResourceService;
+
+    @Autowired
+    private ReservationResourceRepository reservationResourceRepository;
+
+    @Autowired
+    private ResourceRepository resourceRepository;
 
     public List<ReservationDto> getReservations() {
         List<Reservation> listaReservas = reservationRepository.findAll();
@@ -380,6 +384,7 @@ public class ReservationService {
         Talent talent = talentRepository.findById(request.getTalentId())
                 .orElseThrow(() -> new RuntimeException("Talent not found " + request.getTalentId()));
 
+
         // Crear reserva base
         Reservation reservation = new Reservation();
         reservation.setExpert(expert);
@@ -412,6 +417,24 @@ public class ReservationService {
         response.setServiceLine(expert.getServiceLine().getServiceLineName());
         response.setExpert(expert.getName() + " " + expert.getLastname());
         response.setTalent(talent.getName() + " " + talent.getLastname());
+
+        List<ReservationResource> reservationResources = reservationResourceRepository.findByReservation_Id(reservation.getId());
+
+        List<CreateResourceResponse> resourceResponses = new ArrayList<>();
+
+        for (ReservationResource reservationId: reservationResources) {
+            Resource item = resourceRepository.findById(reservationId.getResource().getId()).orElseThrow();
+            CreateResourceResponse createResourceResponse = new CreateResourceResponse();
+            createResourceResponse.setId(item.getId());
+            createResourceResponse.setName(item.getName());
+            //reservationId.getResource().getId();
+            //reservationId.getResource().getName();
+            resourceResponses.add(createResourceResponse);
+        }
+
+        response.setResourcesId(resourceResponses);
+        response.setProjectId(talent.getTalentProjectDetails().getFirst().getId());
+        response.setProjectName(talent.getTalentProjectDetails().getFirst().getAssociatedProject());
 
         return response;
     }
