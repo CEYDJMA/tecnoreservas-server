@@ -53,6 +53,8 @@ public class SecurityConfiguration {
                                                                           "/notifications",
                                                                           "/talents/create/reservation")
 													   .permitAll()
+                        //UserController
+                        .requestMatchers(HttpMethod.GET, "/users/**").hasAuthority("SUPERADMIN")
                         // TalentController
                         .requestMatchers(HttpMethod.POST, "/talents/create").hasAnyAuthority("EXPERT","SUPERADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/talents/update/email/**").hasAnyAuthority("EXPERT","TALENT")

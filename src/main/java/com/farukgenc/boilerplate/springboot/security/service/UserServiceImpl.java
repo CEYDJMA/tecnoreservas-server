@@ -1,6 +1,7 @@
 package com.farukgenc.boilerplate.springboot.security.service;
 
 import com.farukgenc.boilerplate.springboot.model.enums.UserStatus;
+import com.farukgenc.boilerplate.springboot.security.dto.user.UserResponseDto;
 import com.farukgenc.boilerplate.springboot.service.UserValidationService;
 import com.farukgenc.boilerplate.springboot.model.User;
 import com.farukgenc.boilerplate.springboot.model.UserRole;
@@ -18,7 +19,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -75,7 +78,26 @@ public class UserServiceImpl implements UserService {
 		return UserMapper.INSTANCE.convertToAuthenticatedUserDto(user);
 	}
 
-	public String getLoggedUser(){
+    @Override
+    public List<UserResponseDto> findAll() {
+        List<User> response = userRepository.findAll();
+        List<UserResponseDto> responseDto = response
+                .stream()
+                .map(user -> new UserResponseDto(
+                        user.getId(),
+                        user.getName(),
+                        user.getLastname(),
+                        user.getUsername(),
+                        user.getEmail(),
+                        user.getUserStatus(),
+                        user.getUserRole()
+                ))
+                .toList();
+
+        return responseDto;
+    }
+
+    public String getLoggedUser(){
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 				if (authentication != null && authentication.isAuthenticated()) {
 				Object principal = authentication.getPrincipal();
