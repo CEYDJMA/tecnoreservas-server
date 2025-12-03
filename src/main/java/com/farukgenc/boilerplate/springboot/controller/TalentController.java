@@ -201,4 +201,9 @@ public class TalentController {
     public ResponseEntity<ReservationResponse> createReservationByTalent(@RequestBody ReservationRequest request){
         return ResponseEntity.ok().body(talentService.createReservation(request));
     }
+
+    @PostMapping("/with-resources")
+    public ResponseEntity<ReservationResponse> createReservationWithResources(@RequestBody CreateReservationWithResourcesRequest reservationWithResourcesRequest){
+        return ResponseEntity.ok().body(talentService.createReservationWithResources(reservationWithResourcesRequest));
+    }
 }

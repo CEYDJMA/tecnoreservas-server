@@ -192,4 +192,11 @@ public class TalentService {
         }
         return talents;
     }
+
+    public ReservationResponse createReservationWithResources(CreateReservationWithResourcesRequest reservationWithResourcesRequest){
+        if (reservationWithResourcesRequest.getResourceIds().isEmpty()){
+            reservationWithResourcesRequest.setResourceIds(null);
+        }
+        return reservationService.createReservationWithResource(reservationWithResourcesRequest);
+    }
 }
