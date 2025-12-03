@@ -1,6 +1,7 @@
 package com.farukgenc.boilerplate.springboot.security.dto.resource;
 
 import com.farukgenc.boilerplate.springboot.model.ServiceLine;
+import com.farukgenc.boilerplate.springboot.model.enums.ResourceStatus;
 import com.farukgenc.boilerplate.springboot.model.enums.ResourceType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -55,6 +56,11 @@ public class CreateResourceRequest {
      */
     @NotNull(message = "El tipo de recurso es obligatorio")
     private ResourceType resourceType;
+
+    /**
+     * Resource type. Required field for determining the type of resource to create.
+     */
+    private ResourceStatus status;
 
     /**
      * Service line ID. Required for resource classification.
