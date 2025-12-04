@@ -1,5 +1,6 @@
 package com.farukgenc.boilerplate.springboot.controller;
 
+import com.farukgenc.boilerplate.springboot.model.UserRole;
 import com.farukgenc.boilerplate.springboot.security.dto.*;
 import com.farukgenc.boilerplate.springboot.service.ExpertService;
 import io.swagger.v3.oas.annotations.Operation;

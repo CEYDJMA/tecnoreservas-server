@@ -1,5 +1,6 @@
 package com.farukgenc.boilerplate.springboot.controller;
 
+import com.farukgenc.boilerplate.springboot.model.UserRole;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationWithResourcesRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.ReservationResponse;
 import com.farukgenc.boilerplate.springboot.service.ReservationResourceService;

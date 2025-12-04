@@ -380,6 +380,42 @@ public class ReservationService {
         User user = userRepository.findByUsername(username);
         UserRole userRole = user.getUserRole();
 
+        LocalDateTime start = request.getStartDate();
+        LocalDateTime end = request.getEndDate();
+        LocalTime time = start
+                .atZone(ZoneId.systemDefault())
+                .toLocalTime();
+        // horario no disponible
+        LocalTime almuerzoInicio = LocalTime.of(12,0);
+        LocalTime almuerzoFin = LocalTime.of(14,0);
+        LocalTime startTime = start.toLocalTime();
+        LocalTime endTime = end.toLocalTime();
+        LocalDate fecha1 = start.toLocalDate();
+        LocalDate fecha2 = end.toLocalDate();
+        LocalTime inicio = LocalTime.of(8,0);
+        LocalTime fin = LocalTime.of(16,0);
+        LocalDate hoy = LocalDate.now();
+        boolean intersectaConAlmuerzo = !endTime.isBefore(almuerzoInicio) && !startTime.isAfter(almuerzoFin);
+
+        if (time.isBefore(inicio) || time.isAfter(fin)) {
+            throw new IllegalArgumentException("solo se permiten reservas entre las 8:00 y 16:00 horas.");
+        }
+        if (end.isBefore(start)) {
+            throw new IllegalArgumentException("El tiempo de fin de la reserva no puede ser menor al tiempo de inicio de la reserva.");
+        }
+        if (end.getHour() - start.getHour() < 1) {
+            throw new IllegalArgumentException("El tiempo de reserva no puede ser inferior a una hora.");
+        }
+        if (fecha1.isBefore(hoy)) {
+            throw new IllegalArgumentException("Solo se puede reservar hoy o en los siguientes dias.");
+        }
+        if (!fecha1.atStartOfDay().equals(fecha2.atStartOfDay())) {
+            throw new IllegalArgumentException("Las fechas de inicio y fin de la reserva deben ser en el mismo día.");
+        }
+        if (intersectaConAlmuerzo) {
+            throw new IllegalArgumentException("No se puede reservar entre las 12:01 y las 13:59.");
+        }
+
         // Validar experto y talento
         Expert expert = expertRepository.findById(request.getExpertId())
                 .orElseThrow(() -> new RuntimeException("Expert not found " + request.getExpertId()));
@@ -406,6 +442,11 @@ public class ReservationService {
 
         // Guardar reserva
         reservation = reservationRepository.save(reservation);
+        // Crear nueva notificacion
+        int flag = 1;
+        CreateNotificationRequest notificationRequestDto =
+                NotificationMapper.buildCreateNotificationRequest(talent,expert,reservation);
+        NotificationDTO notificationDTO = notificationService.createNotification(notificationRequestDto, flag);
 
         // Asignar recursos usando tu servicio actual
         if (request.getResourceIds() != null && !request.getResourceIds().isEmpty()) {
@@ -427,25 +468,27 @@ public class ReservationService {
 
         for (ReservationResource reservationId: reservationResources) {
             Resource item = resourceRepository.findById(reservationId.getResource().getId()).orElseThrow();
-            CreateResourceResponse createResourceResponse = new CreateResourceResponse();
-            createResourceResponse.setId(item.getId());
-            createResourceResponse.setName(item.getName());
-            //reservationId.getResource().getId();
-            //reservationId.getResource().getName();
-            resourceResponses.add(createResourceResponse);
+            if (item.getServiceLine() .getId().equals(expert.getServiceLine().getId())) {
+                CreateResourceResponse createResourceResponse = new CreateResourceResponse();
+                createResourceResponse.setId(item.getId());
+                createResourceResponse.setName(item.getName());
+                resourceResponses.add(createResourceResponse);
+            } else {
+                System.out.println("El recurso no pertenece a la linea de servicio en la que va a reservar");
+            }
         }
 
         if (request.getProjectId() != null) {
             TalentProjectDetail talentProjectDetail = talentProjectDetailRepository.findById(request.getProjectId()).orElseThrow();
-            if (talentProjectDetail.getTalent().getId().equals(talent.getId())){
+            if (talentProjectDetail.getTalent().getId().equals(talent.getId()) && talentProjectDetail.getServiceLine().getId().equals(expert.getServiceLine().getId())){
                 response.setProjectId(request.getProjectId());
                 response.setProjectName(talentProjectDetail.getAssociatedProject());
+            } else {
+                throw new IllegalArgumentException("El proyecto no pertenece al talento en sesion o no pertenece a la linea de servicio en el que esta registrado");
             }
         }
 
         response.setResourcesId(resourceResponses);
-        //response.setProjectId(talent.getTalentProjectDetails().getFirst().getId());
-        //response.setProjectName(talent.getTalentProjectDetails().getFirst().getAssociatedProject());
 
         return response;
     }
