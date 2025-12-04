@@ -48,6 +48,9 @@ public class ReservationService {
     @Autowired
     private ResourceRepository resourceRepository;
 
+    @Autowired
+    private TalentProjectDetailRepository talentProjectDetailRepository;
+
     public List<ReservationDto> getReservations() {
         List<Reservation> listaReservas = reservationRepository.findAll();
         List<ReservationDto> response = new ArrayList<>();
@@ -432,9 +435,17 @@ public class ReservationService {
             resourceResponses.add(createResourceResponse);
         }
 
+        if (request.getProjectId() != null) {
+            TalentProjectDetail talentProjectDetail = talentProjectDetailRepository.findById(request.getProjectId()).orElseThrow();
+            if (talentProjectDetail.getTalent().getId().equals(talent.getId())){
+                response.setProjectId(request.getProjectId());
+                response.setProjectName(talentProjectDetail.getAssociatedProject());
+            }
+        }
+
         response.setResourcesId(resourceResponses);
-        response.setProjectId(talent.getTalentProjectDetails().getFirst().getId());
-        response.setProjectName(talent.getTalentProjectDetails().getFirst().getAssociatedProject());
+        //response.setProjectId(talent.getTalentProjectDetails().getFirst().getId());
+        //response.setProjectName(talent.getTalentProjectDetails().getFirst().getAssociatedProject());
 
         return response;
     }

@@ -11,6 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReservationWithResourcesRequest {
+
+    private Long projectId;
+
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
