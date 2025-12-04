@@ -71,6 +71,25 @@ public class TalentService {
         }
     }
 
+    public TalentResponseDto updateTalent(Long idTalent, Long idProject, TalentDto talentDto){
+        try {
+            Talent talent = talentRepository.findById(idTalent).orElseThrow();
+            talent.setUsername(talentDto.getUsername());
+            talent.setEmail(talentDto.getEmail());
+            talentRepository.save(talent);
+            TalentResponseDto talentResponseDto = new TalentResponseDto();
+            talentResponseDto.setId(talent.getId());
+            talentResponseDto.setUsername(talent.getUsername());
+            talentResponseDto.setName(talent.getName());
+            TalentProjectDetail talentProjectDetail = talentProjectDetailService.getTalentProjectDetailById(idProject);
+            talentResponseDto.setLineProjectId(talentProjectDetail.getServiceLine().getId());
+            talentResponseDto.setEmail(talent.getEmail());
+            return talentResponseDto;
+        } catch (Error e){
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<TalentResponseDto> getTalents(){
         List<Talent> talentList = talentRepository.findAll();
         List<TalentResponseDto> talentDtoList = new ArrayList<>();
@@ -199,5 +218,9 @@ public class TalentService {
         }
 
         return reservationService.createReservationWithResource(reservationWithResourcesRequest);
+    }
+
+    public void updatePhase(Long id, String phase){
+        System.out.println(id + phase);
     }
 }

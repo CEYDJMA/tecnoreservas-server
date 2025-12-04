@@ -222,4 +222,9 @@ public class TalentController {
     public ResponseEntity<ReservationResponse> createReservationWithResources(@RequestBody ReservationWithResourcesRequest reservationWithResourcesRequest){
         return ResponseEntity.ok().body(talentService.createReservationWithResources(reservationWithResourcesRequest));
     }
+
+    @PatchMapping("/update/{idTalent}/{idProject}")
+    public ResponseEntity<TalentResponseDto> updateTalent(@PathVariable Long idTalent, Long idProject , @RequestBody TalentDto talentDto){
+        return ResponseEntity.ok().body(talentService.updateTalent(idTalent, idProject, talentDto));
+    }
 }

@@ -11,6 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,8 +73,22 @@ public class TalentProjectDetailService {
         return projectDetail;
     }
 
+    public TalentProjectDetail getTalentProjectDetailById(Long id){
+        return talentProjectDetailRepository.findById(id).orElseThrow();
+    }
+
     public Long getLineProjectTalentId(Long talentId){
         TalentProjectDetail projectDetail = talentProjectDetailRepository.findByTalentId(talentId);
         return projectDetail.getId();
+    }
+
+    public List<Long> getAllProjectsOfTalent(Long talentId){
+        List<TalentProjectDetail> projectDetails = Collections.singletonList(talentProjectDetailRepository.findByTalentId(talentId));
+        List<Long> response = new ArrayList<>();
+        for (TalentProjectDetail talentProjectDetail: projectDetails){
+            Long id = talentProjectDetail.getId();
+            response.add(id);
+        }
+        return response;
     }
 }
