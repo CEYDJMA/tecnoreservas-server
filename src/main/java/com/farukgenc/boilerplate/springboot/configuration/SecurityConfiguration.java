@@ -53,6 +53,8 @@ public class SecurityConfiguration {
                                                                           "/notifications",
                                                                           "/talents/create/reservation")
 													   .permitAll()
+                        //UserController
+                        .requestMatchers(HttpMethod.GET, "/users/**").hasAuthority("SUPERADMIN")
                         // TalentController
                         .requestMatchers(HttpMethod.POST, "/talents/create").hasAnyAuthority("EXPERT","SUPERADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/talents/update/email/**").hasAnyAuthority("EXPERT","TALENT")
@@ -83,7 +85,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PATCH,"/reservations/fulfilled/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH,"/reservations/missed/**").hasAuthority("EXPERT")
                         // ServiceLine Controller
-                        .requestMatchers(HttpMethod.GET, "/service/**").hasAnyAuthority("EXPERT", "TALENT","SUPERADMIN")
+                        .requestMatchers(HttpMethod.GET, "/service/**").hasAnyAuthority("EXPERT", "TALENT","SUPERADMIN","SECURITY")
                         //ResourceController
                         .requestMatchers(HttpMethod.GET, "/resources/**").hasAnyAuthority("EXPERT", "TALENT")
                         .requestMatchers(HttpMethod.POST, "/resources/**").hasAuthority("EXPERT")

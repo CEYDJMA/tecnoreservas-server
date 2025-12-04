@@ -74,7 +74,11 @@ public class ResourceMapper {
         resource.setServiceLine(serviceLine);
 
         // Set default status for new resources
-        resource.setStatus(com.farukgenc.boilerplate.springboot.model.enums.ResourceStatus.DISPONIBLE);
+        if (request.getStatus() == null){
+            resource.setStatus(com.farukgenc.boilerplate.springboot.model.enums.ResourceStatus.DISPONIBLE);
+        }else{
+            resource.setStatus(request.getStatus());
+        }
 
         // Handle specific fields for BiotechnologyResource
         if (resource instanceof BiotechnologyResource biotechResource) {
