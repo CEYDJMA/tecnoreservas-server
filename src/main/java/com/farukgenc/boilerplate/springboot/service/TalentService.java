@@ -59,7 +59,7 @@ public class TalentService {
                 talent.setUserStatus(UserStatus.ACTIVO);
                 talentRepository.save(talent);
 
-                TalentProjectDetail projectDetail = talentProjectDetailService.assignDetails(projectDetailDto, talent);
+                TalentProjectDetail projectDetail = talentProjectDetailService.assignDetails(projectDetailDto, talent, null);
                 return "Talento creado exitosamente y datos de proyecto asignados." +
                         "Fase de proyecto: " + projectDetail.getProjectPhase() +
                         " | TRL asignado: " + projectDetail.getNameTrl();

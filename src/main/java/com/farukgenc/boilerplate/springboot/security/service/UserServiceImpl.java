@@ -1,13 +1,14 @@
 package com.farukgenc.boilerplate.springboot.security.service;
 
+import com.farukgenc.boilerplate.springboot.model.*;
 import com.farukgenc.boilerplate.springboot.model.enums.UserStatus;
+import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
+import com.farukgenc.boilerplate.springboot.repository.TalentProjectDetailRepository;
+import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
+import com.farukgenc.boilerplate.springboot.security.dto.*;
 import com.farukgenc.boilerplate.springboot.security.dto.user.UserResponseDto;
+import com.farukgenc.boilerplate.springboot.service.TalentProjectDetailService;
 import com.farukgenc.boilerplate.springboot.service.UserValidationService;
-import com.farukgenc.boilerplate.springboot.model.User;
-import com.farukgenc.boilerplate.springboot.model.UserRole;
-import com.farukgenc.boilerplate.springboot.security.dto.AuthenticatedUserDto;
-import com.farukgenc.boilerplate.springboot.security.dto.RegistrationRequest;
-import com.farukgenc.boilerplate.springboot.security.dto.RegistrationResponse;
 import com.farukgenc.boilerplate.springboot.security.mapper.UserMapper;
 import com.farukgenc.boilerplate.springboot.utils.GeneralMessageAccessor;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
@@ -19,8 +20,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -38,7 +41,6 @@ public class UserServiceImpl implements UserService {
 	private final UserValidationService userValidationService;
 
 	private final GeneralMessageAccessor generalMessageAccessor;
-
 
 	@Override
 	public User findByUsername(String username) {

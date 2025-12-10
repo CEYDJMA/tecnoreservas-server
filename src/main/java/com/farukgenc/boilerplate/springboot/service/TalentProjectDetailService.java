@@ -32,13 +32,10 @@ public class TalentProjectDetailService {
     @Autowired
     private ExpertRepository expertRepository;
 
-    public TalentProjectDetail assignDetails(ProjectDetailDto projectDetailDto, Talent talent) {
+    public TalentProjectDetail assignDetails(ProjectDetailDto projectDetailDto, Talent talent, Long newServiceLineId) {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = userRepository.findByUsername(userDetails.getUsername());
-        Expert expert = expertRepository.findById(user.getId()).orElseThrow();
-        Long serviceLineId = expert.getServiceLine().getId();
-        ServiceLine serviceLine = serviceLineRepository.findById(serviceLineId).orElseThrow();
 
         TalentProjectDetail projectDetail = new TalentProjectDetail();
 
@@ -62,11 +59,20 @@ public class TalentProjectDetailService {
             default:
                 throw new IllegalArgumentException("Fase no valida: " + projectDetailDto.getProjectPhase());
         }
-
         projectDetail.setProjectPhase(ProjectPhase.valueOf(phase));
         projectDetail.setAssociatedProject(projectDetailDto.getAssociatedProject());
-        projectDetail.setServiceLine(serviceLine);
         projectDetail.setTalent(talent);
+        //validar el rol del usuario en sesión para asignar la línea del proyecto
+        if (user.getUserRole().equals(UserRole.EXPERT)){
+            Expert expert = expertRepository.findById(user.getId()).orElseThrow();
+            Long serviceLineId = expert.getServiceLine().getId();
+            ServiceLine serviceLine = serviceLineRepository.findById(serviceLineId).orElseThrow();
+            projectDetail.setServiceLine(serviceLine);
+        } else if (user.getUserRole().equals(UserRole.SUPERADMIN )) {
+            ServiceLine newServiceLine = serviceLineRepository.findById(newServiceLineId).orElseThrow();
+            projectDetail.setServiceLine(newServiceLine);
+        }
+
         talentProjectDetailRepository.save(projectDetail);
         return projectDetail;
     }

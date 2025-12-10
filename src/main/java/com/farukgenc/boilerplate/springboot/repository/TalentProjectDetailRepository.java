@@ -10,4 +10,5 @@ import java.util.List;
 public interface TalentProjectDetailRepository extends JpaRepository<TalentProjectDetail, Long> {
     TalentProjectDetail findByTalentId(Long talentId);
     List<TalentProjectDetail> findAllByServiceLine_Id(Long serviceLineId);
+    TalentProjectDetail findFirstByAssociatedProject(String name);
 }
