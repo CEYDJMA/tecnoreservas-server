@@ -82,7 +82,7 @@ public class TalentService {
             talentResponseDto.setUsername(talent.getUsername());
             talentResponseDto.setName(talent.getName());
             TalentProjectDetail talentProjectDetail = talentProjectDetailService.getTalentProjectDetailById(idProject);
-            talentResponseDto.setLineProjectId(talentProjectDetail.getServiceLine().getId());
+            talentResponseDto.setLineProjectId(talentProjectDetailService.getAllProjectsOfTalent(talent.getId()));
             talentResponseDto.setEmail(talent.getEmail());
             return talentResponseDto;
         } catch (Error e){
@@ -99,7 +99,8 @@ public class TalentService {
             talentDto.setName(talent.getName() + " " + talent.getLastname());
             talentDto.setEmail(talent.getEmail());
             talentDto.setUsername(talent.getUsername());
-            talentDto.setLineProjectId(talentProjectDetailService.getLineProjectTalentId(talent.getId()));
+            List<Long> lista = talentProjectDetailService.getAllProjectsOfTalent(talent.getId());
+            talentDto.setLineProjectId(lista);
             talentDtoList.add(talentDto);
         }
         return talentDtoList;
@@ -116,7 +117,7 @@ public class TalentService {
         talentResponseDto.setId(talent.getId());
         talentResponseDto.setName(talent.getName() + " " + talent.getLastname());
         talentResponseDto.setEmail(talent.getEmail());
-        talentResponseDto.setLineProjectId(talent.getTalentProjectDetails().get(0).getServiceLine().getId());
+        talentResponseDto.setLineProjectId(talentProjectDetailService.getAllProjectsOfTalent(talent.getId()));
         talentResponseDto.setUsername(talent.getUsername());
         return talentResponseDto;
     }

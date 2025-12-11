@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TalentProjectDetailService {
@@ -83,13 +82,17 @@ public class TalentProjectDetailService {
         return talentProjectDetailRepository.findById(id).orElseThrow();
     }
 
-    public Long getLineProjectTalentId(Long talentId){
-        TalentProjectDetail projectDetail = talentProjectDetailRepository.findByTalentId(talentId);
-        return projectDetail.getId();
+    public List<Long> getLineProjectTalentId(Long talentId){
+        List<TalentProjectDetail> projectDetail = talentProjectDetailRepository.findAllByTalentId(talentId);
+        List<Long> response = new ArrayList<>();
+        for (TalentProjectDetail talentProjectDetail: projectDetail) {
+            response.add(talentProjectDetail.getId());
+        }
+        return response;
     }
 
     public List<Long> getAllProjectsOfTalent(Long talentId){
-        List<TalentProjectDetail> projectDetails = Collections.singletonList(talentProjectDetailRepository.findByTalentId(talentId));
+        List<TalentProjectDetail> projectDetails = talentProjectDetailRepository.findAllByTalentId(talentId);
         List<Long> response = new ArrayList<>();
         for (TalentProjectDetail talentProjectDetail: projectDetails){
             Long id = talentProjectDetail.getId();

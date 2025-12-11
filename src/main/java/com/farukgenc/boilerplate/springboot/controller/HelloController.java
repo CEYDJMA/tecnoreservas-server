@@ -5,10 +5,7 @@ import com.farukgenc.boilerplate.springboot.service.SuperAdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created on Ağustos, 2020
@@ -28,7 +25,7 @@ public class HelloController {
 		return ResponseEntity.ok("Hello Spring Boot Boilerplate");
 	}
 
-    @PostMapping("/assign/serviceline-project")
+    @PatchMapping("/assign/serviceline-project")
     public ResponseEntity<String> prueba (@RequestBody ForUserRoleRequest forUserRoleRequest){
 
         return ResponseEntity.ok(superAdminService.assignProjectAndServiceline(forUserRoleRequest));

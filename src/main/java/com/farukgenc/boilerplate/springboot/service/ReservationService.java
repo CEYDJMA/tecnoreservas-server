@@ -468,7 +468,7 @@ public class ReservationService {
 
         for (ReservationResource reservationId: reservationResources) {
             Resource item = resourceRepository.findById(reservationId.getResource().getId()).orElseThrow();
-            if (item.getServiceLine() .getId().equals(expert.getServiceLine().getId())) {
+            if (item.getServiceLine().getId().equals(expert.getServiceLine().getId())) {
                 CreateResourceResponse createResourceResponse = new CreateResourceResponse();
                 createResourceResponse.setId(item.getId());
                 createResourceResponse.setName(item.getName());
