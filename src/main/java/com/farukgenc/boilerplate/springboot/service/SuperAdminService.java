@@ -2,10 +2,7 @@ package com.farukgenc.boilerplate.springboot.service;
 
 import com.farukgenc.boilerplate.springboot.model.*;
 import com.farukgenc.boilerplate.springboot.model.enums.ProjectPhase;
-import com.farukgenc.boilerplate.springboot.repository.ExpertRepository;
-import com.farukgenc.boilerplate.springboot.repository.TalentProjectDetailRepository;
-import com.farukgenc.boilerplate.springboot.repository.TalentRepository;
-import com.farukgenc.boilerplate.springboot.repository.UserRepository;
+import com.farukgenc.boilerplate.springboot.repository.*;
 import com.farukgenc.boilerplate.springboot.security.dto.ForUserRoleRequest;
 import com.farukgenc.boilerplate.springboot.security.dto.ProjectDetailDto;
 import com.farukgenc.boilerplate.springboot.security.dto.ResponseForUserRole;
@@ -33,12 +30,16 @@ public class SuperAdminService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ServiceLineRepository serviceLineRepository;
+
     public String assignProjectAndServiceline (ForUserRoleRequest forUserRoleRequest) {
         try {
             UserRole userRole = userRepository.findById(forUserRoleRequest.getIdUser()).orElseThrow().getUserRole();
 
             if (userRole != null) {
                 Optional<TalentProjectDetail> talentProjectDetail = Optional.ofNullable(talentProjectDetailRepository.findFirstByAssociatedProject(forUserRoleRequest.getProjectName()));
+                ServiceLine serviceLine = serviceLineRepository.findById(forUserRoleRequest.getIdServiceLine()).orElseThrow();
                 //buscar el que es
                 if (userRole == UserRole.TALENT) {
                     if (talentProjectDetail.isPresent() && !talentProjectDetail.map(TalentProjectDetail::getServiceLine).get().getId().equals(forUserRoleRequest.getIdServiceLine())) {
@@ -53,6 +54,10 @@ public class SuperAdminService {
                     //Expert expert = expertRepository.findById(user.get().getId());
                     //Talent talent = talentRepository.findById(user.get().getId());
                     //if (!talentProjectDetail.isPresent()){}
+                } else if (userRole == UserRole.EXPERT) {
+                    Expert expert = expertRepository.findById(forUserRoleRequest.getIdUser()).orElseThrow();
+                    expert.setServiceLine(serviceLine);
+                    expertRepository.save(expert);
                 }
 
             }
