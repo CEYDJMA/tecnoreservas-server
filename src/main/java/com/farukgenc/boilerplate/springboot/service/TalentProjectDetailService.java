@@ -71,9 +71,11 @@ public class TalentProjectDetailService {
             projectDetail.setServiceLine(serviceLine);
         } else if (user.getUserRole().equals(UserRole.SUPERADMIN )) {
             ServiceLine newServiceLine = serviceLineRepository.findById(newServiceLineId).orElseThrow();
+            System.out.println("Id de la linea nueva" + newServiceLine);
             projectDetail.setServiceLine(newServiceLine);
         }
 
+        System.out.println("Los datos: "+ projectDetail);
         talentProjectDetailRepository.save(projectDetail);
         return projectDetail;
     }

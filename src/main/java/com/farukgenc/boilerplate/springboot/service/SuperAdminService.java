@@ -66,6 +66,29 @@ public class SuperAdminService {
                         response.setResponse(talentAndProjectResponseDto);
                         return response;
 
+                    } else if (!talentProjectDetail.isPresent()) {
+                        Talent talent = talentRepository.findById(forUserRoleRequest.getIdUser()).orElseThrow();
+                        ProjectDetailDto projectDetailDto = new ProjectDetailDto();
+                        projectDetailDto.setAssociatedProject(forUserRoleRequest.getProjectName());
+                        projectDetailDto.setProjectPhase(ProjectPhase.INICIO.toString());
+                        projectDetailDto.setNewServiceLineId(forUserRoleRequest.getIdServiceLine());
+                        TalentProjectDetail talentProjectDetail1 = talentProjectDetailService.assignDetails(projectDetailDto, talent, forUserRoleRequest.getIdServiceLine());
+
+                        TalentResponseDto talentResponseDto = new TalentResponseDto();
+                        talentResponseDto.setId(talent.getId());
+                        talentResponseDto.setName(talent.getName());
+                        talentResponseDto.setUsername(talent.getUsername());
+                        talentResponseDto.setLineProjectId(talentProjectDetailService.getAllProjectsOfTalent(talent.getId()));
+                        talentResponseDto.setEmail(talent.getEmail());
+
+                        talentAndProjectResponseDto.setProjectDetailDto(projectDetailDto);
+                        talentAndProjectResponseDto.setTalentResponseDto(talentResponseDto);
+
+                        ForUserRoleResponse<TalentAndProjectResponseDto> response = new ForUserRoleResponse<>();
+                        response.setMessage("proyecto asignado a la linea seleccionada.");
+                        response.setResponse(talentAndProjectResponseDto);
+                        return response;
+
                     }
                 } else if (userRole == UserRole.EXPERT) {
                     ServiceLine serviceLine = serviceLineRepository.findById(forUserRoleRequest.getIdServiceLine()).orElseThrow();

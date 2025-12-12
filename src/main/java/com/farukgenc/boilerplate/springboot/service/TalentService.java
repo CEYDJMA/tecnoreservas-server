@@ -46,7 +46,7 @@ public class TalentService {
     }
 
     @Transactional
-    public String createTalent(TalentDto talentDto, ProjectDetailDto projectDetailDto){
+    public String createTalent(TalentDto talentDto, ProjectDetailDto projectDetailDto, Long newServiceLineId){
         try {
             Talent talent = new Talent();
             if (!userRepository.existsByUsername(talentDto.getUsername())) {
@@ -57,9 +57,11 @@ public class TalentService {
                 talent.setPassword(bCryptPasswordEncoder.encode(talentDto.getPassword()));
                 talent.setUserRole(UserRole.TALENT);
                 talent.setUserStatus(UserStatus.ACTIVO);
+                System.out.println("El talento que se guarda");
                 talentRepository.save(talent);
 
-                TalentProjectDetail projectDetail = talentProjectDetailService.assignDetails(projectDetailDto, talent, null);
+                TalentProjectDetail projectDetail = talentProjectDetailService.assignDetails(projectDetailDto, talent, newServiceLineId);
+                System.out.println();
                 return "Talento creado exitosamente y datos de proyecto asignados." +
                         "Fase de proyecto: " + projectDetail.getProjectPhase() +
                         " | TRL asignado: " + projectDetail.getNameTrl();

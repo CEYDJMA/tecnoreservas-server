@@ -79,8 +79,8 @@ public class TalentController {
     })
     public ResponseEntity<String> createTalent(
             @Parameter(description = "Información del talento a crear.", required = true)
-            @RequestBody TalentAndProjectDto talentAndProjectDto) {
-        return ResponseEntity.ok(talentService.createTalent(talentAndProjectDto.getTalentDto(), talentAndProjectDto.getProjectDetailDto()));
+            @RequestBody TalentAndProjectDto talentAndProjectDto, Long newServiceLineId) {
+        return ResponseEntity.ok(talentService.createTalent(talentAndProjectDto.getTalentDto(), talentAndProjectDto.getProjectDetailDto(), newServiceLineId));
     }
 
     @PatchMapping("/update/email/{id}")
