@@ -41,12 +41,22 @@ public class SuperAdminService {
                 //buscar el que es
                 if (userRole == UserRole.TALENT) {
                     Optional<TalentProjectDetail> talentProjectDetail = Optional.ofNullable(talentProjectDetailRepository.findFirstByAssociatedProject(forUserRoleRequest.getProjectName()));
+                    TalentAndProjectDto talentAndProjectDto = new TalentAndProjectDto();
                     if (talentProjectDetail.isPresent() && !talentProjectDetail.map(TalentProjectDetail::getServiceLine).get().getId().equals(forUserRoleRequest.getIdServiceLine())) {
                         Talent talent = talentRepository.findById(forUserRoleRequest.getIdUser()).orElseThrow();
                         ProjectDetailDto projectDetailDto = new ProjectDetailDto();
                         projectDetailDto.setAssociatedProject(forUserRoleRequest.getProjectName());
                         projectDetailDto.setProjectPhase(ProjectPhase.INICIO.toString());
                         TalentProjectDetail talentProjectDetail1 = talentProjectDetailService.assignDetails(projectDetailDto, talent, forUserRoleRequest.getIdServiceLine());
+
+                        TalentDto talentDto = new TalentDto();
+                        talentDto.setName(talent.getName());
+                        talentDto.setUsername(talent.getUsername());
+                        talentDto.setEmail(talent.getEmail());
+
+                        talentAndProjectDto.setProjectDetailDto(projectDetailDto);
+                        talentAndProjectDto.setTalentDto(talentDto);
+
                     }
                 } else if (userRole == UserRole.EXPERT) {
                     ServiceLine serviceLine = serviceLineRepository.findById(forUserRoleRequest.getIdServiceLine()).orElseThrow();
@@ -55,11 +65,11 @@ public class SuperAdminService {
                     expertRepository.save(expert);
                     ExpertDto expertDto = new ExpertDto();
                     expertDto.setName(expert.getName());
+                    expertDto.setLastname(expert.getLastname());
+                    expertDto.setEmail(expert.getEmail());
                     expertDto.setUsername(expert.getUsername());
-
-                    expertDto.s
-
-
+                    expertDto.setPassword(expert.getPassword());
+                    expertDto.setLine(expert.getServiceLine().getId());
                 }
 
             }
