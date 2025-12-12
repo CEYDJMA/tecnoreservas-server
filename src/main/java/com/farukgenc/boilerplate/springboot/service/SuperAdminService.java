@@ -41,21 +41,30 @@ public class SuperAdminService {
                 //buscar el que es
                 if (userRole == UserRole.TALENT) {
                     Optional<TalentProjectDetail> talentProjectDetail = Optional.ofNullable(talentProjectDetailRepository.findFirstByAssociatedProject(forUserRoleRequest.getProjectName()));
-                    TalentAndProjectDto talentAndProjectDto = new TalentAndProjectDto();
-                    if (talentProjectDetail.isPresent() && !talentProjectDetail.map(TalentProjectDetail::getServiceLine).get().getId().equals(forUserRoleRequest.getIdServiceLine())) {
+                    TalentAndProjectResponseDto talentAndProjectResponseDto = new TalentAndProjectResponseDto();
+                    Optional<TalentProjectDetail> existsProjectInLine = Optional.ofNullable(talentProjectDetailRepository.findFirstByAssociatedProjectAndServiceLine_Id(forUserRoleRequest.getProjectName(), forUserRoleRequest.getIdServiceLine()));
+                    if (talentProjectDetail.isPresent() && !talentProjectDetail.map(TalentProjectDetail::getServiceLine).get().getId().equals(forUserRoleRequest.getIdServiceLine()) && !existsProjectInLine.isPresent()) {
                         Talent talent = talentRepository.findById(forUserRoleRequest.getIdUser()).orElseThrow();
                         ProjectDetailDto projectDetailDto = new ProjectDetailDto();
                         projectDetailDto.setAssociatedProject(forUserRoleRequest.getProjectName());
                         projectDetailDto.setProjectPhase(ProjectPhase.INICIO.toString());
+                        projectDetailDto.setNewServiceLineId(forUserRoleRequest.getIdServiceLine());
                         TalentProjectDetail talentProjectDetail1 = talentProjectDetailService.assignDetails(projectDetailDto, talent, forUserRoleRequest.getIdServiceLine());
 
-                        TalentDto talentDto = new TalentDto();
-                        talentDto.setName(talent.getName());
-                        talentDto.setUsername(talent.getUsername());
-                        talentDto.setEmail(talent.getEmail());
+                        TalentResponseDto talentResponseDto = new TalentResponseDto();
+                        talentResponseDto.setId(talent.getId());
+                        talentResponseDto.setName(talent.getName());
+                        talentResponseDto.setUsername(talent.getUsername());
+                        talentResponseDto.setLineProjectId(talentProjectDetailService.getAllProjectsOfTalent(talent.getId()));
+                        talentResponseDto.setEmail(talent.getEmail());
 
-                        talentAndProjectDto.setProjectDetailDto(projectDetailDto);
-                        talentAndProjectDto.setTalentDto(talentDto);
+                        talentAndProjectResponseDto.setProjectDetailDto(projectDetailDto);
+                        talentAndProjectResponseDto.setTalentResponseDto(talentResponseDto);
+
+                        ForUserRoleResponse<TalentAndProjectResponseDto> response = new ForUserRoleResponse<>();
+                        response.setMessage("proyecto asignado a la linea seleccionada.");
+                        response.setResponse(talentAndProjectResponseDto);
+                        return response;
 
                     }
                 } else if (userRole == UserRole.EXPERT) {
@@ -63,13 +72,17 @@ public class SuperAdminService {
                     Expert expert = expertRepository.findById(forUserRoleRequest.getIdUser()).orElseThrow();
                     expert.setServiceLine(serviceLine);
                     expertRepository.save(expert);
-                    ExpertDto expertDto = new ExpertDto();
-                    expertDto.setName(expert.getName());
-                    expertDto.setLastname(expert.getLastname());
-                    expertDto.setEmail(expert.getEmail());
-                    expertDto.setUsername(expert.getUsername());
-                    expertDto.setPassword(expert.getPassword());
-                    expertDto.setLine(expert.getServiceLine().getId());
+                    ExpertResponseDto expertResponseDto = new ExpertResponseDto();
+                    expertResponseDto.setId(expert.getId());
+                    expertResponseDto.setName(expert.getName());
+                    expertResponseDto.setUsername(expert.getUsername());
+                    expertResponseDto.setLineId(expert.getServiceLine().getId());
+                    expertResponseDto.setEmail(expert.getEmail());
+
+                    ForUserRoleResponse<ExpertResponseDto> response = new ForUserRoleResponse<>();
+                    response.setMessage("Linea de experto actualizada");
+                    response.setResponse(expertResponseDto);
+                    return response;
                 }
 
             }
@@ -78,7 +91,10 @@ public class SuperAdminService {
             throw new RuntimeException(e);
         }
 
-        return ;
+        ForUserRoleResponse<String> response = new ForUserRoleResponse<>();
+        response.setMessage(null);
+        response.setResponse("No hay cambios a realizar.");
+        return response;
 
     };
 }

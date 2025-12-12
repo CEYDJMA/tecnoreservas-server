@@ -11,4 +11,5 @@ public interface TalentProjectDetailRepository extends JpaRepository<TalentProje
     List<TalentProjectDetail> findAllByTalentId(Long talentId);
     List<TalentProjectDetail> findAllByServiceLine_Id(Long serviceLineId);
     TalentProjectDetail findFirstByAssociatedProject(String name);
+    TalentProjectDetail findFirstByAssociatedProjectAndServiceLine_Id(String projectName, Long serviceLineId);
 }

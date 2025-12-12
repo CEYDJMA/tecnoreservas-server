@@ -91,6 +91,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/resources/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.PATCH, "/resources/**").hasAuthority("EXPERT")
                         .requestMatchers(HttpMethod.DELETE, "/resources/**").hasAuthority("EXPERT")
+                        .requestMatchers(HttpMethod.PATCH, "/superadmin/**").hasAuthority("SUPERADMIN")
 
 													   .anyRequest()
 													   .authenticated())
